@@ -8,6 +8,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'material.theme.lightblue',
+    'material',
+    'material.admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,6 +85,11 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -191,12 +199,6 @@ ALLOWED_DUPLICATE_LINK_HOURS = 24 * 7 * 3
 ITEMS_PER_PAGE = 20
 LINK_REQUIRED = True
 AUTO_TAG = False
-
-ADMIN_MENU_ORDER = (
-    ("Content", ("links.Link", "generic.Keyword", "generic.ThreadedComment")),
-    ("Site", ("sites.Site", "redirects.Redirect", "conf.Setting")),
-    ("Users", ("auth.User", "auth.Group",)),
-)
 
 USE_MODELTRANSLATION = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
