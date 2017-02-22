@@ -8,7 +8,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
-    'material.theme.lightblue',
+    'material.theme.bluegrey',
     'material',
     'material.admin',
     'django.contrib.admin',
