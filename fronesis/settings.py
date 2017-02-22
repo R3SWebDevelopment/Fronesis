@@ -187,6 +187,8 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 INSTALLED_APPS += [PACKAGE_NAME_FILEBROWSER]
 
+MATERIAL_ADMIN_SITE = 'fronesis.admin.admin_site'
+
 # Philios settings
 SITE_TITLE = 'Fronesis'
 ACCOUNTS_PROFILE_MODEL = 'links.Profile'
@@ -198,7 +200,7 @@ SEARCH_MODEL_CHOICES = ('links.Link',)
 ALLOWED_DUPLICATE_LINK_HOURS = 24 * 7 * 3
 ITEMS_PER_PAGE = 20
 LINK_REQUIRED = True
-AUTO_TAG = False
+AUTO_TAG = True
 
 USE_MODELTRANSLATION = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
