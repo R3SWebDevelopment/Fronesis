@@ -21,7 +21,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-    'corsheaders'
+    'corsheaders',
+
+    'rest_framework_docs',
+    'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [
@@ -82,6 +85,26 @@ AUTH_PASSWORD_VALIDATORS = [
         )
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+        'rest_framework.filters.SearchFilter',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': (
+        'rest_framework.pagination'
+        '.LimitOffsetPagination'
+    ),
+    'PAGE_SIZE': 10
+}
 
 DATABASES = {
     'default': {
