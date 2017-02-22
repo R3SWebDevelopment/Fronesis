@@ -1,0 +1,1 @@
+web: gunicorn fronesis.wsgi:application --enable-stdio-inheritance
