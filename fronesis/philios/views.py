@@ -7,6 +7,9 @@ class LinkViewSet(viewsets.ModelViewSet):
     serializer_class = LinkSerializer
     queryset = Link.objects.all()
 
+    def get_queryset(self):
+        return self.queryset
+
     def perform_create(self, serializer):
         return serializer.save(
             user=self.request.user
