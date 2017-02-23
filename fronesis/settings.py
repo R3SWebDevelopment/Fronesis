@@ -137,12 +137,19 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': (
         'rest_framework.pagination'
         '.LimitOffsetPagination'
     ),
     'PAGE_SIZE': 10
+}
+
+SWAGGER_SETTINGS = {
+    'JSON_EDITOR': False,
+    'USE_SESSION_AUTH': True,
+    'SHOW_REQUEST_HEADERS': True
 }
 
 DATABASES = {
@@ -168,7 +175,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'fronesis.urls'
 WSGI_APPLICATION = 'fronesis.wsgi.application'
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Mexico_City'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
