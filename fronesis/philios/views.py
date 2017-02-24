@@ -1,4 +1,4 @@
-from .mixins import OnlyAlterOwnObjectsViewSet
+from fronesis.utils.mixins import OnlyAlterOwnObjectsViewSet
 from .serializers import LinkSerializer
 from drum.links.models import Link
 

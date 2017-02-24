@@ -5,6 +5,7 @@ from .admin import admin_site
 urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^philios/', include('fronesis.philios.urls')),
+    url(r'^users/', include('fronesis.users.urls')),
 
     url(r'^admin/', include(admin_site.urls)),
     url(r'^rest-auth/', include('rest_auth.urls')),

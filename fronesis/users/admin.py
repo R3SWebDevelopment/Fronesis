@@ -8,6 +8,8 @@ from .models import UserProfile
 
 class UserProfileInline(TabularInline):
     model = UserProfile
+    max_num = 1
+    min_num = 1
 
 
 @register(User, site=admin_site)
