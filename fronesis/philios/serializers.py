@@ -7,7 +7,7 @@ from mezzanine.generic.models import Rating
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = '__all__'
+        fields = ['id', 'value', 'object_pk']
 
 
 class LinkSerializer(serializers.ModelSerializer):
