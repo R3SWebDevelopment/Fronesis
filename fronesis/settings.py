@@ -37,6 +37,9 @@ INSTALLED_APPS = [
 
     'rest_framework_docs',
     'rest_framework_swagger',
+
+    'fronesis.philios',
+    'fronesis.users',
 ]
 
 MIDDLEWARE = [
