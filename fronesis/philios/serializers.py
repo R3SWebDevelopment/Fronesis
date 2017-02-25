@@ -11,7 +11,7 @@ class RatingSerializer(serializers.ModelSerializer):
 
 
 class LinkSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Link
@@ -19,4 +19,4 @@ class LinkSerializer(serializers.ModelSerializer):
             'id', 'title', 'link', 'publish_date',
             'rating_sum', 'user'
         ]
-        read_only_fields = ['publish_date', 'user']
+        read_only_fields = ['publish_date']
