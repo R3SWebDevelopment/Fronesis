@@ -1,7 +1,7 @@
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.admin import register, TabularInline
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from fronesis.admin import admin_site
 from .models import UserProfile
 
@@ -19,7 +19,12 @@ class UserModelAdmin(UserAdmin):
         (_('Personal info'), {'fields': (
             'first_name', 'last_name', 'email')}),
         (_('Permissions'), {'fields': (
-            'is_active', 'is_staff', 'is_superuser')}),
+            'is_active', 'is_staff', 'is_superuser', 'groups')}),
     )
 
     inlines = [UserProfileInline]
+
+
+@register(Group, site=admin_site)
+class GroupModelAdmin(GroupAdmin):
+    pass
