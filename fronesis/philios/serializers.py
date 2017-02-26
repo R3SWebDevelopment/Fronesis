@@ -8,6 +8,7 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ['id', 'value', 'object_pk']
+        read_only_fields = ['id']
 
 
 class LinkSerializer(serializers.ModelSerializer):
