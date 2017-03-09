@@ -1,6 +1,5 @@
-
-from fronesis.utils.mixins import OnlyAlterOwnObjectsViewSet
 from .serializers import UserSerializer, UserProfileSerializer
+from utils.mixins import OnlyAlterOwnObjectsViewSet
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from .models import UserProfile

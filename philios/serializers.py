@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from drum.links.models import Link
-from fronesis.users.serializers import UserSerializer
+from users.serializers import UserSerializer
 from mezzanine.generic.models import Rating
 
 

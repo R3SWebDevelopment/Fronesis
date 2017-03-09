@@ -1,13 +1,14 @@
-from fronesis.utils.mixins import OnlyAlterOwnObjectsViewSet
 from django.contrib.contenttypes.models import ContentType
 from .serializers import LinkSerializer, RatingSerializer
+from utils.mixins import OnlyAlterOwnObjectsViewSet
 from mezzanine.generic.models import Rating
 from drum.links.models import Link
 from rest_framework import viewsets
 from django.db import transaction
 
 
-rating_content_type = ContentType.objects.get_for_model(Link)
+def get_rating_content_type():
+    return ContentType.objects.get_for_model(Link)
 
 
 class LinkViewSet(OnlyAlterOwnObjectsViewSet):
@@ -22,9 +23,12 @@ class LinkViewSet(OnlyAlterOwnObjectsViewSet):
 
 class RatingViewSet(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
-    queryset = Rating.objects.filter(
-        content_type=rating_content_type
-    )
+    queryset = Rating.objects.all()
+
+    def get_queryset(self):
+        return Rating.objects.filter(
+            content_type=get_rating_content_type()
+        )
 
     def perform_create(self, serializer):
         with transaction.atomic():
@@ -32,11 +36,11 @@ class RatingViewSet(viewsets.ModelViewSet):
             rating = serializer.validated_data
             Rating.objects.filter(
                 user=self.request.user,
-                content_type=rating_content_type,
+                content_type=get_rating_content_type(),
                 object_pk=rating['object_pk']
             ).delete()
 
             return serializer.save(
                 user=self.request.user,
-                content_type=rating_content_type
+                content_type=get_rating_content_type()
             )

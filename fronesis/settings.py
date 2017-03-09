@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -38,8 +39,8 @@ INSTALLED_APPS = [
     'rest_framework_docs',
     'rest_framework_swagger',
 
-    'fronesis.philios',
-    'fronesis.users',
+    'philios',
+    'users',
 ]
 
 MIDDLEWARE = [
