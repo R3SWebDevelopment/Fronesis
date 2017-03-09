@@ -9,8 +9,7 @@ class UsersConfig(AppConfig):
     def ready(self):
         from django.contrib.auth.models import User
         from users.signals import (
-            create_user_profile, save_user_profile,
+            create_user_profile,
         )
 
         post_save.connect(create_user_profile, sender=User)
-        post_save.connect(save_user_profile, sender=User)
