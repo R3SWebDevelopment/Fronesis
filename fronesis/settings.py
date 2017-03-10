@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'taggit',
     'taggit_serializer',
+    'versatileimagefield',
 
     'philios',
     'users',
@@ -170,6 +171,7 @@ DATABASES = {
     }
 }
 
+# accounts
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_UNIQUE_EMAIL = True
@@ -209,6 +211,21 @@ ITEMS_PER_PAGE = 20
 LINK_REQUIRED = True
 AUTO_TAG = False  # disable mezzanine tags, use taggit instead
 TAGGIT_CASE_INSENSITIVE = True
+
+# versatile imagefield
+VERSATILEIMAGEFIELD_SETTINGS = {
+    'cache_length': 2592000,
+    'cache_name': 'versatileimagefield_cache',
+    'jpeg_resize_quality': 85,
+    'sized_directory_name': '__sized__',
+    'filtered_directory_name': '__filtered__',
+    'placeholder_directory_name': '__placeholder__',
+    'create_images_on_demand': False,
+    'image_key_post_processor': None,
+    'progressive_jpeg': True
+}
+
+VERSATILEIMAGEFIELD_USE_PLACEHOLDIT = True
 
 USE_MODELTRANSLATION = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
