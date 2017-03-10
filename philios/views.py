@@ -1,19 +1,19 @@
 from django.contrib.contenttypes.models import ContentType
-from .serializers import LinkSerializer, RatingSerializer
+from .serializers import PostSerializer, RatingSerializer
 from utils.mixins import OnlyAlterOwnObjectsViewSet
 from mezzanine.generic.models import Rating
-from drum.links.models import Link
 from rest_framework import viewsets
 from django.db import transaction
+from .models import Post
 
 
 def get_rating_content_type():
-    return ContentType.objects.get_for_model(Link)
+    return ContentType.objects.get_for_model(Post)
 
 
-class LinkViewSet(OnlyAlterOwnObjectsViewSet):
-    serializer_class = LinkSerializer
-    queryset = Link.objects.all()
+class PostViewSet(OnlyAlterOwnObjectsViewSet):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
 
     def perform_create(self, serializer):
         return serializer.save(

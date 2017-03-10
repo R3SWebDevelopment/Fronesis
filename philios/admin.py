@@ -11,7 +11,7 @@ from .models import Post
 
 
 @register(Post, site=admin_site)
-class LinkModelAdmin(LinkAdmin):
+class PostModelAdmin(LinkAdmin):
     list_editable = ()
     fieldsets = (
         (None, {

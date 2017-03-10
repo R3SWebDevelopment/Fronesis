@@ -13,7 +13,7 @@ class RatingSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
-class LinkSerializer(TaggitSerializer, serializers.ModelSerializer):
+class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     tags = TagListSerializerField()
 
