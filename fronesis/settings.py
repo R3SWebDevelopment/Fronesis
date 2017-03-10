@@ -2,6 +2,9 @@ import os
 import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_APP_PATH = os.path.dirname(os.path.abspath(__file__))
+PROJECT_APP = os.path.basename(PROJECT_APP_PATH)
+PROJECT_ROOT = BASE_DIR = os.path.dirname(PROJECT_APP_PATH)
 
 SECRET_KEY = 'x9l6=-1l*x(+5^gr#!r#am*39zn!27w#vg5s_*^=jop^k(z*q6'
 DEBUG = True
@@ -45,6 +48,8 @@ INSTALLED_APPS = [
 
     'philios',
     'users',
+
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -190,9 +195,31 @@ USE_L10N = True
 USE_TZ = True
 SITE_ID = 1
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# s3 or whitenoise, depending on environment
+if not os.environ.get('S3_BUCKET_NAME'):
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+    MEDIA_URL = STATIC_URL + "media/"
+    MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
+else:
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
+    AWS_QUERYSTRING_AUTH = False
+
+    STATICFILES_LOCATION = 'static'
+    STATIC_URL = 'https://s3.amazonaws.com/{}/{}/'.format(
+        AWS_STORAGE_BUCKET_NAME, STATICFILES_LOCATION)
+    STATICFILES_STORAGE = 'fronesis.storages.StaticStorage'
+
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = 'https://s3.amazonaws.com/{}/{}/'.format(
+        AWS_STORAGE_BUCKET_NAME, MEDIAFILES_LOCATION)
+    DEFAULT_FILE_STORAGE = 'fronesis.storages.MediaStorage'
+
+
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 INSTALLED_APPS += [PACKAGE_NAME_FILEBROWSER]
 
@@ -238,13 +265,7 @@ VERSATILEIMAGEFIELD_RENDITION_KEY_SETS = {
 USE_MODELTRANSLATION = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-PROJECT_APP_PATH = os.path.dirname(os.path.abspath(__file__))
-PROJECT_APP = os.path.basename(PROJECT_APP_PATH)
-PROJECT_ROOT = BASE_DIR = os.path.dirname(PROJECT_APP_PATH)
-
 CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT_APP
-MEDIA_URL = STATIC_URL + "media/"
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
 
 try:
     from mezzanine.utils.conf import set_dynamic_settings
