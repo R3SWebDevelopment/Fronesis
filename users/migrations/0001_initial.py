@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('links', '0002_auto_20170224_1053'),
+        ('links', '0001_initial'),
     ]
 
     operations = [
