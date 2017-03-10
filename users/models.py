@@ -1,9 +1,10 @@
-from versatileimagefield.fields import VersatileImageField
+from versatileimagefield.fields import VersatileImageField, PPOIField
 from drum.links.models import Profile
 
 
 class UserProfile(Profile):
-    avatar = VersatileImageField(null=True, blank=True)
+    avatar = VersatileImageField(null=True, blank=True, ppoi_field='ppoi')
+    ppoi = PPOIField('Image PPOI', default=(0.5, 0.5))
 
     def __str__(self):
         return '{} ({})'.format(self.user, self.karma)
