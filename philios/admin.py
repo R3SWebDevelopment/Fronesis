@@ -5,14 +5,22 @@ from drum.links.admin import LinkAdmin, KeywordAdmin
 
 from mezzanine.generic.models import ThreadedComment
 from mezzanine.generic.models import Keyword
-from drum.links.models import Link
 
 from fronesis.admin import admin_site
+from .models import Post
 
 
-@register(Link, site=admin_site)
+@register(Post, site=admin_site)
 class LinkModelAdmin(LinkAdmin):
-    pass
+    list_editable = ()
+    fieldsets = (
+        (None, {
+            'fields': (
+                'title', 'link', 'status', 'publish_date',
+                'user', 'tags',
+            ),
+        }),
+    )
 
 
 @register(Keyword, site=admin_site)

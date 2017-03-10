@@ -1,7 +1,9 @@
 from rest_framework import serializers
-from drum.links.models import Link
+from .models import Post
 from users.serializers import UserSerializer
 from mezzanine.generic.models import Rating
+from taggit_serializer.serializers import (
+    TagListSerializerField, TaggitSerializer)
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -11,13 +13,14 @@ class RatingSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
-class LinkSerializer(serializers.ModelSerializer):
+class LinkSerializer(TaggitSerializer, serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
+    tags = TagListSerializerField()
 
     class Meta:
-        model = Link
+        model = Post
         fields = [
-            'id', 'title', 'link', 'description', 'publish_date',
-            'rating_sum', 'user'
+            'id', 'title', 'link', 'description', 'tags',
+            'publish_date', 'rating_sum', 'user'
         ]
         read_only_fields = ['publish_date']

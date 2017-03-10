@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'rest_framework_docs',
     'rest_framework_swagger',
 
+    'taggit',
+    'taggit_serializer',
+
     'philios',
     'users',
 ]
@@ -204,7 +207,8 @@ SEARCH_MODEL_CHOICES = ('links.Link',)
 ALLOWED_DUPLICATE_LINK_HOURS = 24 * 7 * 3
 ITEMS_PER_PAGE = 20
 LINK_REQUIRED = True
-AUTO_TAG = True
+AUTO_TAG = False  # disable mezzanine tags, use taggit instead
+TAGGIT_CASE_INSENSITIVE = True
 
 USE_MODELTRANSLATION = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
