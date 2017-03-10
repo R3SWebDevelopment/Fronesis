@@ -226,6 +226,14 @@ VERSATILEIMAGEFIELD_SETTINGS = {
 }
 
 VERSATILEIMAGEFIELD_USE_PLACEHOLDIT = True
+VERSATILEIMAGEFIELD_RENDITION_KEY_SETS = {
+    'userprofile_avatar': [
+        ('full_size', 'url'),
+        ('thumbnail', 'thumbnail__280x280'),
+        ('medium_square_crop', 'crop__280x280'),
+        ('small_square_crop', 'crop__50x50')
+    ]
+}
 
 USE_MODELTRANSLATION = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False

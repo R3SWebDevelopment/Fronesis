@@ -7,12 +7,7 @@ from .models import UserProfile
 
 class UserProfileSerializer(serializers.ModelSerializer):
     avatar = VersatileImageFieldSerializer(
-        sizes=[
-            ('full_size', 'url'),
-            ('thumbnail', 'thumbnail__280x280'),
-            ('medium_square_crop', 'crop__280x280'),
-            ('small_square_crop', 'crop__50x50')
-        ]
+        sizes='userprofile_avatar'
     )
 
     class Meta:

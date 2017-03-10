@@ -8,8 +8,10 @@ class UsersConfig(AppConfig):
 
     def ready(self):
         from django.contrib.auth.models import User
+        from users.models import UserProfile
         from users.signals import (
-            create_user_profile,
+            create_user_profile, warm_user_profile_avatar,
         )
 
         post_save.connect(create_user_profile, sender=User)
+        post_save.connect(warm_user_profile_avatar, sender=UserProfile)
