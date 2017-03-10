@@ -1,6 +1,9 @@
 appdirs==1.4.0
 beautifulsoup4==4.5.3
 bleach==1.5.0
+boto==2.45.0
+boto3==1.4.3
+botocore==1.4.93
 chardet==2.3.0
 coreapi==2.2.4
 coreschema==0.0.4
@@ -15,10 +18,12 @@ django-material==0.12.5
 django-postgrespool==0.3.1
 django-rest-auth==0.9.0
 django-rest-swagger==2.1.1
+django-storages==1.5.2
 django-taggit==0.22.0
 django-taggit-serializer==0.1.5
 django-versatileimagefield==1.6.3
 djangorestframework==3.5.4
+docutils==0.13.1
 drfdocs==0.0.11
 Drum==0.4.0
 filebrowser-safe==0.4.6
@@ -28,6 +33,7 @@ gunicorn==19.6.0
 html5lib==0.9999999
 itypes==1.1.0
 Jinja2==2.9.5
+jmespath==0.9.1
 MarkupSafe==0.23
 Mezzanine==4.2.2
 oauthlib==2.0.1
@@ -37,10 +43,12 @@ packaging==16.8
 Pillow==4.0.0
 psycopg2==2.6.2
 pyparsing==2.1.10
+python-dateutil==2.6.0
 python3-openid==3.0.10
 pytz==2016.10
 requests==2.13.0
 requests-oauthlib==0.8.0
+s3transfer==0.1.10
 simplejson==3.10.0
 six==1.10.0
 sphinx-me==0.3
