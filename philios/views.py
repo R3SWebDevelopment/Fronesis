@@ -23,7 +23,11 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
 
 class RatingViewSet(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
+    filter_fields = RatingSerializer.Meta.filter_fields
     queryset = Rating.objects.all()
+
+    def get_serializer_context(self):
+        return {'request': self.request}
 
     def get_queryset(self):
         return Rating.objects.filter(
@@ -32,6 +36,7 @@ class RatingViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         with transaction.atomic():
+            # TODO: move this to signals
             # delete previous ratings from the same user to the same object
             rating = serializer.validated_data
             Rating.objects.filter(
