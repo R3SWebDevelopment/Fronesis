@@ -34,6 +34,5 @@ def generate_upload_path(post, filename):
 class Post(Link):
     tags = TaggableManager()
     image = VersatileImageField(
-        null=True, blank=True, ppoi_field='ppoi',
-        upload_to=generate_upload_path)
+        null=True, blank=True, ppoi_field='ppoi')
     ppoi = PPOIField('Image PPOI', default=(0.5, 0.5))

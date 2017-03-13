@@ -2,13 +2,22 @@ from .serializers import (
     PostSerializer, RatingSerializer, CommentSerializer,
     get_post_content_type
 )
+from utils.urls import (
+    split_url, get_url_tail
+)
+from utils.images import (
+    retrieve_image, image_exists, valid_image_mimetype,
+    pil_to_django
+)
 from utils.mixins import OnlyAlterOwnObjectsViewSet
 from mezzanine.generic.models import Rating
 from django_comments.models import Comment
 from django.conf import settings
-from rest_framework import viewsets
+from rest_framework import viewsets, serializers
+from django.utils.translation import ugettext as _
 from django.db import transaction
 from .models import Post
+from PIL import Image
 
 
 class PostViewSet(OnlyAlterOwnObjectsViewSet):
@@ -16,9 +25,41 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
     queryset = Post.objects.all()
 
     def perform_create(self, serializer):
-        return serializer.save(
-            user=self.request.user
-        )
+        def _invalidate(msg):
+            raise serializers.ValidationError(_(msg))
+
+        # now download the image and validate it
+        url = serializer.validated_data['link'].lower()
+        domain, path = split_url(url)
+
+        # try to download
+        filename = get_url_tail(path)
+
+        if not image_exists(domain, path):
+            _invalidate(
+                (
+                    'Couldnt retreive image. '
+                    '(There was an error reaching the server'
+                )
+            )
+
+        # validate downloaded image
+        fobject = retrieve_image(url)
+        if not valid_image_mimetype(fobject):
+            return _invalidate('Downloaded file was not a valid image')
+
+        # convert and save the image
+        pil_image = Image.open(fobject)
+        django_file = pil_to_django(pil_image)
+
+        # save to database
+        instance = None
+        with transaction.atomic():
+            instance = serializer.save(user=self.request.user)
+            instance.image.save(filename, django_file)
+            instance.save()
+
+        return instance
 
 
 class CommentViewSet(OnlyAlterOwnObjectsViewSet):

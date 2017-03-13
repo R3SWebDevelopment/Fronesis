@@ -1,14 +1,14 @@
 from django.core.files.base import ContentFile
-import httplib
+import http
 import requests
-import StringIO
+from io import StringIO, BytesIO
 import magic
 
 
 def image_exists(domain, path):
     # http://stackoverflow.com/questions/2486145/python-check-if-url-to-jpg-exists
     try:
-        conn = httplib.HTTPConnection(domain)
+        conn = http.client.HTTPConnection(domain)
         conn.request('HEAD', path)
         response = conn.getresponse()
         conn.close()
@@ -19,7 +19,7 @@ def image_exists(domain, path):
 
 def retrieve_image(url):
     response = requests.get(url)
-    return StringIO.StringIO(response.content)
+    return BytesIO(response.content)
 
 
 def get_mimetype(fobject):
@@ -40,6 +40,6 @@ def valid_image_mimetype(fobject):
 
 def pil_to_django(image, format="JPEG"):
     # http://stackoverflow.com/questions/3723220/how-do-you-convert-a-pil-image-to-a-django-file
-    fobject = StringIO.StringIO()
+    fobject = BytesIO()
     image.save(fobject, format=format)
     return ContentFile(fobject.getvalue())

@@ -1,7 +1,9 @@
 from django.contrib.contenttypes.models import ContentType
 from versatileimagefield.serializers import VersatileImageFieldSerializer
 from rest_framework import serializers
-from utils.urls import split_url, valid_url_extension, valid_url_mimetype
+from utils.urls import (
+    split_url, valid_url_extension, valid_url_mimetype
+)
 from django.utils.translation import ugettext as _
 from users.serializers import UserSerializer
 from mezzanine.generic.models import Rating
@@ -51,17 +53,21 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         read_only_fields = ['user', 'user_rating', 'publish_date', 'image']
 
     def validate_link(self, value):
+        def _invalidate(msg):
+            raise serializers.ValidationError(_(msg))
+
         url = value.lower()
         domain, path = split_url(url)
+
+        # validate url first, image download will be done on the view
         if not valid_url_extension(url) or not valid_url_mimetype(url):
-            raise serializers.ValidationError(
-                _(
-                    (
-                        'Not a valid Image. The URL must have an image '
-                        'extensions (.jpg/.jpeg/.png)'
-                    )
+            _invalidate(
+                (
+                    'Not a valid Image. The URL must have an image '
+                    'extensions (.jpg/.jpeg/.png)'
                 )
             )
+
         return value
 
     def get_user_rating(self, obj):
