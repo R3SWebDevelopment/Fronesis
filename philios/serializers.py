@@ -39,7 +39,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     user_rating = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     tags = TagListSerializerField()
-    image = VersatileImageFieldSerializer(sizes='post_image')
+    image = VersatileImageFieldSerializer(read_only=True, sizes='post_image')
 
     class Meta:
         model = Post
@@ -49,10 +49,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             'comments_count', 'image'
         ]
         read_only_fields = ['user', 'user_rating', 'publish_date', 'image']
-
-    def validate(self, data):
-        self.validate_link(data['link'])
-        return data
 
     def validate_link(self, value):
         url = value.lower()
@@ -66,6 +62,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
                     )
                 )
             )
+        return value
 
     def get_user_rating(self, obj):
         rating = obj.rating.filter(user=self.context['request'].user)
