@@ -1,14 +1,14 @@
-from django.contrib.contenttypes.models import ContentType
-from .serializers import PostSerializer, RatingSerializer
+from .serializers import (
+    PostSerializer, RatingSerializer, CommentSerializer,
+    get_post_content_type
+)
 from utils.mixins import OnlyAlterOwnObjectsViewSet
 from mezzanine.generic.models import Rating
+from django_comments.models import Comment
+from django.conf import settings
 from rest_framework import viewsets
 from django.db import transaction
 from .models import Post
-
-
-def get_rating_content_type():
-    return ContentType.objects.get_for_model(Post)
 
 
 class PostViewSet(OnlyAlterOwnObjectsViewSet):
@@ -18,6 +18,28 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
     def perform_create(self, serializer):
         return serializer.save(
             user=self.request.user
+        )
+
+
+class CommentViewSet(OnlyAlterOwnObjectsViewSet):
+    serializer_class = CommentSerializer
+    filter_fields = CommentSerializer.Meta.filter_fields
+    queryset = Comment.objects.all()
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+    def get_queryset(self):
+        return Comment.objects.filter(
+            content_type=get_post_content_type()
+        )
+
+    def perform_create(self, serializer):
+        return serializer.save(
+            user=self.request.user,
+            content_type=get_post_content_type(),
+            is_removed=False,
+            site_id=settings.SITE_ID
         )
 
 
@@ -31,7 +53,7 @@ class RatingViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Rating.objects.filter(
-            content_type=get_rating_content_type()
+            content_type=get_post_content_type()
         )
 
     def perform_create(self, serializer):
@@ -41,11 +63,11 @@ class RatingViewSet(viewsets.ModelViewSet):
             rating = serializer.validated_data
             Rating.objects.filter(
                 user=self.request.user,
-                content_type=get_rating_content_type(),
+                content_type=get_post_content_type(),
                 object_pk=rating['object_pk']
             ).delete()
 
             return serializer.save(
                 user=self.request.user,
-                content_type=get_rating_content_type()
+                content_type=get_post_content_type()
             )
