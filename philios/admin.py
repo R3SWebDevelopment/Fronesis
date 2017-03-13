@@ -16,7 +16,7 @@ class PostModelAdmin(LinkAdmin):
     fieldsets = (
         (None, {
             'fields': (
-                'title', 'link', 'status', 'publish_date',
+                'title', 'description', 'link', 'status', 'publish_date',
                 'user', 'tags',
             ),
         }),
