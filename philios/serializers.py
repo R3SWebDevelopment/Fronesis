@@ -1,5 +1,8 @@
 from django.contrib.contenttypes.models import ContentType
+from versatileimagefield.serializers import VersatileImageFieldSerializer
 from rest_framework import serializers
+from utils.urls import split_url, valid_url_extension, valid_url_mimetype
+from django.utils.translation import ugettext as _
 from users.serializers import UserSerializer
 from mezzanine.generic.models import Rating
 from django_comments.models import Comment
@@ -36,15 +39,33 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     user_rating = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     tags = TagListSerializerField()
+    image = VersatileImageFieldSerializer(sizes='post_image')
 
     class Meta:
         model = Post
         fields = [
             'id', 'title', 'link', 'description', 'tags',
             'publish_date', 'rating_sum', 'user', 'user_rating',
-            'comments_count'
+            'comments_count', 'image'
         ]
-        read_only_fields = ['user', 'user_rating', 'publish_date']
+        read_only_fields = ['user', 'user_rating', 'publish_date', 'image']
+
+    def validate(self, data):
+        self.validate_link(data['link'])
+        return data
+
+    def validate_link(self, value):
+        url = value.lower()
+        domain, path = split_url(url)
+        if not valid_url_extension(url) or not valid_url_mimetype(url):
+            raise serializers.ValidationError(
+                _(
+                    (
+                        'Not a valid Image. The URL must have an image '
+                        'extensions (.jpg/.jpeg/.png)'
+                    )
+                )
+            )
 
     def get_user_rating(self, obj):
         rating = obj.rating.filter(user=self.context['request'].user)
