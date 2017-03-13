@@ -36,11 +36,12 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
         # try to download
         filename = get_url_tail(path)
 
-        if not image_exists(domain, path):
+        # whoops
+        if False or not image_exists(domain, path):
             _invalidate(
                 (
                     'Couldnt retreive image. '
-                    '(There was an error reaching the server'
+                    '(There was an error reaching the server)'
                 )
             )
 
