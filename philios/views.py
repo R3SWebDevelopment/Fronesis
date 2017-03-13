@@ -10,6 +10,7 @@ from utils.images import (
     pil_to_django
 )
 from utils.mixins import OnlyAlterOwnObjectsViewSet
+from versatileimagefield.image_warmer import VersatileImageFieldWarmer
 from mezzanine.generic.models import Rating
 from django_comments.models import Comment
 from django.conf import settings
@@ -57,6 +58,16 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
         with transaction.atomic():
             instance = serializer.save(user=self.request.user)
             instance.image.save(filename, django_file)
+
+            # create thumbnails
+            num_created, failed_to_create = VersatileImageFieldWarmer(
+                instance_or_queryset=instance,
+                rendition_key_set='post_image',
+                image_attr='image',
+                verbose=True
+            ).warm()
+
+            # save model
             instance.save()
 
         return instance
