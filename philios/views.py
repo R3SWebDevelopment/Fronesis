@@ -37,7 +37,7 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
         filename = get_url_tail(path)
 
         # whoops
-        if False or not image_exists(domain, path):
+        if False and not image_exists(domain, path):
             _invalidate(
                 (
                     'Couldnt retreive image. '
