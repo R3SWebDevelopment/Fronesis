@@ -1,7 +1,7 @@
 from django.core.files.base import ContentFile
 import http
 import requests
-from io import StringIO, BytesIO
+from io import BytesIO
 import magic
 
 
