@@ -28,7 +28,7 @@ def generate_upload_path(post, filename):
         slugify(filename),
         timezone.now().strftime('%Y-%m-%d.%H-%M-%S'),
         ext)
-    return '%s/%s' % (UPLOAD_PATH, filename)
+    return '{}/{}'.format(UPLOAD_PATH, filename)
 
 
 class Post(Link):
