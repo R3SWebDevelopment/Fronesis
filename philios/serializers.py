@@ -46,7 +46,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = [
-            'id', 'title', 'link', 'description', 'tags',
+            'id', 'title', 'link', 'link_type', 'description', 'tags',
             'publish_date', 'rating_sum', 'user', 'user_rating',
             'comments_count', 'image'
         ]
