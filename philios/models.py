@@ -36,3 +36,12 @@ class Post(Link):
     image = VersatileImageField(
         null=True, blank=True, ppoi_field='ppoi')
     ppoi = PPOIField('Image PPOI', default=(0.5, 0.5))
+    link_type = models.CharField(
+        max_length=2,
+        choices=(
+            ('LI', 'Link'),
+            ('IM', 'Image'),
+            ('VI', 'Video'),
+        ),
+        default='LI'
+    )
