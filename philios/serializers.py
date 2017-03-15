@@ -17,6 +17,9 @@ from .models import Post
 def get_post_content_type():
     return ContentType.objects.get_for_model(Post)
 
+def _invalidate(msg):
+    raise serializers.ValidationError(_(msg))
+
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,10 +55,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         ]
         read_only_fields = ['user', 'user_rating', 'publish_date', 'image']
 
-    def validate_link(self, value):
-        def _invalidate(msg):
-            raise serializers.ValidationError(_(msg))
-
+    def _validate_image_link(self, value):
         url = value.lower()
         domain, path = split_url(url)
 
@@ -67,6 +67,9 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
                     'extensions (.jpg/.jpeg/.png)'
                 )
             )
+
+    def validate_link(self, value):
+        self._validate_image_link(value)
 
         return value
 
