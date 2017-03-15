@@ -1,3 +1,4 @@
+from .crawling import get_with_random_user_agent
 from django.core.files.base import ContentFile
 from io import BytesIO
 import magic
@@ -6,12 +7,11 @@ import requests
 
 def image_exists(url):
     r = requests.head(url, allow_redirects=True)
-    print(r)
     return r.status_code == requests.codes.ok
 
 
 def retrieve_image(url):
-    response = requests.get(url, allow_redirects=True)
+    response = get_with_random_user_agent(url)
     return BytesIO(response.content)
 
 

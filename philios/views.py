@@ -27,7 +27,7 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
 
     def _process_image_link(self, serializer):
         # now download the image and validate it
-        url = serializer.validated_data['link'].lower()
+        url = serializer.validated_data['link']
         domain, path = split_url(url)
         filename = get_url_tail(path)
 
