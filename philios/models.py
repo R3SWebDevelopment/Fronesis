@@ -32,16 +32,21 @@ def generate_upload_path(post, filename):
 
 
 class Post(Link):
+    LINK = 'LI'
+    IMAGE = 'IM'
+    VIDEO = 'VI'
+    LINK_TYPES = (
+        (LINK, 'Link'),
+        (IMAGE, 'Image'),
+        (VIDEO, 'Video'),
+    )
+
     tags = TaggableManager()
     image = VersatileImageField(
         null=True, blank=True, ppoi_field='ppoi')
     ppoi = PPOIField('Image PPOI', default=(0.5, 0.5))
     link_type = models.CharField(
         max_length=2,
-        choices=(
-            ('LI', 'Link'),
-            ('IM', 'Image'),
-            ('VI', 'Video'),
-        ),
+        choices=LINK_TYPES,
         default='LI'
     )
