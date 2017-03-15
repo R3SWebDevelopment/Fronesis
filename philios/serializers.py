@@ -55,24 +55,6 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         ]
         read_only_fields = ['user', 'user_rating', 'publish_date', 'image']
 
-    def _validate_image_link(self, value):
-        url = value.lower()
-        domain, path = split_url(url)
-
-        # validate url first, image download will be done on the view
-        if not valid_url_extension(url) or not valid_url_mimetype(url):
-            _invalidate(
-                (
-                    'Not a valid Image. The URL must have an image '
-                    'extensions (.jpg/.jpeg/.png)'
-                )
-            )
-
-    def validate_link(self, value):
-        self._validate_image_link(value)
-
-        return value
-
     def get_user_rating(self, obj):
         rating = obj.rating.filter(user=self.context['request'].user)
 
@@ -90,3 +72,20 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             is_removed=False,
             site_id=settings.SITE_ID
         )
+
+    def _validate_image_link(self, value):
+        url = value.lower()
+        domain, path = split_url(url)
+
+        # validate url first, image download will be done on the view
+        if not valid_url_extension(url) or not valid_url_mimetype(url):
+            _invalidate(
+                (
+                    'Not a valid Image. The URL must have an image '
+                    'extensions (.jpg/.jpeg/.png)'
+                )
+            )
+
+    def validate(self, data):
+        self._validate_image_link(data['link'])
+        return data
