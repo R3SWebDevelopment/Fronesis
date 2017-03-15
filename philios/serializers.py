@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from versatileimagefield.serializers import VersatileImageFieldSerializer
 from rest_framework import serializers
 from utils.urls import (
-    split_url, valid_url_extension, valid_url_mimetype
+    split_url, valid_url_mimetype
 )
 from django.utils.translation import ugettext as _
 from users.serializers import UserSerializer
