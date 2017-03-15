@@ -17,6 +17,7 @@ from .models import Post
 def get_post_content_type():
     return ContentType.objects.get_for_model(Post)
 
+
 def _invalidate(msg):
     raise serializers.ValidationError(_(msg))
 
@@ -86,6 +87,18 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
                 )
             )
 
+    def _validate_video_link(self, value):
+        pass
+
+    def _validate_regular_link(self, value):
+        pass
+
     def validate(self, data):
-        self._validate_image_link(data['link'])
+        # set link validation depending on link type
+        t = data['link_type']
+        v = self._validate_image_link if t == Post.IMAGE \
+            else self._validate_video_link if t == Post.VIDEO \
+            else self._validate_regular_link
+
+        v(data['link'])  # do the validation
         return data
