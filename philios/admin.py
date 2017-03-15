@@ -17,7 +17,7 @@ class PostModelAdmin(LinkAdmin):
         (None, {
             'fields': (
                 'title', 'description', 'image',
-                'link', 'status', 'publish_date',
+                'link', 'link_type', 'status', 'publish_date',
                 'user', 'tags',
             ),
         }),
