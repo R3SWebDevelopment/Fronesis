@@ -93,6 +93,15 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     def _validate_regular_link(self, value):
         pass
 
+    def validate_tags(self, data):
+        def _remove_spaces(str):
+            return "".join(str.split())
+
+        return [
+            '#{}'.format(_remove_spaces(t))
+            if not t.startswith('#')
+            else _remove_spaces(t) for t in data]
+
     def validate(self, data):
         # set link validation depending on link type
         t = data['link_type']
