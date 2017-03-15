@@ -14,10 +14,10 @@ from versatileimagefield.image_warmer import VersatileImageFieldWarmer
 from mezzanine.generic.models import Rating
 from django_comments.models import Comment
 from django.conf import settings
-from rest_framework import viewsets, serializers
-from django.utils.translation import ugettext as _
+from rest_framework import viewsets
 from django.db import transaction
 from .models import Post
+from .serializers import _invalidate
 from PIL import Image
 
 
@@ -25,10 +25,7 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
-    def perform_create(self, serializer):
-        def _invalidate(msg):
-            raise serializers.ValidationError(_(msg))
-
+    def _process_image_link(self, serializer):
         # now download the image and validate it
         url = serializer.validated_data['link'].lower()
         domain, path = split_url(url)
@@ -57,7 +54,7 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
         # save to database
         instance = None
         with transaction.atomic():
-            instance = serializer.save(user=self.request.user)
+            instance = self._do_creation(serializer)
             instance.image.save(filename, django_file)
 
             # create thumbnails
@@ -70,8 +67,25 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
 
             # save model
             instance.save()
-
         return instance
+
+    def _process_video_link(self, serializer):
+        return self._do_creation(serializer)
+
+    def _process_regular_link(self, serializer):
+        return self._do_creation(serializer)
+
+    def _do_creation(self, serializer):
+        return serializer.save(user=self.request.user)
+
+    def perform_create(self, serializer):
+        # set link processing depending on link type
+        t = serializer.validated_data['link_type']
+        p = self._process_image_link if t == Post.IMAGE \
+            else self._process_video_link if t == Post.VIDEO \
+            else self._process_regular_link
+
+        return p(serializer)  # do the processing
 
 
 class CommentViewSet(OnlyAlterOwnObjectsViewSet):
