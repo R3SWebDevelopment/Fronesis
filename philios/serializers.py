@@ -79,13 +79,8 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
         domain, path = split_url(url)
 
         # validate url first, image download will be done on the view
-        if not valid_url_extension(url) or not valid_url_mimetype(url):
-            _invalidate(
-                (
-                    'Not a valid Image. The URL must have an image '
-                    'extensions (.jpg/.jpeg/.png)'
-                )
-            )
+        if not valid_url_mimetype(url):
+            _invalidate('Not a valid Image.')
 
     def _validate_video_link(self, value):
         pass

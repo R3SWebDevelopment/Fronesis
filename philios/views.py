@@ -29,12 +29,10 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
         # now download the image and validate it
         url = serializer.validated_data['link'].lower()
         domain, path = split_url(url)
-
-        # try to download
         filename = get_url_tail(path)
 
-        # TODO: make sure it works in all cases
-        if not image_exists(domain, path):
+        # try to download
+        if not image_exists(url):
             _invalidate(
                 (
                     'Couldnt retreive image. '
@@ -44,12 +42,13 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
 
         # validate downloaded image
         fobject = retrieve_image(url)
-        if not valid_image_mimetype(fobject):
+        mimetype, valid_mimetype = valid_image_mimetype(fobject)
+        if not valid_mimetype:
             return _invalidate('Downloaded file was not a valid image')
 
         # convert and save the image
         pil_image = Image.open(fobject)
-        django_file = pil_to_django(pil_image)
+        django_file = pil_to_django(pil_image, mimetype)
 
         # save to database
         instance = None
