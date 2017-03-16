@@ -45,7 +45,8 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     user_rating = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     tags = TagListSerializerField()
-    image = VersatileImageFieldSerializer(read_only=True, sizes='post_image')
+    image = VersatileImageFieldSerializer(
+        required=False, sizes='post_image')
 
     class Meta:
         model = Post
@@ -74,6 +75,15 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             site_id=settings.SITE_ID
         )
 
+    def validate_tags(self, data):
+        def _remove_spaces(str):
+            return "".join(str.split())
+
+        return [
+            '#{}'.format(_remove_spaces(t))
+            if not t.startswith('#')
+            else _remove_spaces(t) for t in data]
+
     def _validate_image_link(self, value):
         url = value.lower()
         domain, path = split_url(url)
@@ -88,16 +98,7 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     def _validate_regular_link(self, value):
         pass
 
-    def validate_tags(self, data):
-        def _remove_spaces(str):
-            return "".join(str.split())
-
-        return [
-            '#{}'.format(_remove_spaces(t))
-            if not t.startswith('#')
-            else _remove_spaces(t) for t in data]
-
-    def validate(self, data):
+    def _validate_link(self, data):
         # set link validation depending on link type
         t = data['link_type']
         v = self._validate_image_link if t == Post.IMAGE \
@@ -105,4 +106,9 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             else self._validate_regular_link
 
         v(data['link'])  # do the validation
+
+    def validate(self, data):
+        if 'image' not in data:  # if image wasnt uploaded
+            self._validate_link(data)
+
         return data

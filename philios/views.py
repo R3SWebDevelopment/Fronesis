@@ -56,14 +56,6 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
             instance = self._do_creation(serializer)
             instance.image.save(filename, django_file)
 
-            # create thumbnails
-            num_created, failed_to_create = VersatileImageFieldWarmer(
-                instance_or_queryset=instance,
-                rendition_key_set='post_image',
-                image_attr='image',
-                verbose=True
-            ).warm()
-
             # save model
             instance.save()
         return instance
@@ -74,17 +66,39 @@ class PostViewSet(OnlyAlterOwnObjectsViewSet):
     def _process_regular_link(self, serializer):
         return self._do_creation(serializer)
 
-    def _do_creation(self, serializer):
-        return serializer.save(user=self.request.user)
-
-    def perform_create(self, serializer):
+    def _process_link(self, serializer):
         # set link processing depending on link type
         t = serializer.validated_data['link_type']
         p = self._process_image_link if t == Post.IMAGE \
             else self._process_video_link if t == Post.VIDEO \
             else self._process_regular_link
 
-        return p(serializer)  # do the processing
+        return p(serializer)
+
+    def _process_uploaded_image(self, serializer):
+        instance = self._do_creation(serializer)
+        instance.link_type = Post.IMAGE
+        instance.link = instance.image.url
+        instance.save()
+        return instance
+
+    def _do_creation(self, serializer):
+        return serializer.save(user=self.request.user)
+
+    def perform_create(self, serializer):
+        instance = self._process_uploaded_image(serializer) \
+            if 'image' in serializer.validated_data \
+            else self._process_link(serializer)
+
+        # create thumbnails
+        num_created, failed_to_create = VersatileImageFieldWarmer(
+            instance_or_queryset=instance,
+            rendition_key_set='post_image',
+            image_attr='image',
+            verbose=True
+        ).warm()
+
+        return instance
 
 
 class CommentViewSet(OnlyAlterOwnObjectsViewSet):
