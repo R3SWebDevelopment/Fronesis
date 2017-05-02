@@ -1,0 +1,43 @@
+db:
+  image: postgres:9.6
+  environment:
+    - POSTGRES_DB=1yiKPuNTJDnsLhRApQRrFH2QR
+    - POSTGRES_USER=lCoRG7vLQYZvQX1SUUFfgQXbj
+    - POSTGRES_PASSWORD=lkV8AWmeYCexiMGCFq0bleTFJ
+  volumes:
+    - /srv/fronesis/postgres:/var/lib/postgresql/data
+redis:
+  image: redis:3.2
+  volumes:
+    - /srv/minute/redis:/data
+app: &app
+  build: .
+  env_file: .env
+  environment:
+    - DATABASE_URL=postgres://lCoRG7vLQYZvQX1SUUFfgQXbj:lkV8AWmeYCexiMGCFq0bleTFJ@db:5432/1yiKPuNTJDnsLhRApQRrFH2QR
+    - PYTHONUNBUFFERED=TRUE
+  links:
+    - db
+    - redis
+  volumes:
+    - .:/usr/src/app
+    - /srv/fronesis/static:/usr/src/app/.static
+    - /srv/fronesis/media:/usr/src/app/.media
+worker:
+  <<: *app
+  command: celery worker --app=fronesis.celery.app -B
+  ports: []
+cdn:
+  build: docker/cdn
+  links:
+    - app
+  volumes:
+    - /srv/fronesis/static:/usr/share/nginx/html/static:ro
+    - /srv/fronesis/media:/usr/share/nginx/html/media:ro
+proxy:
+  build: docker/proxy
+  ports:
+    - "80:80"
+  links:
+    - app
+    - cdn
