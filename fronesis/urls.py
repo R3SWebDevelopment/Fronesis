@@ -10,6 +10,9 @@ urlpatterns = [
     url(r'^admin/', include(admin_site.urls)),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^docs/', get_swagger_view()),
+
+    url(r'^events/', include('events.urls')),
+
     url("^", include("drum.links.urls")),
     url("^", include("mezzanine.urls"))
 ]

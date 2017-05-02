@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'users',
 
     'storages',
+
+    'events',
 ]
 
 MIDDLEWARE = [
