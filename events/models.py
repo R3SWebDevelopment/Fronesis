@@ -13,7 +13,7 @@ class Event(models.Model):
     description = models.TextField(null=False, blank=False)
     date = models.DateField(null=False, blank=False)
     time = models.TimeField(null=False, blank=False)
-    duration = models.Duration(null=False)
+    duration = models.DurationField(null=False)
     location = models.CharField(null=False, default=False, max_length=150)
     venue = models.CharField(null=False, default=False, max_length=150)
     address = models.TextField(null=True, default=True)
