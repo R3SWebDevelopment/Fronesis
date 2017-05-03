@@ -1,0 +1,145 @@
+{% extends 'user-view.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+
+<section>
+  <div class="wrap">
+    <div class="one-col">
+      <div class="one-col mb40">
+        <div class="profile-event-thumb mr20" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+        <div class="one-third">
+          <h1 class="mb20px">Interaction 17 Redux – Capitulo Monterrey</h1>
+          <p class="mb20">Learn about life cycles with the Universal Model designed by Demartini Institute.</p>
+          <p><strong>February 24, 2017</strong></p>
+        </div>
+      </div>
+      <div class="listed-elements mb40">
+        <button class="btn-black btn-x1 mr20">Edit Event Details</button>
+        <button class="btn-black btn-x1 mr20">View Event</button>
+      </div>
+    </div>
+    <div class="one-col mb40">
+      <div class="progress-bar-wrap">
+        <div class="title">
+          <div class="left-txt c-gray"><p>TICKETS SOLD</p></div>
+          <div class="right-txt c-gray"><p>TICKETS PENDING</p></div>
+        </div>
+        <div class="aqua-progress-bar">
+          <div class="left-txt c-white">23</div>
+          <div class="right-txt c-gray">7</div>
+          <span class="bar" style="width:80%;"></span>
+        </div>
+      </div>
+    </div>
+    <div class="one-col mb40">
+      <p class="mb20 c-gray"><strong>YOUR EVENT’S URL</strong></p>
+      <div class="url-input">http://www.fronesis.mx/events/interaction-17-redux-capitulo-monterrey</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="heading-separator mb40">
+      <h2 class="t-lyonL c-gray">Sales by Ticket Type</h2>
+    </div>
+    <table class="table-border-bottom mb40">
+      <tr>
+        <th>TICKET TYPE</th>
+        <th>PRICE</th>
+        <th>SOLD</th>
+        <th>STATUS</th>
+        <th>SALE ENDS</th>
+      </tr>
+      <tr>
+        <td><strong>Sponsored tickets (free)</strong></td>
+        <td>MX $0.00</td>
+        <td>5/5</td>
+        <td>Sold Out</td>
+        <td>Feb 22, 2017</td>
+      </tr>
+      <tr>
+        <td><strong>Sponsored tickets (free)</strong></td>
+        <td>MX $0.00</td>
+        <td>5/5</td>
+        <td>Sold Out</td>
+        <td>Feb 22, 2017</td>
+      </tr>
+      <tr>
+        <td><strong>Sponsored tickets (free)</strong></td>
+        <td>MX $0.00</td>
+        <td>5/5</td>
+        <td>Sold Out</td>
+        <td>Feb 22, 2017</td>
+      </tr>
+      <tr>
+        <td><strong>Sponsored tickets (free)</strong></td>
+        <td>MX $0.00</td>
+        <td>5/5</td>
+        <td>Sold Out</td>
+        <td>Feb 22, 2017</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="heading-separator mb40">
+      <h2 class="t-lyonL c-gray">Recent Orders</h2>
+    </div>
+    <table class="table-border-bottom mb40">
+      <tr>
+        <th>ORDER</th>
+        <th>BUYER</th>
+        <th>QTY</th>
+        <th>PRICE</th>
+        <th>DATE</th>
+        <th>PAYMENT</th>
+      </tr>
+      <tr>
+        <td>43228X</td>
+        <td>(Buyer’s name)</td>
+        <td>5</td>
+        <td>MX $000.00</td>
+        <td>Feb 22, 2017</td>
+        <td>Credit</td>
+      </tr>
+      <tr>
+        <td>43228X</td>
+        <td>(Buyer’s name)</td>
+        <td>5</td>
+        <td>MX $000.00</td>
+        <td>Feb 22, 2017</td>
+        <td>(Other)</td>
+      </tr>
+      <tr>
+        <td>43228X</td>
+        <td>(Buyer’s name)</td>
+        <td>5</td>
+        <td>MX $000.00</td>
+        <td>Feb 22, 2017</td>
+        <td>Credit</td>
+      </tr>
+      <tr>
+        <td>43228X</td>
+        <td>(Buyer’s name)</td>
+        <td>1</td>
+        <td>MX $000.00</td>
+        <td>Feb 22, 2017</td>
+        <td>(Other)</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap mb40">
+    <button class="btn-black c-center">Load All 23 Orders</button>
+  </div>
+</section>
+
+{% endblock %}

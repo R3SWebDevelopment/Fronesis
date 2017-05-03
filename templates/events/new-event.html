@@ -1,0 +1,152 @@
+{% extends 'user-view.html' %}
+{% load static %}
+
+
+{% block USER_VIEW %}
+ {{ block.super }}
+
+<section>
+  <div class="wrap">
+    <h1 class="mb20">Create a New Event</h1>
+    <div class="one-col">
+      <div class="heading-separator mb40">
+        <div class="blue-cir"><div class="txt">1</div></div>
+        <h2 class="t-lyonL c-gray">Event Details</h2>
+      </div>
+      <div class="one-col mb40">
+        <div class="two-col columns">
+          <label class="dark-label mb20">EVENT NAME</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="Add a name for your">
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="one-col">
+          <label class="dark-label mb20">STARTS</label>
+          <div class="two-col columns mb40">
+            <input type="text" class="border-bottom-input" placeholder="29 / 02 / 2017">
+          </div>
+          <div class="two-col columns mb40">
+            <input type="text" class="border-bottom-input" placeholder="10:00 AM">
+          </div>
+          <div class="one-col columns mb40">
+            <label class="dark-label mb20">DESCRIPTION</label>
+            <ul class="listed-elements mb40">
+              <li><button><img src="{% static 'img/icon-bold.png' %}" alt=""></button></li>
+              <li><button><img src="{% static 'img/icon-italic.png' %}" alt=""></button></li>
+              <li><button><img src="{% static 'img/icon-underline.png' %}" alt=""></button></li>
+              <li><button><img src="{% static 'img/icon-attach.png' %}" alt=""></button></li>
+            </ul>
+            <textarea class="border-box-input" placeholder="Add a description for your event"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="one-col">
+          <label class="dark-label mb20">ENDS</label>
+          <div class="two-col columns mb40">
+            <input type="text" class="border-bottom-input" placeholder="29 / 02 / 2017">
+          </div>
+          <div class="two-col columns mb40">
+            <input type="text" class="border-bottom-input" placeholder="10:00 AM">
+          </div>
+          <div class="one-col">
+            <div class="two-col">
+              <label class="dark-label mb20">ENDS</label>
+              <button class="upload-img" name="button"></button>
+              <p class="smaller-txt">Ideal image size is 1280 x 1080, conisder file size should be under 1MB</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section>
+  <div class="wrap">
+    <div class="one-col">
+      <div class="heading-separator mb40">
+        <div class="blue-cir"><div class="txt">2</div></div>
+        <h2 class="t-lyonL c-gray">Event Venue</h2>
+      </div>
+      <div class="one-col mb40">
+        <div class="two-col columns">
+          <label class="dark-label mb20">Venue Name</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="Name of the stablishment (if it has one)">
+        </div>
+      </div>
+      <div class="one-col mb40">
+        <div class="two-col columns">
+          <label class="dark-label mb20">ADDRESS (STREET NAME & NUMBER)</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="E.g.: Bolivia 203">
+        </div>
+        <div class="two-col columns">
+          <label class="dark-label mb20">NEIGHBORHOOD</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="E.g.: Vista Hermosa">
+        </div>
+      </div>
+      <div class="one-col mb40">
+        <div class="two-col columns">
+          <label class="dark-label mb20">CITY</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="E.g.: México">
+        </div>
+        <div class="two-col columns">
+          <label class="dark-label mb20">POSTAL CODE</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="E.g.: 64620">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="one-col mb40">
+      <div class="heading-separator mb40">
+        <div class="blue-cir"><div class="txt">3</div></div>
+        <h2 class="t-lyonL c-gray">Tickets</h2>
+      </div>
+      <div class="one-col mb40">
+        <div class="col10 columns v-align-b">
+          <button class="p20 c-center"><img src="{% static 'img/icon-squares.png' %}" alt=""></button>
+        </div>
+        <div class="col40 columns">
+          <label class="dark-label mb20">TICKET NAME</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="Name the ticket">
+        </div>
+        <div class="col20 columns">
+          <label class="dark-label mb20">TICKET PRICE</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="$0.00">
+        </div>
+        <div class="col20 columns">
+          <label class="dark-label mb20">TICKETS AVAILABLE</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="1">
+        </div>
+        <div class="col10 columns v-align-b">
+          <button class="p20 c-center"><img src="{% static 'img/icon-delete-gray.png' %}" alt=""></button>
+        </div>
+      </div>
+      <div class="one-col prl9 mb40">
+        <div class="one-col mb40">
+          <button class="btn-black btn-img"><img src="{% static 'img/icon-ticket.png' %}" alt="">Add another ticket</button>
+        </div>
+        <div class="one-col mb40">
+          <label>
+            <div class="aqua-input"><input type="checkbox"><span class="check"></span></div>
+            <p>Show the remaining amount of tickets on your event page</p>
+          </label>
+        </div>
+      </div>
+      <div class="one-col mb40 t-center">
+        <h2 class="t-lyonL c-gray ">Ready to Go!</h2>
+      </div>
+      <div class="one-col gray-border-box t-center mb40">
+        <button class="btn-black btn-x2 mr20" name="button">Save Event, but don’t Publish</button>
+        <button class="btn-aqua btn-x2 mr20" name="button">Publish Your Event</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

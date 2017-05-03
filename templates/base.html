@@ -7,17 +7,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 {% block STYLE %}
-	<link rel="stylesheet" href="{% static "css/reset.css" %}">
-	<link rel="stylesheet" type="text/css" href="{% static "css/slick.css" %}"/>
-	<link rel="stylesheet" href="{% static "css/index.css" %}">
+	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}"/>
+	<link rel="stylesheet" href="{% static 'css/index.css' %}">
 {% endblock %}
 	<title>FRONESIS | Philios®</title>
 </head>
-<body class="{{BODY_CLASS|default:""}}">
+<body class="{{BODY_CLASS|default:''}}">
 	<header>
 		<div class="wrap">
 			<div class="logo" id="triggerStMenu">
-				<img src="{% static "img/f-logo.png" %}" alt="logo">
+				<img src="{% static 'img/f-logo.png' %}" alt="logo">
 			</div>
 			<div class="st-menu">
 				<ul>
@@ -54,8 +54,8 @@
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="{% static "js/jquery.tagsinput.js" %}"></script>
-	<script src="{% static "js/scripts.js" %}"></script>
+	<script src="{% static 'js/jquery.tagsinput.js' %}"></script>
+	<script src="{% static 'js/scripts.js' %}"></script>
 {% endblock %}
 </body>
 </html>

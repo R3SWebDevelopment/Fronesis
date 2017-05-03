@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+
+<section>
+  <div class="wrap mt60">
+    <div class="three-col columns mb40">
+      <div class="event-description mr100 mb20">
+        <div class="featured-img"><img src="{% static 'img/event-featured.png' %}" alt=""></div>
+        <div class="content-txt">
+          <h1 class="t-lyon">Interaction 17 Redux – Capitulo Monterrey</h1>
+          <p>Como la primer actividad del capítulo en Monterrey del IxDA, ofreceremos un reporte de lo que se vivió en el evento Interaction 17 al inicio de febrero, en la ciudad de Nueva York.</p>
+          <p>El objetivo es presentar las tendencias tecnológicas y discursivas presentadas a lo largo de una semana de actividades, y promover la conversación al final sobre dichos temas y cómo se relacionan a la comunidad de Diseño de Interacción en Monterrey.</p>
+          <p><strong>Consejos para los asistentes</strong></p>
+          <ul>
+            <li>A las 8:00 comenzaremos a recibir a los asistentes al evento, y a las 8:20 	iniciamos el keynote.</li>
+            <li>El evento se realizará en las instalaciones de <a href="#">Think Workspace Santa Lucía</a>, y cuentan con cafetería – para que puedan llegar directo y comer algún 	snack antes de la presentación</li>
+          </ul>
+          <p><strong>Quién debe asistir al evento</strong></p>
+          <p>Diseñadores y otros creativos dedicados a los ámbitos de Diseño de Interacción, Diseño de Experiencia de Usuario – y en general cualquier interesdo en las intersecciones entre lo <a href="#">Interactivo y la Tecnología.</a></p>
+        </div>
+      </div>
+      <div class="black-border-box mb40 mr100">
+        <p>Invite your friends!</p>
+        <div class="display-inline">
+          <button type="button" name="button" class="social-btn-tw c-tw">TW</button>
+          <button type="button" name="button" class="social-btn-fb c-fb">FB</button>
+        </div>
+      </div>
+    </div>
+    <div class="one-fourth columns mb40">
+      <div class="one-col mb40">
+        <p class="c-aqua mb20">TICKETS</p>
+        <p class="mb20">From <strong>$0MXN</strong>  to <strong>$500MXN</strong></p>
+        <button class="btn-aqua btn-x2">Get Tickets</button>
+      </div>
+      <div class="one-col mb40">
+        <p class="c-aqua mb20">DATE AND TIME</p>
+        <p class="mb20"> <strong>February 24, 2017 8:00 PM</strong></p>
+      </div>
+      <div class="one-col mb40">
+        <p class="c-aqua mb20">LOCATION</p>
+        <p>Think Workspace Santa Lucía
+          Juan Ignacio Ramón 801
+          Colonia Centro
+          Monterrey, Nuevo León
+          64000</p>
+      </div>
+      <div class="one-col mb40">
+        <p class="c-aqua mb20">ATTENDING</p>
+        <ul class="display-inline mrb10 mb20">
+          <li>
+            <div class="profile-x1" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+          </li>
+          <li>
+            <div class="profile-x1" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+          </li>
+          <li>
+            <div class="profile-x1" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+          </li>
+          <li>
+            <div class="profile-x1" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+          </li>
+          <li>
+            <div class="profile-x1" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+          </li>
+          <li>
+            <div class="profile-x1" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+          </li>
+          <li>
+            <div class="profile-x1" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+          </li>
+        </ul>
+        <button class="btn-txt-gray" name="button">See all 23</button>
+      </div>
+      <div class="one-col mb40">
+        <p class="c-aqua mb20">ORGANIZER</p>
+        <div class="display-inline mb20">
+          <div class="profile-x1 mr20" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+          <div>
+            <p><strong>Paco Martínez</strong></p>
+            <p>Agent</p>
+          </div>
+        </div>
+        <button class="btn-black btn-x2">Contact the Organizer</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
