@@ -1,6 +1,8 @@
 from django.forms import ModelForm
 from .models import Event
 
+from django.conf import settings
+
 
 class EventForm(ModelForm):
     class Meta:
@@ -19,4 +21,5 @@ class EventForm(ModelForm):
                 self.fields[field].required = True
             else:
                 self.fields[field].required = False
-
+        for field in ['ends_time', 'begins_time']:
+            self.fields[field].valid_time_formats = settings.VALID_TIME_FORMATS

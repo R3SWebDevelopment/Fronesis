@@ -288,3 +288,5 @@ except ImportError:
     pass
 else:
     set_dynamic_settings(globals())
+
+VALID_TIME_FORMATS = ['%H:%M', '%I:%M']

@@ -59,9 +59,8 @@ class EventView(FormView):
             return self.form_invalid(form, **kwargs)
 
     def form_valid(self, form):
-        cleaned_data = form.cleaned_data
-        event = form.save(commit=True)
-        event.save()
+        self.event = form.save(commit=True)
+        self.event.save()
         return super(EventView, self).form_valid(form)
 
     def get_success_url(self):

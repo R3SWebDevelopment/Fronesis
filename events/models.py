@@ -14,7 +14,7 @@ class Event(models.Model):
     begins_date = models.DateField(null=True, verbose_name="starts")
     begins_time = models.TimeField(null=True, verbose_name="")
     ends_date = models.DateField(null=True, verbose_name="ends")
-    ends_time = models.DateTimeField(null=True, verbose_name="")
+    ends_time = models.TimeField(null=True, verbose_name="")
     description = models.TextField(null=False, blank=False, verbose_name="description")
     cover = models.ImageField(null=True, verbose_name="cover image")
 
@@ -67,7 +67,8 @@ class Event(models.Model):
 
     @property
     def admin_url(self):
-        return reverse('my_events_create')
+        uuid = "{}".format(self.uuid)
+        return reverse('my_events_update', kwargs={'event_uuid': uuid.replace("-", "")})
 
     def __str__(self):
         return "{} - {}({})".format(self.name, self.begins_date, self.begins_time)
