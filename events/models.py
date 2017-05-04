@@ -9,11 +9,13 @@ from denorm import denormalized, depend_on_related
 
 class Event(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=False, blank=False)
-    name = models.CharField(null=False, blank=False, max_length=150, default="Event Name")
-    begins_time = models.DateTimeField(null=True)
-    ends_time = models.DateTimeField(null=True)
-    description = models.TextField(null=False, blank=False)
-    cover = models.ImageField(null=True)
+    name = models.CharField(null=False, blank=False, max_length=150, default="", verbose_name="event name")
+    begins_date = models.DateField(null=True, verbose_name="starts")
+    begins_time = models.TimeField(null=True, verbose_name="")
+    ends_date = models.DateField(null=True, verbose_name="ends")
+    ends_time = models.DateTimeField(null=True, verbose_name="")
+    description = models.TextField(null=False, blank=False, verbose_name="description")
+    cover = models.ImageField(null=True, verbose_name="cover image")
 
     venue = models.CharField(null=False, blank=True, max_length=150, default="")
     address = models.CharField(null=False, blank=True, max_length=150, default="")
