@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'taggit_serializer',
     'versatileimagefield',
 
+    'denorm',
+
     'philios',
     'users',
 
@@ -53,6 +55,11 @@ INSTALLED_APPS = [
 
     'events',
 ]
+
+MIDDLEWARE_CLASSES = (
+    'django.middleware.transaction.TransactionMiddleware',
+    'denorm.middleware.DenormMiddleware',
+)
 
 MIDDLEWARE = [
     'mezzanine.core.middleware.UpdateCacheMiddleware',
@@ -171,7 +178,7 @@ SWAGGER_SETTINGS = {
 
 DATABASES = {
     # heroku
-    'default': dj_database_url.config(engine='django_postgrespool')
+    'default': dj_database_url.config(engine='django.db.backends.postgresql')
 } if os.environ.get('DATABASE_URL', '') else {
     # localhost
     'default': {
