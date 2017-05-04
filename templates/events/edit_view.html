@@ -1,0 +1,206 @@
+{% extends 'user-view.html' %}
+{% load static %}
+
+
+{% block USER_VIEW %}
+  {{ block.super }}
+<br>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <section style="display: inline-block;">
+    <div class="wrap">
+      <h1 class="mb20">Create a New Event</h1>
+      <div class="one-col">
+        <div class="heading-separator mb40">
+          <div class="blue-cir"><div class="txt">1</div></div>
+          <h2 class="t-lyonL c-gray">Event Details</h2>
+        </div>
+        <div class="one-col mb40">
+          <div class="two-col columns">
+            <label for="{{ form.name.id_for_label }}" class="dark-label mb20">{{ form.name.label|upper }}</label>
+            <input type="text" id = "{{ form.name.id_for_label }}" name = "{{ form.name.html_name }}" value = "{{ form.name.value|default:'' }}" class="border-bottom-input two-col columns" placeholder="Add a name for your" required>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="one-col">
+            <label for="{{ form.begins_date.id_for_label }}" class="dark-label mb20">{{ form.begins_date.label|upper }}</label>
+            <div class="two-col columns mb40">
+              <input type="date" id = "{{ form.begins_date.id_for_label }}" name = "{{ form.begins_date.html_name }}" value = "{{ form.begins_date.value|default:'' }}" class="border-bottom-input" placeholder="29 / 02 / 2017" required>
+            </div>
+            <div class="two-col columns mb40">
+              <input type="time" id = "{{ form.begins_time.id_for_label }}" name = "{{ form.begins_time.html_name }}" value = "{{ form.begins_time.value|default:'' }}" class="border-bottom-input" placeholder="10:00 AM" required>
+            </div>
+            <div class="one-col columns mb40">
+              <label for="{{ form.description.id_for_label }}" class="dark-label mb20">{{ form.description.label|upper }}</label>
+              <textarea id = "{{ form.description.id_for_label }}" name = "{{ form.description.html_name }}" class="border-box-input" placeholder="Add a description for your event" required>{{ form.description.value|default:'' }}</textarea>
+            </div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="one-col">
+            <label for="{{ form.ends_date.id_for_label }}" class="dark-label mb20">{{ form.ends_date.label|upper }}</label>
+            <div class="two-col columns mb40">
+              <input id = "{{ form.ends_date.id_for_label }}" name = "{{ form.ends_date.html_name }}" value = "{{ form.ends_date.value|default:'' }}" type="date" class="border-bottom-input calendar-input" placeholder="29 / 02 / 2017">
+            </div>
+            <div class="two-col columns mb40">
+              <input type="time" id = "{{ form.ends_time.id_for_label }}" name = "{{ form.ends_time.html_name }}" value = "{{ form.ends_time.value|default:'' }}" class="border-bottom-input" placeholder="10:00 AM" required>
+            </div>
+            <div class="one-col">
+              <div class="two-col">
+                <label for="{{ form.cover.id_for_label }}" class="dark-label mb20">{{ form.cover.label|upper }}</label>
+                <button class="upload-img" name="button">
+                  <img id="output" width="100%" height="100%" style="display: none;"/>
+                </button>
+                <input id = "{{ form.cover.id_for_label }}" name = "{{ form.cover.html_name }}" type="file" accept="image/*" style = "display:none;">
+                <p class="smaller-txt">Ideal image size is 1280 x 1080, conisder file size should be under 1MB</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section>
+    <div class="wrap">
+      <div class="one-col">
+        <div class="heading-separator mb40">
+          <div class="blue-cir"><div class="txt">2</div></div>
+          <h2 class="t-lyonL c-gray">Event Venue</h2>
+        </div>
+        <div class="one-col mb40">
+          <div class="two-col columns">
+            <label for="{{ form.venue.id_for_label }}" class="dark-label mb20">{{ form.venue.label|upper }}</label>
+            <input id = "{{ form.venue.id_for_label }}" name = "{{ form.venue.html_name }}" value = "{{ form.venue.value|default:'' }}" type="text" class="border-bottom-input two-col columns" placeholder="Name of the stablishment (if it has one)">
+          </div>
+        </div>
+        <div class="one-col mb40">
+          <div class="two-col columns">
+            <label for="{{ form.address.id_for_label }}" class="dark-label mb20">{{ form.address.label|upper }}</label>
+            <input id = "{{ form.address.id_for_label }}" name = "{{ form.address.html_name }}" value = "{{ form.address.value|default:'' }}" type="text" class="border-bottom-input two-col columns" placeholder="E.g.: Bolivia 203" required>
+          </div>
+          <div class="two-col columns">
+            <label for="{{ form.neighborhood.id_for_label }}" class="dark-label mb20">{{ form.neighborhood.label|upper }}</label>
+            <input id = "{{ form.neighborhood.id_for_label }}" name = "{{ form.neighborhood.html_name }}" value = "{{ form.neighborhood.value|default:'' }}" type="text" class="border-bottom-input two-col columns" placeholder="E.g.: Vista Hermosa" required>
+          </div>
+        </div>
+        <div class="one-col mb40">
+          <div class="two-col columns">
+            <label for="{{ form.city.id_for_label }}" class="dark-label mb20">{{ form.city.label|upper }}</label>
+            <input id = "{{ form.city.id_for_label }}" name = "{{ form.city.html_name }}" value = "{{ form.city.value|default:'' }}" type="text" class="border-bottom-input two-col columns" placeholder="E.g.: México">
+          </div>
+          <div class="two-col columns">
+            <label for="{{ form.postal_code.id_for_label }}" class="dark-label mb20">{{ form.postal_code.label|upper }}</label>
+            <input id = "{{ form.postal_code.id_for_label }}" name = "{{ form.postal_code.html_name }}" value = "{{ form.postal_code.value|default:'' }}" type="text" class="border-bottom-input two-col columns" placeholder="E.g.: 64620">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="one-col mb40">
+      {% if mode == 'update' %}
+        <div class="heading-separator mb40">
+          <div class="blue-cir"><div class="txt">3</div></div>
+          <h2 class="t-lyonL c-gray">Tickets</h2>
+        </div>
+        <div class="one-col mb40">
+          <div class="col10 columns v-align-b">
+            <button class="p20 c-center"><img src="{% static 'img/icon-squares.png' %}" alt=""></button>
+          </div>
+          <div class="col40 columns">
+            <label class="dark-label mb20">TICKET NAME</label>
+            <input type="text" class="border-bottom-input two-col columns" placeholder="Name the ticket">
+          </div>
+          <div class="col20 columns">
+            <label class="dark-label mb20">TICKET PRICE</label>
+            <input type="text" class="border-bottom-input two-col columns" placeholder="$0.00">
+          </div>
+          <div class="col20 columns">
+            <label class="dark-label mb20">TICKETS AVAILABLE</label>
+            <input type="text" class="border-bottom-input two-col columns" placeholder="1">
+          </div>
+          <div class="col10 columns v-align-b">
+            <button class="p20 c-center"><img src="{% static 'img/icon-delete-gray.png' %}" alt=""></button>
+          </div>
+        </div>
+        <div class="one-col prl9 mb40">
+          <div class="one-col mb40">
+            <button class="btn-black btn-img"><img src="{% static 'img/icon-ticket.png' %}" alt="">Add another ticket</button>
+          </div>
+          <div class="one-col mb40">
+            <label>
+              <div class="aqua-input"><input type="checkbox"><span class="check"></span></div>
+              <p>Show the remaining amount of tickets on your event page</p>
+            </label>
+          </div>
+        </div>
+      {% endif %}
+        <div class="one-col mb40 t-center">
+          <h2 class="t-lyonL c-gray ">Ready to Go!</h2>
+        </div>
+        <div class="one-col gray-border-box t-center mb40">
+          <button class="btn-black btn-x2 mr20" name="button" type="submit">Save Event, but don’t Publish</button>
+        {% if mode == 'update' %}
+          <button class="btn-aqua btn-x2 mr20" name="button">Publish Your Event</button>
+        {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+</form>
+
+{{form}}
+
+{% endblock %}
+
+
+{% block LIBRARIES %}
+  {{ block.super }}
+
+  <!-- include libraries(jQuery, bootstrap) -->
+  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+  <!-- include summernote css/js-->
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.css" rel="stylesheet">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.js"></script>
+  <script>
+    $(document).ready(function() {
+      var cover = $('#{{ form.cover.id_for_label }}');
+      var description = $('#{{ form.description.id_for_label }}');
+      var cover_trigger = $('.upload-img');
+      var cover_trigger_img = $('.upload-img::after');
+
+      $(description).summernote({
+        height: 300
+      });
+
+      $(cover_trigger).click(function(event){
+        event.preventDefault();
+        $(cover).click();
+      });
+
+      $(cover).change(function(){
+        preview_image(this, cover_trigger);
+      });
+
+      var preview_image = function(input, target) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $(target).find('img#output').attr('src', e.target.result).css({display: 'block'}).append(":-webkit-any(body):after {content: none;}");;
+          }
+
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+
+    });
+
+
+  </script>
+{% endblock %}

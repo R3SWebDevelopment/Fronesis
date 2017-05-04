@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Min, Max, Sum
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
+from django.urls import reverse
 import uuid
 
 from denorm import denormalized, depend_on_related
@@ -17,8 +18,9 @@ class Event(models.Model):
     description = models.TextField(null=False, blank=False, verbose_name="description")
     cover = models.ImageField(null=True, verbose_name="cover image")
 
-    venue = models.CharField(null=False, blank=True, max_length=150, default="")
-    address = models.CharField(null=False, blank=True, max_length=150, default="")
+    venue = models.CharField(null=False, blank=True, max_length=150, default="", verbose_name="venue name")
+    address = models.CharField(null=False, blank=True, max_length=150, default="",
+                               verbose_name="address (street name & number)")
     neighborhood = models.CharField(null=False, blank=True, max_length=150, default="")
     city = models.CharField(null=False, blank=True, max_length=150, default="")
     postal_code = models.CharField(null=False, blank=True, max_length=5, default="")
@@ -62,6 +64,13 @@ class Event(models.Model):
     @depend_on_related('TicketSales')
     def tickets_available(self):
         return self.total_tickets - self.tickets_sold
+
+    @property
+    def admin_url(self):
+        return reverse('my_events_create')
+
+    def __str__(self):
+        return "{} - {}({})".format(self.name, self.begins_date, self.begins_time)
 
 
 class Ticket(models.Model):

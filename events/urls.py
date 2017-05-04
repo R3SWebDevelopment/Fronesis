@@ -1,7 +1,13 @@
-from .views import DummyView
+from .views import DummyView, EventView
 from django.conf.urls import url
 
 urlpatterns = [
+
+    url(r'^my_events/create/$', EventView.as_view(), {'mode': 'create'}, name='my_events_create'),
+    url(r'^my_events/(?P<event_uuid>\w+)/edit/$', EventView.as_view(), {'mode': 'update'}, name='my_events_update'),
+
+
+    # Dummy views
     url(r'^index.html$', DummyView.as_view(), {'template_name': 'index.html'}),
     url(r'^list-events.html$', DummyView.as_view(), {'template_name': 'events/list-events.html',
                                                      'body_class': 'bg-white'}),
