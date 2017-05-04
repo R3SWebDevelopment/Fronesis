@@ -1,4 +1,4 @@
--e git://github.com/initcrash/django-denorm.git@188aa8e546cce3beb6ae687ba40b02e3b34348dc#egg=django_denorm-dev
+-e git://github.com/django-denorm/django-denorm.git@3181d196207a19aabdcc25598243ee596aca0326#egg=django_denorm-dev
 
 appdirs==1.4.3
 beautifulsoup4==4.5.3
