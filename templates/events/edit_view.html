@@ -27,6 +27,10 @@
             <label for="{{ form.name.id_for_label }}" class="dark-label mb20">{{ form.name.label|upper }}</label>
             <input type="text" id = "{{ form.name.id_for_label }}" name = "{{ form.name.html_name }}" value = "{{ form.name.value|default:'' }}" class="border-bottom-input two-col columns" placeholder="Add a name for your" required>
           </div>
+          <div class="two-col columns">
+            <label for="{{ form.subtitle.id_for_label }}" class="dark-label mb20">{{ form.subtitle.label|upper }}</label>
+            <input id = "{{ form.subtitle.id_for_label }}" name = "{{ form.subtitle.html_name }}" value = "{{ form.subtitle.value|default:'' }}" type="text" class="border-bottom-input two-col columns" placeholder="Increase communication, trust and understanding with your partner." required>
+          </div>
         </div>
         <div class="two-col">
           <div class="one-col">

@@ -3,10 +3,18 @@ from django.db.models import Min, Max, Sum
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django.utils.safestring import mark_safe
+from datetime import datetime
 import uuid
 
 from denorm import denormalized, depend_on_related
+
+
+class PastEvent(models.Manager):
+    def get_queryset(self):
+        now = datetime.now()
+        today = now.date()
+        time = now.time()
+        return super(PastEvent, self).get_queryset().filter(ends_date__lt=today, ends_time__lt=time)
 
 
 class Event(models.Model):
@@ -29,6 +37,12 @@ class Event(models.Model):
 
     organizer = models.ForeignKey(User, null=True)
     display_remaining_tickets = models.BooleanField(default=False)
+
+    past = PastEvent()
+    objects = models.Manager()
+
+    class Meta:
+        ordering = ['begins_date', 'begins_time']
 
     @denormalized(models.DecimalField, max_digits=5, decimal_places=2, default=0)
     @depend_on_related('Ticket')
@@ -73,13 +87,8 @@ class Event(models.Model):
         return reverse('my_events_update', kwargs={'event_uuid': uuid.replace("-", "")})
 
     @property
-    def description_label(self):
-        if self.description is not None and self.description.strip():
-            html = mark_safe(self.description)
-            html = html.replace("<br>", "")
-            print("HTML: {}".format(html))
-            return html
-        return ""
+    def url(self):
+        return self.admin_url
 
     @property
     def cover_url(self):

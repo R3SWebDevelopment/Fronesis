@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.urls import reverse
 from django.views.generic.edit import FormView
 from django.shortcuts import get_object_or_404
@@ -17,6 +17,21 @@ class DummyView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DummyView, self).get_context_data(**kwargs)
+        context['BODY_CLASS'] = self.body_class or ''
+        return context
+
+
+class MyEventsView(ListView):
+    template_name = 'events/my_events.html'
+    body_class = 'bg-white'
+
+    def get_queryset(self):
+        return Event.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(MyEventsView, self).get_context_data(**kwargs)
+        context['attending_by_you'] = Event.objects.none()
+        context['past_events'] = Event.past.all()
         context['BODY_CLASS'] = self.body_class or ''
         return context
 
