@@ -3,6 +3,7 @@ from django.db.models import Min, Max, Sum
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 import uuid
 
 from denorm import denormalized, depend_on_related
@@ -11,6 +12,7 @@ from denorm import denormalized, depend_on_related
 class Event(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=False, blank=False)
     name = models.CharField(null=False, blank=False, max_length=150, default="", verbose_name="event name")
+    subtitle = models.CharField(null=False, blank=False, max_length=150, default="", verbose_name="event subtitle")
     begins_date = models.DateField(null=True, verbose_name="starts")
     begins_time = models.TimeField(null=True, verbose_name="")
     ends_date = models.DateField(null=True, verbose_name="ends")
@@ -69,6 +71,23 @@ class Event(models.Model):
     def admin_url(self):
         uuid = "{}".format(self.uuid)
         return reverse('my_events_update', kwargs={'event_uuid': uuid.replace("-", "")})
+
+    @property
+    def description_label(self):
+        if self.description is not None and self.description.strip():
+            html = mark_safe(self.description)
+            html = html.replace("<br>", "")
+            print("HTML: {}".format(html))
+            return html
+        return ""
+
+    @property
+    def cover_url(self):
+        try:
+            return self.cover.url
+        except:
+            pass
+        return 'https://placeholdit.imgix.net/~text?txtsize=33&txt=Event%20Image&w=256&h=256'
 
     def __str__(self):
         return "{} - {}({})".format(self.name, self.begins_date, self.begins_time)
