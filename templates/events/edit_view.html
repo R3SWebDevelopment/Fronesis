@@ -1,5 +1,6 @@
 {% extends 'user-view.html' %}
 {% load static %}
+{% load static %}
 
 
 {% block USER_VIEW %}
@@ -9,7 +10,13 @@
   {% csrf_token %}
   <section style="display: inline-block;">
     <div class="wrap">
-      <h1 class="mb20">Create a New Event</h1>
+      <h1 class="mb20">
+      {% if mode == 'update' %}
+        {{ form.name.value|title }}
+      {% else %}
+        Create a New Event
+      {% endif %}
+      </h1>
       <div class="one-col">
         <div class="heading-separator mb40">
           <div class="blue-cir"><div class="txt">1</div></div>
@@ -25,7 +32,7 @@
           <div class="one-col">
             <label for="{{ form.begins_date.id_for_label }}" class="dark-label mb20">{{ form.begins_date.label|upper }}</label>
             <div class="two-col columns mb40">
-              <input type="date" id = "{{ form.begins_date.id_for_label }}" name = "{{ form.begins_date.html_name }}" value = "{{ form.begins_date.value|default:'' }}" class="border-bottom-input" placeholder="29 / 02 / 2017" required>
+              <input type="date" id = "{{ form.begins_date.id_for_label }}" name = "{{ form.begins_date.html_name }}" value = "{{ form.begins_date.value|default:''|date:'Y-m-j' }}" class="border-bottom-input" placeholder="29 / 02 / 2017" required>
             </div>
             <div class="two-col columns mb40">
               <input type="time" id = "{{ form.begins_time.id_for_label }}" name = "{{ form.begins_time.html_name }}" value = "{{ form.begins_time.value|default:'' }}" class="border-bottom-input" placeholder="10:00 AM" required>
@@ -40,7 +47,7 @@
           <div class="one-col">
             <label for="{{ form.ends_date.id_for_label }}" class="dark-label mb20">{{ form.ends_date.label|upper }}</label>
             <div class="two-col columns mb40">
-              <input id = "{{ form.ends_date.id_for_label }}" name = "{{ form.ends_date.html_name }}" value = "{{ form.ends_date.value|default:'' }}" type="date" class="border-bottom-input calendar-input" placeholder="29 / 02 / 2017">
+              <input id = "{{ form.ends_date.id_for_label }}" name = "{{ form.ends_date.html_name }}" value = "{{ form.ends_date.value|default:''|date:'Y-m-j' }}" type="date" class="border-bottom-input calendar-input" placeholder="29 / 02 / 2017">
             </div>
             <div class="two-col columns mb40">
               <input type="time" id = "{{ form.ends_time.id_for_label }}" name = "{{ form.ends_time.html_name }}" value = "{{ form.ends_time.value|default:'' }}" class="border-bottom-input" placeholder="10:00 AM" required>
@@ -49,7 +56,7 @@
               <div class="two-col">
                 <label for="{{ form.cover.id_for_label }}" class="dark-label mb20">{{ form.cover.label|upper }}</label>
                 <button class="upload-img" name="button">
-                  <img id="output" width="100%" height="100%" style="display: none;"/>
+                  <img id="output" width="100%" height="100%" {% if mode == 'update' %} src="{{ MEDIA_URL }}{{ form.cover.value|default:'' }}" {% else %}style="display: none;"{% endif %}/>
                 </button>
                 <input id = "{{ form.cover.id_for_label }}" name = "{{ form.cover.html_name }}" type="file" accept="image/*" style = "display:none;">
                 <p class="smaller-txt">Ideal image size is 1280 x 1080, conisder file size should be under 1MB</p>
@@ -107,33 +114,57 @@
           <div class="blue-cir"><div class="txt">3</div></div>
           <h2 class="t-lyonL c-gray">Tickets</h2>
         </div>
-        <div class="one-col mb40">
+        <div class="one-col mb40 ticket-container" id="ticket_template">
+          <input type="hidden" id="ticket" name="ticket[]">
           <div class="col10 columns v-align-b">
             <button class="p20 c-center"><img src="{% static 'img/icon-squares.png' %}" alt=""></button>
           </div>
           <div class="col40 columns">
             <label class="dark-label mb20">TICKET NAME</label>
-            <input type="text" class="border-bottom-input two-col columns" placeholder="Name the ticket">
+            <input type="text" class="border-bottom-input two-col columns" placeholder="Name the ticket" id="name" name="name[]">
           </div>
           <div class="col20 columns">
             <label class="dark-label mb20">TICKET PRICE</label>
-            <input type="text" class="border-bottom-input two-col columns" placeholder="$0.00">
+            <input type="number" min="0" step="any" class="border-bottom-input two-col columns" placeholder="$0.00" id="price" name="price[]">
           </div>
           <div class="col20 columns">
             <label class="dark-label mb20">TICKETS AVAILABLE</label>
-            <input type="text" class="border-bottom-input two-col columns" placeholder="1">
+            <input type="number" min="1" step="1" class="border-bottom-input two-col columns" placeholder="1" id="total" name="total[]">
           </div>
           <div class="col10 columns v-align-b">
-            <button class="p20 c-center"><img src="{% static 'img/icon-delete-gray.png' %}" alt=""></button>
+            <button class="p20 c-center remove_ticket" type="button"><img src="{% static 'img/icon-delete-gray.png' %}" alt=""></button>
           </div>
         </div>
+      {% for ticket in event.tickets %}
+        <div class="one-col mb40">
+          <input type="hidden" id="ticket" name="ticket[]" value="{{ticket.pk}}">
+          <div class="col10 columns v-align-b">
+            <button class="p20 c-center"><img src="{% static 'img/icon-squares.png' %}" alt=""></button>
+          </div>
+          <div class="col40 columns">
+            <label class="dark-label mb20">TICKET NAME</label>
+            <input type="text" class="border-bottom-input two-col columns" placeholder="Name the ticket" id="name" name="name[]" value="{{ticket.name|default:''}}">
+          </div>
+          <div class="col20 columns">
+            <label class="dark-label mb20">TICKET PRICE</label>
+            <input type="number" min="0" step="any" class="border-bottom-input two-col columns" placeholder="$0.00" id="price" name="price[]" value="{{ticket.price|default:'0'|floatformat:2}}">
+          </div>
+          <div class="col20 columns">
+            <label class="dark-label mb20">TICKETS AVAILABLE</label>
+            <input type="number" min="1" step="1" class="border-bottom-input two-col columns" placeholder="1" id="total" name="total[]" value="{{ticket.total|default:'1'}}">
+          </div>
+          <div class="col10 columns v-align-b">
+            <button class="p20 c-center remove_ticket" type="button"><img src="{% static 'img/icon-delete-gray.png' %}" alt=""></button>
+          </div>
+        </div>
+      {% endfor %}
         <div class="one-col prl9 mb40">
           <div class="one-col mb40">
-            <button class="btn-black btn-img"><img src="{% static 'img/icon-ticket.png' %}" alt="">Add another ticket</button>
+            <button class="btn-black btn-img" id="add_ticket" type="button"><img src="{% static 'img/icon-ticket.png' %}" alt="">Add another ticket</button>
           </div>
           <div class="one-col mb40">
             <label>
-              <div class="aqua-input"><input type="checkbox"><span class="check"></span></div>
+              <div class="aqua-input"><input type="checkbox" id = "{{ form.display_remaining_tickets.id_for_label }}" name = "{{ form.display_remaining_tickets.html_name }}"  {{ form.display_remaining_tickets.value|yesno:'checked,' }}><span class="check"></span></div>
               <p>Show the remaining amount of tickets on your event page</p>
             </label>
           </div>
@@ -173,6 +204,27 @@
       var description = $('#{{ form.description.id_for_label }}');
       var cover_trigger = $('.upload-img');
       var cover_trigger_img = $('.upload-img::after');
+      var add_ticket = $('#add_ticket');
+      var ticket_template = $('#ticket_template');
+      var remove_ticket = $('button.remove_ticket');
+
+      $(remove_ticket).click(function(event){
+        event.preventDefault();
+        var container = $(this).parents('.ticket-container');
+        if($('.ticket-container').length > 1){
+          $(container).remove();
+        }else{
+          $(ticket_template).find(':input').val('');
+        }
+      });
+
+      $(add_ticket).click(function(event){
+        event.preventDefault();
+        var row = $(ticket_template).clone(true);
+
+        $(row).insertAfter(ticket_template).find(':input').val('');
+
+      });
 
       $(description).summernote({
         height: 300

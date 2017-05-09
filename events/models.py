@@ -16,7 +16,7 @@ class Event(models.Model):
     ends_date = models.DateField(null=True, verbose_name="ends")
     ends_time = models.TimeField(null=True, verbose_name="")
     description = models.TextField(null=False, blank=False, verbose_name="description")
-    cover = models.ImageField(null=True, verbose_name="cover image")
+    cover = models.ImageField(null=True, verbose_name="cover image", upload_to='events/cover/')
 
     venue = models.CharField(null=False, blank=True, max_length=150, default="", verbose_name="venue name")
     address = models.CharField(null=False, blank=True, max_length=150, default="",
@@ -26,7 +26,7 @@ class Event(models.Model):
     postal_code = models.CharField(null=False, blank=True, max_length=5, default="")
 
     organizer = models.ForeignKey(User, null=True)
-    display_ramaining_tickets = models.BooleanField(default=False)
+    display_remaining_tickets = models.BooleanField(default=False)
 
     @denormalized(models.DecimalField, max_digits=5, decimal_places=2, default=0)
     @depend_on_related('Ticket')
@@ -73,6 +73,34 @@ class Event(models.Model):
     def __str__(self):
         return "{} - {}({})".format(self.name, self.begins_date, self.begins_time)
 
+    def define_ticket_type(self, pk, name, price, total):
+        price = float(price or '1')
+        total = int(total or '1')
+        ticket = None
+        if pk is not None and pk.strip():
+            ticket = self.tickets_types.filter(pk=pk).first()
+        if ticket is None:
+            ticket = Ticket.objects.create(event=self, name=name, price=price or 1, total=total or 1)
+        else:
+            ticket.name = name
+            ticket.price = price
+            ticket.totla = total
+            ticket.save()
+        return ticket
+
+    def clean_tickets(self, exclude=[]):
+        kept_alive = []
+        for ticket in self.tickets_types.all().exclude(pk__in=[e.pk for e in exclude]):
+            if ticket.can_delete:
+                ticket.delete()
+            else:
+                kept_alive.append(ticket)
+        return kept_alive
+
+    @property
+    def tickets(self):
+        return self.tickets_types.all()
+
 
 class Ticket(models.Model):
     event = models.ForeignKey(Event, blank=False, null=False, related_name='tickets_types')
@@ -99,6 +127,12 @@ class Ticket(models.Model):
         if self.available == 0:
             return "Sold Out"
         return "Selling"
+
+    @property
+    def can_delete(self):
+        if self.sold > 0:
+            return False
+        return True
 
 
 class TicketSales(models.Model):

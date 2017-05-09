@@ -36,6 +36,8 @@ class EventView(FormView):
         context = super(EventView, self).get_context_data(**kwargs)
         context['BODY_CLASS'] = self.body_class or ''
         context['mode'] = self.mode
+        if self.event_uuid is not None:
+            context['event'] = Event.objects.filter(uuid=self.event_uuid).first()
         return context
 
     def get_form(self, form_class=None):
@@ -53,6 +55,8 @@ class EventView(FormView):
         else:
             event = get_object_or_404(Event, uuid=self.event_uuid)
             form = form_class(request.POST, request.FILES, instance=event)
+            valid = form.is_valid()
+            self.post_data = request.POST
         if form.is_valid():
             return self.form_valid(form, **kwargs)
         else:
@@ -61,6 +65,17 @@ class EventView(FormView):
     def form_valid(self, form):
         self.event = form.save(commit=True)
         self.event.save()
+        if self.mode == 'update':
+            current_tickets = []
+            ids = self.post_data.getlist('ticket[]') or []
+            names = self.post_data.getlist('name[]') or []
+            prices = self.post_data.getlist('price[]') or []
+            totals = self.post_data.getlist('total[]') or []
+            tickets_data = zip(ids, names, prices, totals)
+            for ticket_data in tickets_data:
+                ticket = self.event.define_ticket_type(*ticket_data)
+                current_tickets.append(ticket)
+            self.event.clean_tickets(exclude=current_tickets)
         return super(EventView, self).form_valid(form)
 
     def get_success_url(self):
