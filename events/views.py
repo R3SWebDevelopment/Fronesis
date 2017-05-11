@@ -1,6 +1,8 @@
 from django.views.generic import TemplateView, ListView
 from django.urls import reverse
 from django.views.generic.edit import FormView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from .forms import EventForm
 from .models import Event
@@ -25,8 +27,13 @@ class MyEventsView(ListView):
     template_name = 'events/my_events.html'
     body_class = 'bg-white'
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.user = request.user
+        return super(MyEventsView, self).dispatch(request=request, **kwargs)
+
     def get_queryset(self):
-        return Event.objects.all()
+        return Event.objects.filter(organizer=self.user)
 
     def get_context_data(self, **kwargs):
         context = super(MyEventsView, self).get_context_data(**kwargs)
@@ -42,6 +49,7 @@ class EventView(FormView):
     form_class = EventForm
     body_class = 'bg-white'
 
+    @method_decorator(login_required)
     def dispatch(self, request, mode='create', event_uuid=None, *args, **kwargs):
         self.mode = mode
         self.event_uuid = event_uuid
