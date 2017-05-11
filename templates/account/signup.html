@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load account %}
+
+
+{% block CONTENT %}
+<div class="c-center t-center">
+  <div class="med-wrap ptb100 c-white">
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'my_events' %}" />
+      <div class="one-col">
+        <div class="heading-separator mb40">
+          <h2 class="t-lyonL">Sign up</h2>
+        </div>
+      {% if form.errors %}
+        <div class="big-box gray-border-box alert-notification">
+          <ul>
+          {% if form.non_field_errors %}
+            <li>
+              {{form.non_field_errors}}
+            </li>
+          {% endif %}
+      {% for field in form %}
+        {% if field.errors %}
+          {% for error in field.errors %}
+            <li>
+              {{error}}
+            </li>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+        <div class="one-col p20">
+          <div class="two-col columns">
+            <label for="{{ form.email.id_for_label }}" class="dark-label mb20">{{ form.email.label|upper }}</label>
+            <input type="email" id = "{{ form.email.id_for_label }}" name = "{{ form.email.html_name }}" value = "{{ form.email.value|default:'' }}" class="border-bottom-input two-col columns" placeholder="Email Address" required>
+          </div>
+        </div>
+        <div class="one-col p20">
+          <div class="two-col columns">
+            <label for="{{ form.password1.id_for_label }}" class="dark-label mb20">{{ form.password1.label|upper }}</label>
+            <input type="password" id = "{{ form.password1.id_for_label }}" name = "{{ form.password1.html_name }}" value = "{{ form.password1.value|default:'' }}" class="border-bottom-input two-col columns" placeholder="Password" required>
+          </div>
+        </div>
+        <div class="one-col p20">
+          <div class="two-col columns">
+            <label for="{{ form.password2.id_for_label }}" class="dark-label mb20">{{ form.password2.label|upper }}</label>
+            <input type="password" id = "{{ form.password2.id_for_label }}" name = "{{ form.password2.html_name }}" value = "{{ form.password2.value|default:'' }}" class="border-bottom-input two-col columns" placeholder="Password again" required>
+          </div>
+        </div>
+      </div>
+      <div class="one-col p20">
+        <div class="submit-wrapper">
+          <button class="stroke-btn-gray">
+            Sign up
+          </button>
+        </div>
+      </div>
+      <div class="one-col p20 c-white t-center">
+        <a href="{% url 'account_reset_password' %}" class="c-white">Olvidé mi contraseña</a>
+        |
+        <a href="{% url 'account_login' %}" class="c-white">Log in</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
