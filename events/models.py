@@ -175,3 +175,9 @@ class TicketSales(models.Model):
 
 class TicketSalesOrder(models.Model):
     pass
+
+
+class PaymentCustomer(models.Model):
+    uuid = models.UUIDField(editable=False, null=False, blank=False)
+    user = models.ForeignKey(User, related_name='payment_customer')
+
