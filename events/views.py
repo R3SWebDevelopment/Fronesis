@@ -86,7 +86,9 @@ class EventView(FormView):
             return self.form_invalid(form, **kwargs)
 
     def form_valid(self, form):
-        self.event = form.save(commit=True)
+        self.event = form.save(commit=False)
+        if self.mode == 'create':
+            self.event.organizer = self.organizer
         self.event.save()
         if self.mode == 'update':
             current_tickets = []
