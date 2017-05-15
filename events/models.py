@@ -3,7 +3,7 @@ from django.db.models import Min, Max, Sum
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.urls import reverse
-from datetime import datetime
+from datetime import datetime, timedelta
 import uuid
 
 from denorm import denormalized, depend_on_related
@@ -187,4 +187,23 @@ class TicketSalesOrder(models.Model):
     total = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     transaction_uuid = models.CharField(max_length=100, null=False, blank=False, default=uuid.uuid4)
 
+
+class ShoppingCart(models.Model):
+    event = models.ForeignKey(Event, related_name='events_shopping_cart', default=0)
+    buyer = models.ForeignKey(User, null=True, default=None)
+    is_guest = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+
+
+def generate_expiration_datetime(minutes=5):
+    now = datetime.now()
+    expiration_datetime = now + timedelta(minutes=minutes)
+    return expiration_datetime
+
+
+class TicketSelection(models.Model):
+    cart = models.ForeignKey(ShoppingCart, default=0, null=False, related_name='tickets_selected')
+    ticket_type = models.ForeignKey(Ticket, null=False, default=0)
+    qty = models.IntegerField(default=1, null=False)
+    expiration = models.DateTimeField(null=False, default=generate_expiration_datetime)
 
