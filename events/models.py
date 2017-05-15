@@ -38,6 +38,8 @@ class Event(models.Model):
     organizer = models.ForeignKey(User, null=True)
     display_remaining_tickets = models.BooleanField(default=False)
 
+    published = models.BooleanField(default=False)
+
     past = PastEvent()
     objects = models.Manager()
 
