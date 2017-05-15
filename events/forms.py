@@ -1,10 +1,10 @@
-from django.forms import ModelForm
-from .models import Event
+from django import forms
+from .models import Event, PaymentCustomer
 
 from django.conf import settings
 
 
-class EventForm(ModelForm):
+class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = '__all__'
@@ -25,3 +25,13 @@ class EventForm(ModelForm):
                 self.fields[field].required = False
         for field in ['ends_time', 'begins_time']:
             self.fields[field].valid_time_formats = settings.VALID_TIME_FORMATS
+
+
+class PaymentForm(forms.Form):
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+    line1 = forms.CharField(required=True)
+    line2 = forms.CharField(required=True)
+    line3 = forms.CharField(required=False)
+    email = forms.EmailField(required=True)
+    phone_number = forms.CharField(required=True)
