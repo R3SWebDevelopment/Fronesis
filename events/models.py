@@ -17,6 +17,24 @@ class PastEvent(models.Manager):
         return super(PastEvent, self).get_queryset().filter(ends_date__lt=today, ends_time__lt=time)
 
 
+class PublishedEvent(models.Manager):
+    def get_queryset(self):
+        now = datetime.now()
+        today = now.date()
+        time = now.time()
+        return super(PublishedEvent, self).get_queryset().filter(published=True).filter(ends_date__gte=today,
+                                                                                        ends_time__gte=time)
+
+
+class PublishedPastEvent(models.Manager):
+    def get_queryset(self):
+        now = datetime.now()
+        today = now.date()
+        time = now.time()
+        return super(PublishedEvent, self).get_queryset().filter(published=True).filter(ends_date__lt=today,
+                                                                                        ends_time__lt=time)
+
+
 class Event(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=False, blank=False)
     name = models.CharField(null=False, blank=False, max_length=150, default="", verbose_name="event name")
@@ -42,6 +60,8 @@ class Event(models.Model):
 
     past = PastEvent()
     objects = models.Manager()
+    published = PublishedEvent()
+    publishedPast = PublishedPastEvent()
 
     class Meta:
         ordering = ['begins_date', 'begins_time']
