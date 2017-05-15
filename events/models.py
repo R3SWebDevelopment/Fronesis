@@ -60,7 +60,7 @@ class Event(models.Model):
 
     past = PastEvent()
     objects = models.Manager()
-    published = PublishedEvent()
+    publishedEvent = PublishedEvent()
     publishedPast = PublishedPastEvent()
 
     class Meta:
