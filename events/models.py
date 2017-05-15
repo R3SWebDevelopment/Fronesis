@@ -173,11 +173,18 @@ class TicketSales(models.Model):
         return ""
 
 
-class TicketSalesOrder(models.Model):
-    pass
-
-
 class PaymentCustomer(models.Model):
     uuid = models.UUIDField(editable=False, null=False, blank=False)
     user = models.ForeignKey(User, related_name='payment_customer')
+
+
+class TicketSalesOrder(models.Model):
+    buyer = models.ForeignKey(PaymentCustomer, related_name='tickets_sales_order', default=0)
+    event = models.ForeignKey(Event, related_name='tickets_sells', default=0)
+    ticket_type = models.ForeignKey(Ticket, related_name='tickets_type_sold', default=0)
+    qty = models.IntegerField(default=1, null=False)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    total = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    transaction_uuid = models.CharField(max_length=100, null=False, blank=False, default=uuid.uuid4)
+
 
