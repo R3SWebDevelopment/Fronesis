@@ -8,6 +8,7 @@
 <br>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
+  {{ form.published }}
   <section style="display: inline-block;">
     <div class="wrap">
       <h1 class="mb20">
@@ -179,9 +180,13 @@
         </div>
         <div class="one-col gray-border-box t-center mb40">
           <button class="btn-black btn-x2 mr20" name="button" type="submit">Save Event, but don’t Publish</button>
-        {% if mode == 'update' %}
-          <button class="btn-aqua btn-x2 mr20" name="button">Publish Your Event</button>
+      {% if mode == 'update' %}
+        {% if event.published %}
+          <button class="btn-aqua btn-x2 mr20" id ="unpublish" name="button">Unpublish Your Event</button>
+        {% else %}
+          <button class="btn-aqua btn-x2 mr20" id ="publish" name="button">Publish Your Event</button>
         {% endif %}
+      {% endif %}
         </div>
       </div>
     </div>
@@ -211,6 +216,20 @@
       var add_ticket = $('#add_ticket');
       var ticket_template = $('#ticket_template');
       var remove_ticket = $('button.remove_ticket');
+      var publish_button = $('#publish');
+      var unpublish_button = $('#unpublish');
+
+      $(publish_button).click(function(){
+        var form = $(this).parents('form');
+        var published = $(form).find('#id_published');
+        $(published).prop('checked', true);
+      });
+
+      $(unpublish_button).click(function(){
+        var form = $(this).parents('form');
+        var published = $(form).find('#id_published');
+        $(published).prop('checked', false);
+      });
 
       $(remove_ticket).click(function(event){
         event.preventDefault();

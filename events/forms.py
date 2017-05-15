@@ -13,8 +13,8 @@ class EventForm(forms.ModelForm):
         super(EventForm, self).__init__(*args, **kwargs)
         instance = kwargs.get('instance', None)
         if instance is not None:
-            required_fields = ['name', 'subtitle', 'begins_date', 'begins_time', 'ends_date', 'ends_time', 'description', 'cover',
-                               'address', 'neighborhood', 'city', 'postal_code']
+            required_fields = ['name', 'subtitle', 'begins_date', 'begins_time', 'ends_date', 'ends_time',
+                               'description', 'cover', 'address', 'neighborhood', 'city', 'postal_code']
         else:
             required_fields = ['name', 'begins_date', 'begins_time', 'ends_date', 'ends_time', 'description', 'cover',
                                'address', 'neighborhood', 'city', 'postal_code']
@@ -23,6 +23,8 @@ class EventForm(forms.ModelForm):
                 self.fields[field].required = True
             else:
                 self.fields[field].required = False
+        for field in ['published']:
+            self.fields[field].widget.attrs['class'] = 'hide'
         for field in ['ends_time', 'begins_time']:
             self.fields[field].valid_time_formats = settings.VALID_TIME_FORMATS
 
