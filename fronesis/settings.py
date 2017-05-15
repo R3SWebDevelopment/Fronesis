@@ -211,7 +211,6 @@ SITE_ID = 1
 if not os.environ.get('S3_BUCKET_NAME'):
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, '.static/')
-    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
     MEDIA_URL = "/media/"
     MEDIA_ROOT = os.path.join(BASE_DIR, '.media/')
@@ -224,7 +223,6 @@ else:
     STATICFILES_LOCATION = 'static'
     STATIC_URL = 'https://s3.amazonaws.com/{}/{}/'.format(
         AWS_STORAGE_BUCKET_NAME, STATICFILES_LOCATION)
-    STATICFILES_STORAGE = 'fronesis.storages.StaticStorage'
 
     MEDIAFILES_LOCATION = 'media'
     MEDIA_URL = 'https://s3.amazonaws.com/{}/{}/'.format(
