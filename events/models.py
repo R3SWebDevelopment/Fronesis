@@ -61,6 +61,8 @@ class Event(models.Model):
 
     published = models.BooleanField(default=False)
 
+    slug = models.SlugField(max_length=250, null=True, blank=True, default="")
+
     past = PastEvent()
     objects = models.Manager()
     publishedEvent = PublishedEvent()
@@ -113,6 +115,10 @@ class Event(models.Model):
 
     @property
     def url(self):
+        year = self.begins_date.date.year
+        month = self.begins_date.date.strftime('%B')
+        day = self.begins_date.day
+
         return self.admin_url
 
     @property
