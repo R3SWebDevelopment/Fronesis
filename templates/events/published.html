@@ -1,0 +1,86 @@
+{% extends 'user-view.html' %}
+{% load static %}
+{% load static %}
+
+
+{% block USER_VIEW %}
+  {{ block.super }}
+<br>
+	<section>
+		<div class="wrap pb60">
+			<h2 class="c-gray t-lyon mb40">Events</h2>
+			<div class="one-col">
+      {% for event in object_list %}
+				<div class="one-third columns card-event">
+					<div class="top" style="background-image: url('{{ event.cover_url }}')"></div>
+					<div class="bottom">
+						<h2 class="t-lyon mb20">
+              <a href="{{event.url}}">
+                {{ event.name }}
+              </a>
+            </h2>
+						<p class="mb20">
+              {{ event.subtitle|default:'<br>'|truncatewords:3}}
+            </p>
+						<p><strong>{{ event.begins_date|date:"F d, Y"}}</strong></p>
+					</div>
+				</div>
+      {% endfor %}
+			</div>
+		</div>
+	</section>
+
+{% if attending_by_you|length > 0 %}
+	<section>
+		<div class="wrap pb60">
+			<h2 class="c-gray t-lyon mb40">Events You are Attending To</h2>
+			<div class="one-col">
+				<div class="one-third columns card-event">
+					<div class="top" style="background-image: url('{{ event.cover_url }}')"></div>
+					<div class="bottom">
+						<h2 class="t-lyon mb20">
+              <a href="{{event.url}}">
+                {{ event.name }}
+              </a>
+            </h2>
+						<p class="mb20">
+              {{ event.subtitle|default:'<br>'|truncatewords:3}}
+            </p>
+						<p><strong>{{ event.begins_date|date:"F d, Y"}}</strong></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endif %}
+
+{% if past_events|length > 0 %}
+	<section>
+		<div class="wrap pb60">
+			<h2 class="c-gray t-lyon mb40">Past Events</h2>
+			<div class="one-col">
+      {% for event in past_events %}
+				<div class="one-third columns card-event">
+					<div class="top" style="background-image: url('{{ event.cover_url }}')"></div>
+					<div class="bottom">
+						<h2 class="t-lyon mb20">
+              <a href="{{event.url}}">
+                {{ event.name }}
+              </a>
+            </h2>
+						<p class="mb20">
+              {{ event.subtitle|default:'<br>'|truncatewords:3}}
+            </p>
+						<p><strong>{{ event.begins_date|date:"F d, Y"}}</strong></p>
+					</div>
+				</div>
+      {% endfor %}
+			</div>
+		</div>
+	</section>
+{% endif %}
+
+{{form}}
+
+{% endblock %}
+

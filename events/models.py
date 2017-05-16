@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.urls import reverse
 from datetime import datetime, timedelta
+from django.db.models import Q
 import uuid
 
 from denorm import denormalized, depend_on_related
@@ -31,8 +32,10 @@ class PublishedPastEvent(models.Manager):
         now = datetime.now()
         today = now.date()
         time = now.time()
-        return super(PublishedPastEvent, self).get_queryset().filter(published=True).filter(ends_date__lt=today,
-                                                                                            ends_time__lt=time)
+        qs_events_before_today = Q(ends_date__lt=today)
+        qs_events_early_today = Q(ends_date=today, ends_time__lt=time)
+        return super(PublishedPastEvent, self).get_queryset().filter(published=True).\
+            filter(qs_events_before_today | qs_events_early_today)
 
 
 class Event(models.Model):
