@@ -1,3 +1,4 @@
+from django.template.defaultfilters import slugify
 from django.db import models
 from django.db.models import Min, Max, Sum
 from django.core.exceptions import ObjectDoesNotExist
@@ -6,6 +7,7 @@ from django.urls import reverse
 from datetime import datetime, timedelta
 from django.db.models import Q
 import uuid
+from decimal import Decimal
 
 from denorm import denormalized, depend_on_related
 
@@ -38,6 +40,11 @@ class PublishedPastEvent(models.Manager):
             filter(qs_events_before_today | qs_events_early_today)
 
 
+class PublishedAllEvent(models.Manager):
+    def get_queryset(self):
+        return super(PublishedAllEvent, self).get_queryset().filter(published=True)
+
+
 class Event(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=False, blank=False)
     name = models.CharField(null=False, blank=False, max_length=150, default="", verbose_name="event name")
@@ -67,6 +74,7 @@ class Event(models.Model):
     objects = models.Manager()
     publishedEvent = PublishedEvent()
     publishedPast = PublishedPastEvent()
+    published_all = PublishedAllEvent()
 
     class Meta:
         ordering = ['begins_date', 'begins_time']
@@ -115,11 +123,16 @@ class Event(models.Model):
 
     @property
     def url(self):
-        year = self.begins_date.date.year
-        month = self.begins_date.date.strftime('%B')
+        year = self.begins_date.year
+        month = self.begins_date.strftime('%B')
         day = self.begins_date.day
-
-        return self.admin_url
+        return reverse('public_event', kwargs={
+            'year': year,
+            'month': month,
+            'day': day,
+            'slug': self.slug,
+            'event_uuid': self.uuid
+        })
 
     @property
     def cover_url(self):
@@ -134,17 +147,17 @@ class Event(models.Model):
 
     def define_ticket_type(self, pk, name, price, total):
         if name is not None and name.strip():
-            price = float(price or '1')
+            price = "%.2f" % round(float(price), 2)
             total = int(total or '1')
             ticket = None
             if pk is not None and pk.strip():
                 ticket = self.tickets_types.filter(pk=pk).first()
             if ticket is None:
-                ticket = Ticket.objects.create(event=self, name=name, price=price or 1, total=total or 1)
+                ticket = Ticket.objects.create(event=self, name=name, price=price, total=total)
             else:
                 ticket.name = name
                 ticket.price = price
-                ticket.totla = total
+                ticket.total = total
                 ticket.save()
             return ticket
         else:
@@ -163,11 +176,15 @@ class Event(models.Model):
     def tickets(self):
         return self.tickets_types.all()
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Event, self).save(*args, **kwargs)
+
 
 class Ticket(models.Model):
     event = models.ForeignKey(Event, blank=False, null=False, related_name='tickets_types')
     name = models.CharField(max_length=100, blank=False, null=False)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     total = models.IntegerField(blank=False, null=False, default=1)
 
     @denormalized(models.IntegerField, default=0)
