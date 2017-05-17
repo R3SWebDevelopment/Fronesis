@@ -307,4 +307,5 @@ class TicketSelection(models.Model):
     expiration = models.DateTimeField(null=True, default=None)
     selected = models.BooleanField(default=False)
 
-
+    class Meta:
+        order_with_respect_to = 'ticket_type'
