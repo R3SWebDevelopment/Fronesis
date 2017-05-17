@@ -178,6 +178,7 @@ class EventsPublished(ListView):
         context = super(EventsPublished, self).get_context_data(**kwargs)
         context['past_events'] = Event.publishedPast.all()
         context['BODY_CLASS'] = self.body_class or ''
+        s
         return context
 
 
@@ -188,7 +189,7 @@ class EventDetailPublished(DetailView):
 
     def dispatch(self, request, year, month, day, slug, event_uuid, *args, **kwargs):
         begins_date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%B/%Y').date()
-        self.event = Event.published_all.filter(uuid=event_uuid, begins_date=begins_date, slug=slug)
+        self.event = Event.published_all.filter(uuid=event_uuid, begins_date=begins_date, slug=slug).first()
         return super(EventDetailPublished, self).dispatch(request=request)
 
     def get_context_data(self, **kwargs):

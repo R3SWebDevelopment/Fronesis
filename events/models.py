@@ -25,8 +25,10 @@ class PublishedEvent(models.Manager):
         now = datetime.now()
         today = now.date()
         time = now.time()
-        return super(PublishedEvent, self).get_queryset().filter(published=True).filter(begins_date__gte=today,
-                                                                                        begins_time__gte=time)
+        qs_events_later_today = Q(begins_date=today, begins_time__gte=time)
+        qs_events_after_today = Q(begins_date__gt=today)
+        return super(PublishedEvent, self).get_queryset().filter(published=True).\
+            filter(qs_events_later_today | qs_events_after_today)
 
 
 class PublishedPastEvent(models.Manager):
