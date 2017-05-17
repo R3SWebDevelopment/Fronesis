@@ -218,6 +218,9 @@ class Ticket(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)
     total = models.IntegerField(blank=False, null=False, default=1)
 
+    class Meta:
+        ordering = ['price', 'name']
+
     @denormalized(models.IntegerField, default=0)
     @depend_on_related('TicketSales')
     def sold(self):
