@@ -153,6 +153,19 @@ class Event(models.Model):
         })
 
     @property
+    def get_tickets_url(self):
+        year = self.begins_date.year
+        month = self.begins_date.strftime('%B')
+        day = self.begins_date.day
+        return reverse('public_event_tickets', kwargs={
+            'year': year,
+            'month': month,
+            'day': day,
+            'slug': self.slug,
+            'event_uuid': self.uuid
+        })
+
+    @property
     def cover_url(self):
         try:
             return self.cover.url
@@ -273,6 +286,8 @@ def generate_expiration_datetime(minutes=5):
 class TicketSelection(models.Model):
     cart = models.ForeignKey(ShoppingCart, default=0, null=False, related_name='tickets_selected')
     ticket_type = models.ForeignKey(Ticket, null=False, default=0)
-    qty = models.IntegerField(default=1, null=False)
+    qty = models.IntegerField(default=0, null=False)
     expiration = models.DateTimeField(null=False, default=generate_expiration_datetime)
+    selected = models.BooleanField(default=False)
+
 
