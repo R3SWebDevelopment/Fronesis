@@ -1,8 +1,10 @@
-from .views import DummyView, CreateEventView, MyEventsView, EventsPublished, EventView
+from .views import DummyView, CreateEventView, MyEventsView, EventsPublished, EventView, EventDetailPublished
 from django.conf.urls import url
 
 urlpatterns = [
     url(r'^$', EventsPublished.as_view(), name='events'),
+    url(r'^(?P<year>[0-9]{4})/(?P<month>\w+)/(?P<day>[0-9]{2})/(?P<slug>[\w-]+)/(?P<event_uuid>[\w-]+)/$',
+        EventDetailPublished.as_view(), name='public_event'),
     url(r'^my_events/$', MyEventsView.as_view(), name='my_events'),
     url(r'^my_events/create/$', CreateEventView.as_view(), {'mode': 'create'}, name='my_events_create'),
     url(r'^my_events/(?P<event_uuid>[0-9A-Fa-f-]+)/edit/$', EventView.as_view(), {'mode': 'update'},

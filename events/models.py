@@ -79,7 +79,7 @@ class Event(models.Model):
     class Meta:
         ordering = ['begins_date', 'begins_time']
 
-    @denormalized(models.DecimalField, max_digits=5, decimal_places=2, default=0)
+    @denormalized(models.DecimalField, max_digits=8, decimal_places=2, default=0)
     @depend_on_related('Ticket')
     def min_ticket_price(self):
         try:
@@ -87,7 +87,7 @@ class Event(models.Model):
         except ObjectDoesNotExist:
             return 0
 
-    @denormalized(models.DecimalField, max_digits=5, decimal_places=2, default=0)
+    @denormalized(models.DecimalField, max_digits=8, decimal_places=2, default=0)
     @depend_on_related('Ticket')
     def max_ticket_price(self):
         try:

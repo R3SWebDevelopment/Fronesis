@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
+from datetime import datetime
 from .forms import EventForm
 from .models import Event
 
@@ -178,3 +179,22 @@ class EventsPublished(ListView):
         context['past_events'] = Event.publishedPast.all()
         context['BODY_CLASS'] = self.body_class or ''
         return context
+
+
+class EventDetailPublished(DetailView):
+
+    template_name = 'events/public-view-event.html'
+    body_class = 'bg-white'
+
+    def dispatch(self, request, year, month, day, slug, event_uuid, *args, **kwargs):
+        begins_date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%B/%Y').date()
+        self.event = Event.published_all.filter(uuid=event_uuid, begins_date=begins_date, slug=slug)
+        return super(EventDetailPublished, self).dispatch(request=request)
+
+    def get_context_data(self, **kwargs):
+        context = super(EventDetailPublished, self).get_context_data(**kwargs)
+        context['BODY_CLASS'] = self.body_class or ''
+        return context
+
+    def get_object(self, queryset=None):
+        return self.event
