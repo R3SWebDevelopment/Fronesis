@@ -278,10 +278,24 @@ class ShoppingCart(models.Model):
     buyer = models.ForeignKey(User, null=True, default=None)
     is_guest = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
+    selected = models.BooleanField(default=False)
+    checkout = models.BooleanField(default=False)
+
+    first_name = models.CharField(blank=True, null=True, default='', max_length=100)
+    last_name = models.CharField(blank=True, null=True, default='', max_length=100)
+    line1 = models.CharField(blank=True, null=True, default='', max_length=150)
+    line2 = models.CharField(blank=True, null=True, default='', max_length=150)
+    line3 = models.CharField(blank=True, null=True, default='', max_length=150)
+    email = models.CharField(blank=True, null=True, default='', max_length=150)
+    phone_number = models.CharField(blank=True, null=True, default='', max_length=10)
 
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.is_guest = self.buyer is None
+            if self.is_guest is False:
+                self.first_name = self.buyer.first_name
+                self.last_name = self.buyer.last_name
+                self.email = self.buyer.email
         super(ShoppingCart, self).save(*args, **kwargs)
 
     def update_event_tickets(self):
