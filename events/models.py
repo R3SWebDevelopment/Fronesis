@@ -276,6 +276,20 @@ class ShoppingCart(models.Model):
     is_guest = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
 
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.is_guest = self.buyer is None
+        super(ShoppingCart, self).save(*args, **kwargs)
+
+    def update_event_tickets(self):
+        for ticket in self.event.tickets:
+            ticket_selection, created = TicketSelection.objects.get_or_create(cart=self, ticket_type=ticket)
+            if created:
+                ticket_selection.qty = 0
+                ticket_selection.selected = False
+                ticket_selection.expiration = None
+                ticket_selection.save()
+
 
 def generate_expiration_datetime(minutes=5):
     now = datetime.now()
@@ -287,7 +301,7 @@ class TicketSelection(models.Model):
     cart = models.ForeignKey(ShoppingCart, default=0, null=False, related_name='tickets_selected')
     ticket_type = models.ForeignKey(Ticket, null=False, default=0)
     qty = models.IntegerField(default=0, null=False)
-    expiration = models.DateTimeField(null=False, default=generate_expiration_datetime)
+    expiration = models.DateTimeField(null=True, default=None)
     selected = models.BooleanField(default=False)
 
 
