@@ -7,7 +7,7 @@ from django.urls import reverse
 from datetime import datetime, timedelta
 from django.db.models import Q
 import uuid
-from decimal import Decimal
+
 
 from denorm import denormalized, depend_on_related
 
@@ -80,6 +80,22 @@ class Event(models.Model):
 
     class Meta:
         ordering = ['begins_date', 'begins_time']
+
+    @property
+    def assistants(self):
+        return User.objects.all()
+
+    @property
+    def organizer_name(self):
+        return self.organizer.get_full_name()
+
+    @property
+    def begins_timestamp(self):
+        return datetime.combine(self.begins_date, self.begins_time)
+
+    @property
+    def ends_timestamp(self):
+        return datetime.combine(self.ends_date, self.ends_time)
 
     @denormalized(models.DecimalField, max_digits=8, decimal_places=2, default=0)
     @depend_on_related('Ticket')

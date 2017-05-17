@@ -178,7 +178,6 @@ class EventsPublished(ListView):
         context = super(EventsPublished, self).get_context_data(**kwargs)
         context['past_events'] = Event.publishedPast.all()
         context['BODY_CLASS'] = self.body_class or ''
-        s
         return context
 
 
