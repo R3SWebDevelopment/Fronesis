@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+<form method="post">
+  {% csrf_token %}
+  <br>
+	<section>
+		<div class="wrap">
+			<div class="one-col">
+				<div class="one-col mb40">
+					<div class="profile-event-thumb mr20" style="background-image: url('{{ object.cover_url }}')"></div>
+					<div class="one-third">
+						<h1 class="mb20px">{{ object.name }} - {{ object.subtitle }}</h1>
+						<p class="mb20">
+              {{ object.description|safe }}
+            </p>
+						<p><strong>{{ object.begins_date|date:'F d, Y' }}</strong></p>
+					</div>
+				</div>
+				<div class="listed-elements mb40">
+        {% if object.organizer == user %}
+          <a href="{{ object.admin_url }}">
+            <button class="btn-black btn-x1 mr20">
+              Edit Event Details
+            </button>
+          </a>
+        {% endif %}
+          <a href="{{ object.url }}">
+            <button class="btn-black btn-x1 mr20">
+              View Event
+            </button>
+          </a>
+				</div>
+			</div>
+    {% if object.display_remaining_tickets %}
+			<div class="one-col mb40">
+				<div class="progress-bar-wrap">
+					<div class="title">
+						<div class="left-txt c-gray"><p>TICKETS SOLD</p></div>
+						<div class="right-txt c-gray"><p>TICKETS PENDING</p></div>
+					</div>
+					<div class="aqua-progress-bar">
+						<div class="left-txt c-white">{{ object.tickets_sold }}</div>
+						<div class="right-txt c-gray">{{ object.tickets_available }}</div>
+						<span class="bar" style="width:{{ object.sells_percentage|default:'0' }}%;"></span>
+					</div>
+				</div>
+			</div>
+    {% endif %}
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="heading-separator mb40">
+      {% if no_tickets_selected %}
+        <h1 style="text-align: center; color:red;">
+          You need to select at least one ticket
+        </h1>
+      {% endif %}
+				<h2 class="t-lyonL c-gray">Select Tickets</h2>
+
+			</div>
+			<table class="table-border-bottom mb40">
+				<tr>
+					<th>TICKET TYPE</th>
+					<th>PRICE</th>
+					<th>QTY</th>
+          <th>SUBTOTAL</th>
+				</tr>
+      {{ form.management_form }}
+      {% for ticket in form %}
+      {{ ticket.id }}
+				<tr data-price="{{ ticket.price_label.value }}">
+					<td>
+            <strong>
+              {{ ticket.ticket_label.value }}
+            </strong>
+          </td>
+					<td>
+            MX ${{ ticket.price_label.value }}
+          </td>
+					<td>
+            {{ ticket.qty }}
+          </td>
+          <td>MX $<span class="subtotal">0.00</span></td>
+				</tr>
+      {% endfor %}
+        <tr>
+          <td colspan="3" style="text-align: right;">
+            Total:
+          </td>
+          <td>
+            MX $<span class="total">0.00</span>
+          </td>
+        </tr>
+			</table>
+		</div>
+	</section>
+  <section>
+    <div class="one-col gray-border-box t-center mb40">
+      <a href="{{object.url}}">
+        <button class="btn-black btn-x2 mr20" name="button" type="button">Cancel</button>
+      </a>
+      <button class="btn-aqua btn-x2 mr20" name="button" type="submit">Go to Check-out</button>
+    </div>
+  </section>
+</form>
+
+{% endblock %}
+
+{% block SCRIPT %}
+{{ block.super }}
+<script>
+  $('body').ready(function(){
+    var qty_input = $(this).find('select.qty_input');
+    $(qty_input).change(function(){
+      var qty = $(this).val();
+      var price = $(this).parents('tr').data('price');
+      var subtotal = price * qty
+      $(this).parents('tr').find('span.subtotal').text(subtotal.toFixed(2))
+      var total = 0;
+      $(this).parents('table').find('td > span.subtotal').each(function(){
+        total += $(this).text() * 1;
+      }).parents('table').find('tr > td > span.total').text(total.toFixed(2));
+    });
+  });
+</script>
+{% endblock %}

@@ -1,6 +1,6 @@
 from django import forms
-from .models import Event, PaymentCustomer
-
+from .models import Event, ShoppingCart, TicketSelection
+from django.forms.models import modelformset_factory
 from django.conf import settings
 
 
@@ -29,11 +29,33 @@ class EventForm(forms.ModelForm):
             self.fields[field].valid_time_formats = settings.VALID_TIME_FORMATS
 
 
-class PaymentForm(forms.Form):
-    first_name = forms.CharField(required=True)
-    last_name = forms.CharField(required=True)
-    line1 = forms.CharField(required=True)
-    line2 = forms.CharField(required=True)
-    line3 = forms.CharField(required=False)
-    email = forms.EmailField(required=True)
-    phone_number = forms.CharField(required=True)
+class EventGetTicketForm(forms.ModelForm):
+    class Meta:
+        model = ShoppingCart
+        fields = '__all__'
+
+
+class TicketSelectionForm(forms.ModelForm):
+    ticket_label = forms.CharField(required=False)
+    price_label = forms.CharField(required=False)
+
+    class Meta:
+        model = TicketSelection
+        fields = ['qty']
+
+    def __init__(self, *args, **kwargs):
+        super(TicketSelectionForm, self).__init__(*args, **kwargs)
+        instance = kwargs.get('instance', None)
+        if instance is not None:
+            self.fields['ticket_label'].initial = instance.ticket_type.name
+            self.fields['price_label'].initial = instance.ticket_type.price
+            available_tickets = ((v, v) for v in range(0, instance.ticket_type.available + 1))
+            self.fields['qty'].widget = forms.Select(choices=available_tickets, attrs={'class': 'qty_input'})
+
+    def save(self, commit=True, *args, **kwargs):
+        ticket = super(TicketSelectionForm, self).save(commit=False, *args, **kwargs)
+        if ticket.qty > 0:
+            ticket.select_ticket()
+
+
+TicketSelectionFormSet = modelformset_factory(form=TicketSelectionForm, model=TicketSelection, extra=0)

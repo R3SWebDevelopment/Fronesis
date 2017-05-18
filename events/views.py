@@ -1,12 +1,14 @@
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, FormView
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 from datetime import datetime
-from .forms import EventForm
-from .models import Event
+from .forms import EventForm, EventGetTicketForm, TicketSelectionFormSet
+from .models import Event, ShoppingCart, TicketSelection
+from django.forms.forms import NON_FIELD_ERRORS
 
 
 class DummyView(TemplateView):
@@ -189,6 +191,8 @@ class EventDetailPublished(DetailView):
     def dispatch(self, request, year, month, day, slug, event_uuid, *args, **kwargs):
         begins_date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%B/%Y').date()
         self.event = Event.published_all.filter(uuid=event_uuid, begins_date=begins_date, slug=slug).first()
+        if self.event is None:
+            raise Http404
         return super(EventDetailPublished, self).dispatch(request=request)
 
     def get_context_data(self, **kwargs):
@@ -198,3 +202,63 @@ class EventDetailPublished(DetailView):
 
     def get_object(self, queryset=None):
         return self.event
+
+
+class EventGetTicket(FormView):
+    template_name = 'events/get-tickets.html'
+    form_class = TicketSelectionFormSet
+    body_class = 'bg-white'
+    no_tickets_selected=False
+
+    def dispatch(self, request, year, month, day, slug, event_uuid, *args, **kwargs):
+        self.request = request
+        begins_date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%B/%Y').date()
+        self.event = Event.published_all.filter(uuid=event_uuid, begins_date=begins_date, slug=slug).first()
+        self.user = request.user
+        if self.event is None:
+            raise Http404
+        return super(EventGetTicket, self).dispatch(request=request)
+
+    def get(self, request, *args, **kwargs):
+        cart_id = self.request.session.get('ticket_cart_id', None)
+        buyer = self.request.user if self.request.user is not None or self.request.user.is_authenticated else None
+        try:
+            self.cart = ShoppingCart.objects.get(id=cart_id, event=self.event, buyer=buyer)
+        except ShoppingCart.DoesNotExist:
+            self.cart = ShoppingCart.objects.create(event=self.event, buyer=buyer)
+        self.cart.update_event_tickets()
+        self.request.session['ticket_cart_id'] = self.cart.id
+        self.ticket_selection = TicketSelectionFormSet(queryset=TicketSelection.objects.filter(cart=self.cart))
+        return super(EventGetTicket, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        cart_id = self.request.session.get('ticket_cart_id', None)
+        buyer = self.request.user if self.request.user is not None or self.request.user.is_authenticated else None
+        try:
+            self.cart = ShoppingCart.objects.get(id=cart_id, event=self.event, buyer=buyer)
+        except ShoppingCart.DoesNotExist:
+            pass
+        self.ticket_selection = TicketSelectionFormSet(request.POST,
+                                                       queryset=TicketSelection.objects.filter(cart=self.cart))
+        if self.ticket_selection.is_valid():
+            total_ticket_selected = 0
+            for ticket in self.ticket_selection.cleaned_data:
+                total_ticket_selected += ticket.get('qty', 0)
+            if total_ticket_selected > 0:
+                self.ticket_selection.save()
+                return self.form_valid(self.ticket_selection, **kwargs)
+            else:
+                self.no_tickets_selected = True
+                self.ticket_selection = TicketSelectionFormSet(queryset=TicketSelection.objects.filter(cart=self.cart))
+                return self.form_invalid(self.ticket_selection, **kwargs)
+        else:
+            return self.form_invalid(self.ticket_selection, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(EventGetTicket, self).get_context_data(**kwargs)
+        context['form'] = self.ticket_selection
+        context['BODY_CLASS'] = self.body_class or ''
+        context['object'] = self.event
+        context['user'] = self.user
+        context['no_tickets_selected'] = self.no_tickets_selected
+        return context

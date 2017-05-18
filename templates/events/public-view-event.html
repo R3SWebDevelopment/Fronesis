@@ -29,7 +29,11 @@
       <div class="one-col mb40">
         <p class="c-aqua mb20">TICKETS</p>
         <p class="mb20">From <strong>${{ object.min_ticket_price|default:'0.00' }}MXN</strong>  to <strong>${{ object.max_ticket_price|default:'0.00' }}MXN</strong></p>
-        <button class="btn-aqua btn-x2">Get Tickets</button>
+        <a href="{{ object.get_tickets_url }}">
+          <button class="btn-aqua btn-x2">
+            Get Tickets
+          </button>
+        </a>
       </div>
       <div class="one-col mb40">
         <p class="c-aqua mb20">DATE AND TIME</p>

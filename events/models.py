@@ -135,6 +135,10 @@ class Event(models.Model):
         return self.total_tickets - self.tickets_sold
 
     @property
+    def sells_percentage(self):
+        return (self.tickets_sold * 100) / self.total_tickets
+
+    @property
     def admin_url(self):
         uuid = "{}".format(self.uuid)
         return reverse('my_events_update', kwargs={'event_uuid': uuid})
@@ -323,3 +327,8 @@ class TicketSelection(models.Model):
 
     class Meta:
         order_with_respect_to = 'ticket_type'
+
+    def select_ticket(self):
+        self.selected = True
+        self.expiration = generate_expiration_datetime()
+        self.save()
