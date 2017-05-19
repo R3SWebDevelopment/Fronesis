@@ -23,6 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
 
+    'django_celery_results',
+
     'drum.links',
     'mezzanine.boot',
     'mezzanine.conf',
