@@ -38,6 +38,7 @@ class EventGetTicketForm(forms.ModelForm):
     class Meta:
         model = ShoppingCart
         fields = '__all__'
+        exclude = ['buyer', 'event']
 
 
 class TicketSelectionForm(forms.ModelForm):

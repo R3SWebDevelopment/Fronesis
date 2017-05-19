@@ -8,7 +8,6 @@ from django.http import Http404
 from datetime import datetime
 from .forms import EventForm, EventGetTicketForm, TicketSelectionFormSet
 from .models import Event, ShoppingCart, TicketSelection
-from django.forms.forms import NON_FIELD_ERRORS
 
 
 class DummyView(TemplateView):
@@ -293,6 +292,23 @@ class EventGetTicketCheckOut(FormView):
                                                        filter(selected=True))
         self.form = EventGetTicketForm(instance=self.cart)
         return super(EventGetTicketCheckOut, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.ticket_selection = TicketSelectionFormSet(queryset=TicketSelection.objects.filter(cart=self.cart).
+                                                       filter(selected=True))
+        self.form = EventGetTicketForm(request.POST, instance=self.cart)
+        form = self.form
+        errors = self.form.errors
+        valid = self.form.is_valid()
+        s
+        if self.form.is_valid():
+            return self.form_invalid(self.form, **kwargs)
+        else:
+            return self.form_invalid(self.form, **kwargs)
+
+    def form_valid(self, form):
+        self.cart = self.form.save()
+        return super(EventGetTicketCheckOut, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(EventGetTicketCheckOut, self).get_context_data(**kwargs)
