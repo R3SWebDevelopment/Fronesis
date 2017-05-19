@@ -291,3 +291,7 @@ else:
     set_dynamic_settings(globals())
 
 VALID_TIME_FORMATS = ['%H:%M', '%I:%M']
+
+# Celery settings
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = 'django-cache'
