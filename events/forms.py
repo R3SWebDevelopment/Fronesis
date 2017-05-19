@@ -30,6 +30,11 @@ class EventForm(forms.ModelForm):
 
 
 class EventGetTicketForm(forms.ModelForm):
+    credit_card_number = forms.CharField(label='Credit Card Number', required=True, initial="")
+    credit_card_exp_month = forms.CharField(label='Expiration Month', required=True, initial="")
+    credit_card_exp_year = forms.CharField(label='Expiration Year', required=True, initial="")
+    credit_card_cvv = forms.CharField(label='CVV', required=True, initial='')
+
     class Meta:
         model = ShoppingCart
         fields = '__all__'
@@ -38,6 +43,7 @@ class EventGetTicketForm(forms.ModelForm):
 class TicketSelectionForm(forms.ModelForm):
     ticket_label = forms.CharField(required=False)
     price_label = forms.CharField(required=False)
+    total_label = forms.CharField(required=False)
 
     class Meta:
         model = TicketSelection
@@ -51,6 +57,7 @@ class TicketSelectionForm(forms.ModelForm):
             self.fields['price_label'].initial = instance.ticket_type.price
             available_tickets = ((v, v) for v in range(0, instance.ticket_type.available + 1))
             self.fields['qty'].widget = forms.Select(choices=available_tickets, attrs={'class': 'qty_input'})
+            self.fields['total_label'].initial = instance.ticket_type.price * instance.qty
 
     def save(self, commit=True, *args, **kwargs):
         ticket = super(TicketSelectionForm, self).save(commit=False, *args, **kwargs)

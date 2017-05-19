@@ -7,6 +7,7 @@ from django.urls import reverse
 from datetime import datetime, timedelta
 from django.db.models import Q
 import uuid
+from django.contrib.humanize.templatetags.humanize import intcomma
 
 
 from denorm import denormalized, depend_on_related
@@ -170,6 +171,19 @@ class Event(models.Model):
         })
 
     @property
+    def get_tickets_checkout_url(self):
+        year = self.begins_date.year
+        month = self.begins_date.strftime('%B')
+        day = self.begins_date.day
+        return reverse('public_event_tickets_checkout', kwargs={
+            'year': year,
+            'month': month,
+            'day': day,
+            'slug': self.slug,
+            'event_uuid': self.uuid
+        })
+
+    @property
     def cover_url(self):
         try:
             return self.cover.url
@@ -287,9 +301,9 @@ class ShoppingCart(models.Model):
 
     first_name = models.CharField(blank=True, null=True, default='', max_length=100)
     last_name = models.CharField(blank=True, null=True, default='', max_length=100)
-    line1 = models.CharField(blank=True, null=True, default='', max_length=150)
-    line2 = models.CharField(blank=True, null=True, default='', max_length=150)
-    line3 = models.CharField(blank=True, null=True, default='', max_length=150)
+    line1 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Street Name')
+    line2 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Neighborhood')
+    line3 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='City and State')
     email = models.CharField(blank=True, null=True, default='', max_length=150)
     phone_number = models.CharField(blank=True, null=True, default='', max_length=10)
 
@@ -311,6 +325,17 @@ class ShoppingCart(models.Model):
                 ticket_selection.expiration = None
                 ticket_selection.save()
 
+    @property
+    def total(self):
+        total = 0
+        for ticket in self.tickets_selected.filter(selected=True):
+            total += ticket.total
+        return total
+
+    @property
+    def total_label(self):
+        return intcomma(self.total)
+
 
 def generate_expiration_datetime(minutes=5):
     now = datetime.now()
@@ -327,6 +352,12 @@ class TicketSelection(models.Model):
 
     class Meta:
         order_with_respect_to = 'ticket_type'
+
+    @property
+    def total(self):
+        if self.selected:
+            return self.qty * self.ticket_type.price
+        return 0
 
     def select_ticket(self):
         self.selected = True
