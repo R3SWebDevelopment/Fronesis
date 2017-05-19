@@ -294,4 +294,5 @@ VALID_TIME_FORMATS = ['%H:%M', '%I:%M']
 
 # Celery settings
 CELERY_RESULT_BACKEND = 'django-db'
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 CELERY_RESULT_BACKEND = 'django-cache'
