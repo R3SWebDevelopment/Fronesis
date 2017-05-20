@@ -1,5 +1,5 @@
 import os
-import djcelery
+#import djcelery
 
 
 from django.core.wsgi import get_wsgi_application
@@ -10,4 +10,4 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fronesis.settings")
 application = get_wsgi_application()
 application = DjangoWhiteNoise(application)
 
-djcelery.setup_loader()
+# djcelery.setup_loader()

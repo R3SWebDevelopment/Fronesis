@@ -23,8 +23,6 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
 
-    'django_celery_results',
-
     'drum.links',
     'mezzanine.boot',
     'mezzanine.conf',
@@ -292,7 +290,11 @@ else:
 
 VALID_TIME_FORMATS = ['%H:%M', '%I:%M']
 
-# Celery settings
-CELERY_RESULT_BACKEND = 'django-db'
-BROKER_URL = 'amqp://guest:guest@localhost:5672//'
-CELERY_RESULT_BACKEND = 'django-cache'
+# celery
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://redis:6379/0')
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ENABLE_UTC = True
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
