@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 import uuid
 from django.contrib.humanize.templatetags.humanize import intcomma
+from .tasks import check_tickets_reservation
 
 
 from denorm import denormalized, depend_on_related
@@ -270,6 +271,10 @@ class TicketSales(models.Model):
     event = models.ForeignKey(Event, blank=False, null=False, related_name='tickets_sales')
     ticket_type = models.ForeignKey(Ticket, blank=False, null=False, related_name='ticket_type_sales')
     buyer = models.ForeignKey(User, blank=False, null=False, related_name='tickets_bought')
+    credit_card = models.ForeignKey('PaymentCreditCard', blank=False, null=False, default=0,
+                                    related_name='tickets_bought')
+    payment_authorization = models.CharField(null=False, blank=False, default='99999999', max_length=30)
+    uuid = models.UUIDField(editable=False, null=False, blank=False, default=uuid.uuid4)
 
     @denormalized(models.CharField, null=False, blank=False, max_length=150, default='NO NAME')
     def buyer_name(self):
@@ -279,6 +284,12 @@ class TicketSales(models.Model):
 class PaymentCustomer(models.Model):
     uuid = models.UUIDField(editable=False, null=False, blank=False)
     user = models.ForeignKey(User, related_name='payment_customer')
+
+
+class PaymentCreditCard(models.Model):
+    customer = models.ForeignKey(PaymentCustomer, blank=False, null=False, default=0, related_name='credit_card')
+    uuid = models.UUIDField(editable=False, null=False, blank=False)
+    credit_card_number = models.CharField(max_length=19, null=False, blank=False, default='**** **** **** ****')
 
 
 class TicketSalesOrder(models.Model):
@@ -336,6 +347,13 @@ class ShoppingCart(models.Model):
     def total_label(self):
         return intcomma(self.total)
 
+    def asign_tickets(self):
+        pass
+
+    @property
+    def tickets_selected(self):
+        return self.tickets_selected.filter(selected=True).filter(qty__gt=0)
+
 
 def generate_expiration_datetime(minutes=5):
     now = datetime.now()
@@ -363,3 +381,14 @@ class TicketSelection(models.Model):
         self.selected = True
         self.expiration = generate_expiration_datetime()
         self.save()
+        # Execute a ticket reservation check one second later the expiration date
+        check_tickets_reservation.apply_async(eta=self.expiration + timedelta(seconds=1))
+
+    def check_ticket_reservation(self):
+        # Checks if the ticket reservation time has expired, if does release the tickets and clear the expiration
+        now = datetime.now()
+        if self.selected and now > self.expiration:
+            self.selected = False
+            self.qty = 0
+            self.expiration = None
+            self.save()
