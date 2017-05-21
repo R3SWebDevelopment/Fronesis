@@ -31,6 +31,7 @@ class PaymentGateway(object):
 
     def set_customer(self, first_name, last_name, email, line1, line2, line3, city, state, postal_code, phone_number,
                      country_code='MX'):
+        to_create = True
         from events.models import PaymentCustomer
         user = User.objects.filter(email=email).first()
         self.address = {
@@ -43,6 +44,7 @@ class PaymentGateway(object):
             "country_code": country_code
         }
         if user is not None:
+            to_create = False
             try:
                 self.payment_customer = PaymentCustomer.objects.get(user=user)
                 self.customer = openpay.Customer.retrieve(self.payment_customer.uuid)
@@ -64,7 +66,7 @@ class PaymentGateway(object):
                     self.customer_error = None
                 except openpay.error.InvalidRequestError as customer_error:
                     self.customer_error = customer_error
-        return self.customer.get('id')
+        return self.customer.id, to_create
 
     def set_credit_card(self, card_holder, number, month, year, cvv):
         if self.debut:

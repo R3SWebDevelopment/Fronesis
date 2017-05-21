@@ -314,9 +314,19 @@ class ShoppingCart(models.Model):
     last_name = models.CharField(blank=True, null=True, default='', max_length=100)
     line1 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Street Name')
     line2 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Neighborhood')
-    line3 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='City and State')
+    line3 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Reference')
+    city = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='City')
+    state = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='State')
     email = models.CharField(blank=True, null=True, default='', max_length=150)
-    phone_number = models.CharField(blank=True, null=True, default='', max_length=10)
+    phone_number = models.CharField(blank=True, null=True, default='', max_length=10, verbose_name='Phone Number')
+
+    card_holder = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Card Holder')
+    order_id = models.CharField(blank=True, null=True, default='', max_length=150)
+
+    def assign_user(self, user):
+        self.buyer = user
+        self.is_guest = False
+        self.save()
 
     def save(self, *args, **kwargs):
         if self.pk is None:
@@ -347,7 +357,7 @@ class ShoppingCart(models.Model):
     def total_label(self):
         return intcomma(self.total)
 
-    def asign_tickets(self):
+    def asign_tickets(self, cc_mask, authorization):
         pass
 
     @property
