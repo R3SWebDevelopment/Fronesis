@@ -309,6 +309,7 @@ class ShoppingCart(models.Model):
     active = models.BooleanField(default=True)
     selected = models.BooleanField(default=False)
     checkout = models.BooleanField(default=False)
+    processing = models.BooleanField(default=False)
 
     first_name = models.CharField(blank=True, null=True, default='', max_length=100)
     last_name = models.CharField(blank=True, null=True, default='', max_length=100)
