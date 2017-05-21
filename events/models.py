@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 import uuid
 from django.contrib.humanize.templatetags.humanize import intcomma
-from .tasks import check_tickets_reservation
+from .tasks import check_tickets_reservation, process_ticket_purchase_order
 
 
 from denorm import denormalized, depend_on_related
@@ -329,6 +329,19 @@ class ShoppingCart(models.Model):
 
     card_holder = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Card Holder')
     order_id = models.CharField(blank=True, null=True, default='', max_length=150)
+
+    def process_payment(self, cc_number, cc_exp_month, cc_exp_year, cc_cvv):
+        self.processing = True
+        self.save()
+        self.define_order_id()
+        description = 'Ticket\'s for event {}'.format(self.event.name)
+        process_ticket_purchase_order.delay(cart=self, cc_number=cc_number, cc_exp_month=cc_exp_month,
+                                            cc_exp_year=cc_exp_year, cc_cvv=cc_cvv, description=description)
+
+    def define_order_id(self):
+        order_id = ''
+        self.order_id = order_id
+        self.save()
 
     def assign_user(self, user):
         self.buyer = user
