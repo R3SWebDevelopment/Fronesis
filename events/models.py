@@ -280,6 +280,12 @@ class TicketSales(models.Model):
     def buyer_name(self):
         return ""
 
+    @classmethod
+    def assign(cls, event, ticket_type, buyer, cc, autorization):
+        ticket_sale = cls.objects.create(event=event, ticket_type=ticket_type, buyer=buyer, credit_card=cc,
+                                         payment_authorization=autorization)
+        return ticket_sale
+
 
 class PaymentCustomer(models.Model):
     uuid = models.UUIDField(editable=False, null=False, blank=False)
@@ -358,17 +364,28 @@ class ShoppingCart(models.Model):
     def total_label(self):
         return intcomma(self.total)
 
-    def asign_tickets(self, cc_mask, authorization):
-        pass
+    def asign_tickets(self, authorization, cc):
+        self.processing = False
+        self.active = False
+        self.checkout = True
+        self.save()
+        for ticket in self.tickets_selected:
+            ticket_sales = TicketSales.assign(event=self.event, ticket_type=ticket, buyer=self.buyer, cc=cc,
+                                              autorization=authorization)
+            ticket.clear_ticket_selection()
 
     @property
     def tickets_selected(self):
         return self.tickets_selected.filter(selected=True).filter(qty__gt=0)
 
 
-def generate_expiration_datetime(minutes=5):
-    now = datetime.now()
-    expiration_datetime = now + timedelta(minutes=minutes)
+def generate_expiration_datetime(minutes=5, adding=False, time=None):
+    if adding and time is not None:
+
+        expiration_datetime = time + timedelta(minutes=minutes)
+    else:
+        now = datetime.now()
+        expiration_datetime = now + timedelta(minutes=minutes)
     return expiration_datetime
 
 
@@ -388,6 +405,12 @@ class TicketSelection(models.Model):
             return self.qty * self.ticket_type.price
         return 0
 
+    def clear_ticket_selection(self):
+        self.selected = False
+        self.qty = 0
+        self.expiration = None
+        self.save()
+
     def select_ticket(self):
         self.selected = True
         self.expiration = generate_expiration_datetime()
@@ -398,8 +421,8 @@ class TicketSelection(models.Model):
     def check_ticket_reservation(self):
         # Checks if the ticket reservation time has expired, if does release the tickets and clear the expiration
         now = datetime.now()
-        if self.selected and now > self.expiration:
-            self.selected = False
-            self.qty = 0
-            self.expiration = None
-            self.save()
+        if self.cart.processing is not True and self.cart.active and self.selected and now > self.expiration:
+            self.clear_ticket_selection()
+        elif self.cart.processing is not True and self.cart.active and self.selected:
+            self.expiration = generate_expiration_datetime(minutes=3, adding=True, time=self.expiration)
+            check_tickets_reservation.apply_async(eta=self.expiration + timedelta(seconds=1))
