@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 import celery
 from utils.openpay_gateway import PaymentGateway
-from djang.contrib.auth.models import User
+from django.contrib.auth.models import User
 
 
 @celery.task(name='events.tickets.reservation.check')
