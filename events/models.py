@@ -319,15 +319,16 @@ class ShoppingCart(models.Model):
 
     first_name = models.CharField(blank=True, null=True, default='', max_length=100)
     last_name = models.CharField(blank=True, null=True, default='', max_length=100)
-    line1 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Street Name')
+    line1 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Street Name and Number')
     line2 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Neighborhood')
     line3 = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Reference')
     city = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='City')
     state = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='State')
+    postal_code = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Postal Code')
     email = models.CharField(blank=True, null=True, default='', max_length=150)
     phone_number = models.CharField(blank=True, null=True, default='', max_length=10, verbose_name='Phone Number')
 
-    card_holder = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Card Holder')
+    card_holder = models.CharField(blank=True, null=True, default='', max_length=150, verbose_name='Card Holder Name')
     order_id = models.CharField(blank=True, null=True, default='', max_length=150)
 
     def process_payment(self, cc_number, cc_exp_month, cc_exp_year, cc_cvv):
@@ -429,7 +430,7 @@ class TicketSelection(models.Model):
         self.expiration = generate_expiration_datetime()
         self.save()
         # Execute a ticket reservation check one second later the expiration date
-        check_tickets_reservation.apply_async(eta=self.expiration + timedelta(seconds=1))
+        ## check_tickets_reservation.apply_async(kwargs={'ticket_id': self.id}, eta=self.expiration + timedelta(seconds=1))
 
     def check_ticket_reservation(self):
         # Checks if the ticket reservation time has expired, if does release the tickets and clear the expiration
@@ -438,4 +439,5 @@ class TicketSelection(models.Model):
             self.clear_ticket_selection()
         elif self.cart.processing is not True and self.cart.active and self.selected:
             self.expiration = generate_expiration_datetime(minutes=3, adding=True, time=self.expiration)
-            check_tickets_reservation.apply_async(eta=self.expiration + timedelta(seconds=1))
+            ## check_tickets_reservation.apply_async(kwargs={'ticket_id': self.id},
+            ##                                       eta=self.expiration + timedelta(seconds=1))

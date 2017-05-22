@@ -100,6 +100,22 @@
           <input type="text" id = "{{ car_form.line3.id_for_label }}" value = "{{ car_form.line3.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line3.label|title}}" required>
         </div>
       </div>
+      <div class="one-col mb40">
+        <div class="two-col columns">
+          <label for="{{ car_form.postal_code.id_for_label }}" class="dark-label mb20">{{ car_form.postal_code.label|upper }}</label>
+          <input type="text" id = "{{ car_form.postal_code.id_for_label }}" value = "{{ car_form.postal_code.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.postal_code.label|title}}" required>
+        </div>
+        <div class="two-col columns">
+          <label for="{{ car_form.city.id_for_label }}" class="dark-label mb20">{{ car_form.city.label|upper }}</label>
+          <input type="text" id = "{{ car_form.city.id_for_label }}" value = "{{ car_form.city.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.city.label|title}}" required>
+        </div>
+      </div>
+      <div class="one-col mb40">
+        <div class="one-col columns">
+          <label for="{{ car_form.state.id_for_label }}" class="dark-label mb20">{{ car_form.state.label|upper }}</label>
+          <input type="text" id = "{{ car_form.state.id_for_label }}" value = "{{ car_form.state.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.state.label|title}}" required>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -110,11 +126,16 @@
       </div>
       <div class="one-col mb40">
         <div class="one-col columns">
+          <label for="{{ car_form.card_holder.id_for_label }}" class="dark-label mb20">{{ car_form.card_holder.label|upper }}</label>
+          <input type="text" id = "{{ car_form.card_holder.id_for_label }}" name = "{{ car_form.card_holder.html_name}}" value = "{{ car_form.card_holder.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.card_holder.label|title}}" required>
+        </div>
+      </div>
+      <div class="one-col mb40">
+        <div class="one-col columns">
           <label for="{{ car_form.credit_card_number.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_number.label|upper }}</label>
           <input type="text" id = "{{ car_form.credit_card_number.id_for_label }}" name = "{{ car_form.credit_card_number.html_name}}" value = "{{ car_form.credit_card_number.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_number.label|title}}" required>
         </div>
       </div>
-
       <div class="one-col mb40">
         <div class="two-col columns">
           <label for="{{ car_form.credit_card_exp_month.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_month.label|upper }}</label>
