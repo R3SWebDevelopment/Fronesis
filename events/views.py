@@ -8,6 +8,7 @@ from django.http import Http404
 from datetime import datetime
 from .forms import EventForm, EventGetTicketForm, TicketSelectionFormSet
 from .models import Event, ShoppingCart, TicketSelection
+from utils.utils import  get_logged_user
 
 
 class DummyView(TemplateView):
@@ -31,7 +32,7 @@ class MyEventsView(ListView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        self.user = request.user
+        self.user = get_logged_user(request)
         return super(MyEventsView, self).dispatch(request=request, **kwargs)
 
     def get_queryset(self):
@@ -55,7 +56,7 @@ class CreateEventView(CreateView):
     def dispatch(self, request, mode='create', event_uuid=None, *args, **kwargs):
         self.mode = mode
         self.event_uuid = event_uuid
-        self.organizer = request.user
+        self.organizer = get_logged_user(request)
         return super(CreateEventView, self).dispatch(request=request, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -122,7 +123,7 @@ class EventView(UpdateView):
     def dispatch(self, request, mode='create', event_uuid=None, *args, **kwargs):
         self.mode = mode
         self.event_uuid = event_uuid
-        self.organizer = request.user
+        self.organizer = get_logged_user(request)
         if self.event_uuid is not None:
             self.event = Event.objects.filter(uuid =self.event_uuid).first()
         return super(EventView, self).dispatch(request=request, **kwargs)
@@ -213,14 +214,14 @@ class EventGetTicket(FormView):
         self.request = request
         begins_date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%B/%Y').date()
         self.event = Event.published_all.filter(uuid=event_uuid, begins_date=begins_date, slug=slug).first()
-        self.user = request.user
+        self.user = get_logged_user(request)
         if self.event is None:
             raise Http404
         return super(EventGetTicket, self).dispatch(request=request)
 
     def get(self, request, *args, **kwargs):
         cart_id = self.request.session.get('ticket_cart_id', None)
-        buyer = self.request.user if self.request.user is not None or self.request.user.is_authenticated else None
+        buyer = self.user if self.user is not None or self.user.is_authenticated else None
         try:
             self.cart = ShoppingCart.objects.get(id=cart_id, event=self.event, buyer=buyer)
         except ShoppingCart.DoesNotExist:
@@ -232,7 +233,7 @@ class EventGetTicket(FormView):
 
     def post(self, request, *args, **kwargs):
         cart_id = self.request.session.get('ticket_cart_id', None)
-        buyer = self.request.user if self.request.user is not None or self.request.user.is_authenticated else None
+        buyer = self.user if self.user is not None or self.user.is_authenticated else None
         try:
             self.cart = ShoppingCart.objects.get(id=cart_id, event=self.event, buyer=buyer)
         except ShoppingCart.DoesNotExist:
@@ -276,8 +277,8 @@ class EventGetTicketCheckOut(FormView):
         self.request = request
         begins_date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%B/%Y').date()
         self.event = Event.published_all.filter(uuid=event_uuid, begins_date=begins_date, slug=slug).first()
-        self.user = request.user
-        buyer = self.request.user if self.request.user is not None or self.request.user.is_authenticated else None
+        self.user = get_logged_user(request)
+        buyer = self.user if self.user is not None or self.user.is_authenticated else None
         if self.event is None:
             raise Http404
         cart_id = self.request.session.get('ticket_cart_id', None)
