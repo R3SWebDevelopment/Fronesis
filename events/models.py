@@ -446,14 +446,17 @@ class ShoppingCart(models.Model):
         return intcomma(self.total)
 
     def asign_tickets(self, authorization, cc):
+        purchared_tickets_id = []
         self.processing = False
         self.active = False
         self.checkout = True
         self.save()
         for ticket in self.selected_tickets:
-            ticket_sales = TicketSales.assign(event=self.event, ticket_type=ticket, buyer=self.buyer, cc=cc,
+            ticket_sales = TicketSales.assign(event=self.event, ticket_type=ticket.ticket_type, buyer=self.buyer, cc=cc,
                                               autorization=authorization)
             ticket.clear_ticket_selection()
+            purchared_tickets_id.append(ticket_sales.id)
+        return  purchared_tickets_id
 
     @property
     def selected_tickets(self):

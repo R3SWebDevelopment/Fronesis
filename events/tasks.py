@@ -56,14 +56,14 @@ def process_ticket_purchase_order(cart_id, cc_number, cc_exp_month, cc_exp_year,
             print("PaymentCreditCard: {}, {}".format(payment_cc, cc_created))
 
             # Assign tickets
-            cart.asign_tickets(authorization=authorization, cc=payment_cc)
+            purchared_ticekts = cart.asign_tickets(authorization=authorization, cc=payment_cc)
             # Send Email
 #             send_ticket_purchase_notification_email.delay(email=cart.email, tikets=cart.tickets_selected,
 #                                                          order_id=cart.order_id, cc_mask=cc_mask,
 #                                                          autorization=authorization)
             task = send_ticket_purchase_notification_email.apply_async(kwargs={
                 'email': cart.email,
-                'tikets': cart.selected_tickets,
+                'tikets': purchared_ticekts,
                 'order_id': cart.order_id,
                 'cc_mask': cc_mask,
                 'autorization': authorization,

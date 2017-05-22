@@ -66,6 +66,19 @@ class PaymentGateway(object):
                     self.customer_error = None
                 except openpay.error.InvalidRequestError as customer_error:
                     self.customer_error = customer_error
+        else:
+            try:
+                self.customer = openpay.Customer.create(
+                    name=first_name,
+                    last_name=last_name,
+                    email=email,
+                    phone_number=phone_number,
+                    address=self.address
+                )
+                self.customer_error = None
+            except openpay.error.InvalidRequestError as customer_error:
+                self.customer_error = customer_error
+                return None, False
         return self.customer.id, to_create
 
     def set_credit_card(self, card_holder, number, month, year, cvv):
