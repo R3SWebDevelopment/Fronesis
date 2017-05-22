@@ -8,6 +8,7 @@ from django.http import Http404
 from datetime import datetime
 from .forms import EventForm, EventGetTicketForm, TicketSelectionFormSet
 from .models import Event, ShoppingCart, TicketSelection
+from utils.utils import  get_logged_user
 
 
 class DummyView(TemplateView):
@@ -31,7 +32,7 @@ class MyEventsView(ListView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        self.user = request.user
+        self.user = get_logged_user(request)
         return super(MyEventsView, self).dispatch(request=request, **kwargs)
 
     def get_queryset(self):
@@ -55,7 +56,7 @@ class CreateEventView(CreateView):
     def dispatch(self, request, mode='create', event_uuid=None, *args, **kwargs):
         self.mode = mode
         self.event_uuid = event_uuid
-        self.organizer = request.user
+        self.organizer = get_logged_user(request)
         return super(CreateEventView, self).dispatch(request=request, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -122,7 +123,7 @@ class EventView(UpdateView):
     def dispatch(self, request, mode='create', event_uuid=None, *args, **kwargs):
         self.mode = mode
         self.event_uuid = event_uuid
-        self.organizer = request.user
+        self.organizer = get_logged_user(request)
         if self.event_uuid is not None:
             self.event = Event.objects.filter(uuid =self.event_uuid).first()
         return super(EventView, self).dispatch(request=request, **kwargs)
@@ -213,14 +214,14 @@ class EventGetTicket(FormView):
         self.request = request
         begins_date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%B/%Y').date()
         self.event = Event.published_all.filter(uuid=event_uuid, begins_date=begins_date, slug=slug).first()
-        self.user = request.user
+        self.user = get_logged_user(request)
         if self.event is None:
             raise Http404
         return super(EventGetTicket, self).dispatch(request=request)
 
     def get(self, request, *args, **kwargs):
         cart_id = self.request.session.get('ticket_cart_id', None)
-        buyer = self.request.user if self.request.user is not None or self.request.user.is_authenticated else None
+        buyer = self.user if self.user is not None and self.user.is_authenticated else None
         try:
             self.cart = ShoppingCart.objects.get(id=cart_id, event=self.event, buyer=buyer)
         except ShoppingCart.DoesNotExist:
@@ -232,7 +233,7 @@ class EventGetTicket(FormView):
 
     def post(self, request, *args, **kwargs):
         cart_id = self.request.session.get('ticket_cart_id', None)
-        buyer = self.request.user if self.request.user is not None or self.request.user.is_authenticated else None
+        buyer = self.user if self.user is not None and self.user.is_authenticated else None
         try:
             self.cart = ShoppingCart.objects.get(id=cart_id, event=self.event, buyer=buyer)
         except ShoppingCart.DoesNotExist:
@@ -271,13 +272,15 @@ class EventGetTicketCheckOut(FormView):
     form_class = TicketSelectionFormSet
     body_class = 'bg-white'
     no_tickets_selected = False
+    error_message = []
+    ticket_selection = None
 
     def dispatch(self, request, year, month, day, slug, event_uuid, *args, **kwargs):
         self.request = request
         begins_date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%B/%Y').date()
         self.event = Event.published_all.filter(uuid=event_uuid, begins_date=begins_date, slug=slug).first()
-        self.user = request.user
-        buyer = self.request.user if self.request.user is not None or self.request.user.is_authenticated else None
+        self.user = get_logged_user(request)
+        buyer = self.user if self.user is not None and self.user.is_authenticated else None
         if self.event is None:
             raise Http404
         cart_id = self.request.session.get('ticket_cart_id', None)
@@ -297,18 +300,45 @@ class EventGetTicketCheckOut(FormView):
         self.ticket_selection = TicketSelectionFormSet(queryset=TicketSelection.objects.filter(cart=self.cart).
                                                        filter(selected=True))
         self.form = EventGetTicketForm(request.POST, instance=self.cart)
-        form = self.form
-        errors = self.form.errors
-        valid = self.form.is_valid()
-        s
         if self.form.is_valid():
-            return self.form_invalid(self.form, **kwargs)
+            valid = True
+            clean_data = self.form.cleaned_data
+            if len(clean_data.get('credit_card_number')) != 16:
+                self.error_message.append('Wrong Credit Card number')
+                valid = False
+            elif not clean_data.get('credit_card_number').isdigit():
+                self.error_message.append('Wrong Credit Card number')
+                valid = False
+            try:
+                expiration_date = datetime.strptime('01/{}/{}'.format(clean_data.get('credit_card_exp_month'),
+                                                                      clean_data.get('credit_card_exp_year')),
+                                                    '%d/%m/%Y')
+                if expiration_date == datetime.now():
+                    valid = False
+                    self.error_message.append('Wrong expiration date')
+            except ValueError:
+                valid = False
+                self.error_message.append('Wrong expiration date')
+            if valid:
+                return self.form_valid(self.form, **kwargs)
+            else:
+                return self.form_invalid(self.form, **kwargs)
         else:
             return self.form_invalid(self.form, **kwargs)
 
     def form_valid(self, form):
         self.cart = self.form.save()
+        clean_data = self.form.cleaned_data
+        cc_number = clean_data.get('credit_card_number')
+        cc_exp_month = clean_data.get('credit_card_exp_month')
+        cc_exp_year = clean_data.get('credit_card_exp_year')
+        cc_cvv = clean_data.get('credit_card_cvv')
+        self.cart.process_payment(cc_number=cc_number, cc_exp_month=cc_exp_month, cc_exp_year=cc_exp_year,
+                                  cc_cvv=cc_cvv)
         return super(EventGetTicketCheckOut, self).form_valid(form)
+
+    def get_success_url(self):
+        return self.event.get_tickets_checkout_finished_url
 
     def get_context_data(self, **kwargs):
         context = super(EventGetTicketCheckOut, self).get_context_data(**kwargs)
@@ -319,5 +349,42 @@ class EventGetTicketCheckOut(FormView):
         context['user'] = self.user
         context['cart'] = self.cart
         context['no_tickets_selected'] = self.no_tickets_selected
+        context['error_message'] = self.error_message
         return context
 
+
+class EventGetTicketCheckOutFinished(FormView):
+    template_name = 'events/get-tickets-checkout_finish.html'
+    form_class = TicketSelectionFormSet
+    body_class = 'bg-white'
+
+    def dispatch(self, request, year, month, day, slug, event_uuid, *args, **kwargs):
+        self.request = request
+        begins_date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%B/%Y').date()
+        self.event = Event.published_all.filter(uuid=event_uuid, begins_date=begins_date, slug=slug).first()
+        self.user = get_logged_user(request)
+        buyer = self.user if self.user is not None and self.user.is_authenticated else None
+        if self.event is None:
+            raise Http404
+        cart_id = self.request.session.get('ticket_cart_id', None)
+        # try:
+        #     self.cart = ShoppingCart.objects.get(id=cart_id, event=self.event, buyer=buyer)
+        # except ShoppingCart.DoesNotExist:
+        #     raise Http404
+        return super(EventGetTicketCheckOutFinished, self).dispatch(request=request)
+
+    def get(self, request, *args, **kwargs):
+        # self.ticket_selection = TicketSelectionFormSet(queryset=TicketSelection.objects.filter(cart=self.cart).
+        #                                                filter(selected=True))
+        # self.form = EventGetTicketForm(instance=self.cart)
+        return super(EventGetTicketCheckOutFinished, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(EventGetTicketCheckOutFinished, self).get_context_data(**kwargs)
+        # context['form'] = self.ticket_selection
+        # context['car_form'] = self.form
+        context['BODY_CLASS'] = self.body_class or ''
+        context['object'] = self.event
+        # context['user'] = self.user
+        # context['cart'] = self.cart
+        return context

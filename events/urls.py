@@ -1,5 +1,5 @@
 from .views import DummyView, CreateEventView, MyEventsView, EventsPublished, EventView, EventDetailPublished, \
-    EventGetTicket, EventGetTicketCheckOut
+    EventGetTicket, EventGetTicketCheckOut, EventGetTicketCheckOutFinished
 from django.conf.urls import url
 
 urlpatterns = [
@@ -10,6 +10,8 @@ urlpatterns = [
         EventGetTicket.as_view(), name='public_event_tickets'),
     url(r'^(?P<year>[0-9]{4})/(?P<month>\w+)/(?P<day>[0-9]{2})/(?P<slug>[\w-]+)/(?P<event_uuid>[\w-]+)/get-tickets/'
         r'checkout/$', EventGetTicketCheckOut.as_view(), name='public_event_tickets_checkout'),
+    url(r'^(?P<year>[0-9]{4})/(?P<month>\w+)/(?P<day>[0-9]{2})/(?P<slug>[\w-]+)/(?P<event_uuid>[\w-]+)/get-tickets/'
+        r'checkout/finish/$', EventGetTicketCheckOutFinished.as_view(), name='public_event_tickets_checkout_finish'),
     url(r'^my_events/$', MyEventsView.as_view(), name='my_events'),
     url(r'^my_events/create/$', CreateEventView.as_view(), {'mode': 'create'}, name='my_events_create'),
     url(r'^my_events/(?P<event_uuid>[0-9A-Fa-f-]+)/edit/$', EventView.as_view(), {'mode': 'update'},

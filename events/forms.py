@@ -40,6 +40,10 @@ class EventGetTicketForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['buyer', 'event']
 
+    def __init__(self, *args, **kwargs):
+        super(EventGetTicketForm, self).__init__(*args, **kwargs)
+        self.fields['state'].widget = forms.Select()
+
 
 class TicketSelectionForm(forms.ModelForm):
     ticket_label = forms.CharField(required=False)

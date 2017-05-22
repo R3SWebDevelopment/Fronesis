@@ -7,188 +7,229 @@
 <form method="post">
   {% csrf_token %}
   <br>
-	<section>
-		<div class="wrap">
-			<div class="one-col">
-				<div class="one-col mb40">
-					<div class="profile-event-thumb mr20" style="background-image: url('{{ object.cover_url }}')"></div>
-					<div class="one-third">
-						<h1 class="mb20px">{{ object.name }} - {{ object.subtitle }}</h1>
-						<p class="mb20">
-              {{ object.description|safe }}
-            </p>
-						<p><strong>{{ object.begins_date|date:'F d, Y' }}</strong></p>
-					</div>
-				</div>
-				<div class="listed-elements mb40">
-        {% if object.organizer == user %}
-          <a href="{{ object.admin_url }}">
-            <button class="btn-black btn-x1 mr20">
-              Edit Event Details
-            </button>
-          </a>
-        {% endif %}
-          <a href="{{ object.url }}">
-            <button class="btn-black btn-x1 mr20">
-              View Event
-            </button>
-          </a>
-				</div>
-			</div>
-    {% if object.display_remaining_tickets %}
-			<div class="one-col mb40">
-				<div class="progress-bar-wrap">
-					<div class="title">
-						<div class="left-txt c-gray"><p>TICKETS SOLD</p></div>
-						<div class="right-txt c-gray"><p>TICKETS PENDING</p></div>
-					</div>
-					<div class="aqua-progress-bar">
-						<div class="left-txt c-white">{{ object.tickets_sold }}</div>
-						<div class="right-txt c-gray">{{ object.tickets_available }}</div>
-						<span class="bar" style="width:{{ object.sells_percentage|default:'0' }}%;"></span>
-					</div>
-				</div>
-			</div>
-    {% endif %}
-		</div>
-	</section>
+    <section>
+        <div class="wrap">
+            <div class="one-col">
+                <div class="one-col mb40">
+                    <div class="profile-event-thumb mr20" style="background-image: url('{{ object.cover_url }}')"></div>
+                    <div class="one-third">
+                        <h1 class="mb20px">{{ object.name }} - {{ object.subtitle }}</h1>
+                        <p class="mb20">
+                            {{ object.description|safe }}
+                        </p>
+                        <p><strong>{{ object.begins_date|date:'F d, Y' }}</strong></p>
+                    </div>
+                </div>
+                <div class="listed-elements mb40">
+                    {% if object.organizer == user %}
+                    <a href="{{ object.admin_url }}">
+                        <button class="btn-black btn-x1 mr20">
+                            Edit Event Details
+                        </button>
+                    </a>
+                    {% endif %}
+                    <a href="{{ object.url }}">
+                        <button class="btn-black btn-x1 mr20">
+                            View Event
+                        </button>
+                    </a>
+                </div>
+            </div>
+            {% if object.display_remaining_tickets %}
+            <div class="one-col mb40">
+                <div class="progress-bar-wrap">
+                    <div class="title">
+                        <div class="left-txt c-gray"><p>TICKETS SOLD</p></div>
+                        <div class="right-txt c-gray"><p>TICKETS PENDING</p></div>
+                    </div>
+                    <div class="aqua-progress-bar">
+                        <div class="left-txt c-white">{{ object.tickets_sold }}</div>
+                        <div class="right-txt c-gray">{{ object.tickets_available }}</div>
+                        <span class="bar" style="width:{{ object.sells_percentage|default:'0' }}%;"></span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+{% if error_message != None and error_message|length > 0 %}
+    <section>
+        <div class="wrap">
+            <div class="one-col mb40">
+                <p>
+                    {{ error_message }}
+                </p>
+            </div>
+        </div>
+    </section>
+{% endif %}
+    <section>
+        <div class="wrap">
+            <div class="heading-separator mb40">
+                <h2 class="t-lyonL c-gray">Your Info</h2>
+            </div>
+            <div class="one-col mb40">
+                <div class="two-col columns">
+                    <label for="{{ car_form.first_name.id_for_label }}" class="dark-label mb20">{{ car_form.first_name.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.first_name.id_for_label }}" name = "{{ car_form.first_name.html_name}}" value = "{{ car_form.first_name.value }}" class="border-bottom-input two-col columns" placeholder="First Name" required>
+                </div>
+                <div class="two-col columns">
+                    <label for="{{ car_form.last_name.id_for_label }}" class="dark-label mb20">{{ car_form.last_name.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.last_name.id_for_label }}" name = "{{ car_form.last_name.html_name}}" value = "{{ car_form.last_name.value }}" class="border-bottom-input two-col columns" placeholder="Last Name" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ car_form.email.id_for_label }}" class="dark-label mb20">{{ car_form.email.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.email.id_for_label }}" name = "{{ car_form.email.html_name}}" value = "{{ car_form.email.value }}" class="border-bottom-input two-col columns" placeholder="Email Address" required>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <section>
-    <div class="wrap">
-      <div class="heading-separator mb40">
-        <h2 class="t-lyonL c-gray">Your Info</h2>
-      </div>
-      <div class="one-col mb40">
-        <div class="two-col columns">
-          <label for="{{ car_form.first_name.id_for_label }}" class="dark-label mb20">{{ car_form.first_name.label|upper }}</label>
-          <input type="text" id = "{{ car_form.first_name.id_for_label }}" value = "{{ car_form.first_name.value }}" class="border-bottom-input two-col columns" placeholder="First Name" required>
+    <section>
+        <div class="wrap">
+            <div class="heading-separator mb40">
+                <h2 class="t-lyonL c-gray">Your Billing Info</h2>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ car_form.line1.id_for_label }}" class="dark-label mb20">{{ car_form.line1.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.line1.id_for_label }}" name = "{{ car_form.line1.html_name}}" value = "{{ car_form.line1.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line1.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ car_form.line2.id_for_label }}" class="dark-label mb20">{{ car_form.line2.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.line2.id_for_label }}" name = "{{ car_form.line2.html_name}}" value = "{{ car_form.line2.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line2.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ car_form.line3.id_for_label }}" class="dark-label mb20">{{ car_form.line3.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.line3.id_for_label }}" name = "{{ car_form.line3.html_name}}" value = "{{ car_form.line3.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line3.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="two-col columns">
+                    <label for="{{ car_form.postal_code.id_for_label }}" class="dark-label mb20">{{ car_form.postal_code.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.postal_code.id_for_label }}" name = "{{ car_form.postal_code.html_name}}" value = "{{ car_form.postal_code.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.postal_code.label|title}}" required>
+                </div>
+                <div class="two-col columns">
+                    <label for="{{ car_form.city.id_for_label }}" class="dark-label mb20">{{ car_form.city.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.city.id_for_label }}" name = "{{ car_form.city.html_name}}" value = "{{ car_form.city.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.city.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="two-col columns">
+                    <label for="{{ car_form.state.id_for_label }}" class="dark-label mb20">{{ car_form.state.label|upper }}</label>
+                    <select id = "{{ car_form.state.id_for_label }}" name = "{{ car_form.state.html_name}}" value = "{{ car_form.state.value }}" class="border-bottom-input two-col columns">
+                        {% for value, label in car_form.state.field.choices %}
+                        <option value="{{ value }}" {% if car_form.state.values == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="two-col columns">
+                    <label for="{{ car_form.phone_number.id_for_label }}" class="dark-label mb20">{{ car_form.phone_number.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.phone_number.id_for_label }}" name = "{{ car_form.phone_number.html_name}}" value = "{{ car_form.phone_number.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.phone_number.label|title}}" required>
+                </div>
+            </div>
         </div>
-        <div class="two-col columns">
-          <label for="{{ car_form.last_name.id_for_label }}" class="dark-label mb20">{{ car_form.last_name.label|upper }}</label>
-          <input type="text" id = "{{ car_form.last_name.id_for_label }}" value = "{{ car_form.last_name.value }}" class="border-bottom-input two-col columns" placeholder="Last Name" required>
-        </div>
-      </div>
-      <div class="one-col mb40">
-        <div class="one-col columns">
-          <label for="{{ car_form.email.id_for_label }}" class="dark-label mb20">{{ car_form.email.label|upper }}</label>
-          <input type="text" id = "{{ car_form.email.id_for_label }}" value = "{{ car_form.email.value }}" class="border-bottom-input two-col columns" placeholder="Email Address" required>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section>
-    <div class="wrap">
-      <div class="heading-separator mb40">
-        <h2 class="t-lyonL c-gray">Your Billing Info</h2>
-      </div>
-      <div class="one-col mb40">
-        <div class="one-col columns">
-          <label for="{{ car_form.line1.id_for_label }}" class="dark-label mb20">{{ car_form.line1.label|upper }}</label>
-          <input type="text" id = "{{ car_form.line1.id_for_label }}" value = "{{ car_form.line1.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line1.label|title}}" required>
+    <section>
+        <div class="wrap">
+            <div class="heading-separator mb40">
+                <h2 class="t-lyonL c-gray">Your Credit Cart Info</h2>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ car_form.card_holder.id_for_label }}" class="dark-label mb20">{{ car_form.card_holder.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.card_holder.id_for_label }}" name = "{{ car_form.card_holder.html_name}}" value = "{{ car_form.card_holder.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.card_holder.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ car_form.credit_card_number.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_number.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.credit_card_number.id_for_label }}" name = "{{ car_form.credit_card_number.html_name}}" value = "{{ car_form.credit_card_number.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_number.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="two-col columns">
+                    <label for="{{ car_form.credit_card_exp_month.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_month.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.credit_card_exp_month.id_for_label }}" name = "{{ car_form.credit_card_exp_month.html_name}}" value = "{{ car_form.credit_card_exp_month.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_month.label|title}}" required>
+                </div>
+                <div class="two-col columns">
+                    <label for="{{ car_form.credit_card_exp_year.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_year.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.credit_card_exp_year.id_for_label }}" name = "{{ car_form.credit_card_exp_year.html_name}}" value = "{{ car_form.credit_card_exp_year.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_year.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ car_form.credit_card_cvv.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_cvv.label|upper }}</label>
+                    <input type="text" id = "{{ car_form.credit_card_cvv.id_for_label }}" name = "{{ car_form.credit_card_cvv.html_name}}" value = "{{ car_form.credit_card_cvv.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_cvv.label|upper}}" required>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="one-col mb40">
-        <div class="one-col columns">
-          <label for="{{ car_form.line2.id_for_label }}" class="dark-label mb20">{{ car_form.line2.label|upper }}</label>
-          <input type="text" id = "{{ car_form.line2.id_for_label }}" value = "{{ car_form.line2.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line2.label|title}}" required>
-        </div>
-      </div>
-      <div class="one-col mb40">
-        <div class="one-col columns">
-          <label for="{{ car_form.line3.id_for_label }}" class="dark-label mb20">{{ car_form.line3.label|upper }}</label>
-          <input type="text" id = "{{ car_form.line3.id_for_label }}" value = "{{ car_form.line3.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line3.label|title}}" required>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section>
-    <div class="wrap">
-      <div class="heading-separator mb40">
-        <h2 class="t-lyonL c-gray">Your Credit Cart Info</h2>
-      </div>
-      <div class="one-col mb40">
-        <div class="one-col columns">
-          <label for="{{ car_form.credit_card_number.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_number.label|upper }}</label>
-          <input type="text" id = "{{ car_form.credit_card_number.id_for_label }}" name = "{{ car_form.credit_card_number.html_name}}" value = "{{ car_form.credit_card_number.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_number.label|title}}" required>
-        </div>
-      </div>
+    <section>
+        <div class="wrap">
+            <div class="heading-separator mb40">
+                {% if no_tickets_selected %}
+                <h1 style="text-align: center; color:red;">
+                    You need to select at least one ticket
+                </h1>
+                {% endif %}
+                <h2 class="t-lyonL c-gray">Tickets Selected</h2>
 
-      <div class="one-col mb40">
-        <div class="two-col columns">
-          <label for="{{ car_form.credit_card_exp_month.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_month.label|upper }}</label>
-          <input type="text" id = "{{ car_form.credit_card_exp_month.id_for_label }}" name = "{{ car_form.credit_card_exp_month.html_name}}" value = "{{ car_form.credit_card_exp_month.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_month.label|title}}" required>
+            </div>
+            <table class="table-border-bottom mb40">
+                <tr>
+                    <th>TICKET TYPE</th>
+                    <th>PRICE</th>
+                    <th>QTY</th>
+                    <th>SUBTOTAL</th>
+                </tr>
+                {{ form.management_form }}
+                {% for ticket in form %}
+                {{ ticket.id }}
+                <tr data-price="{{ ticket.price_label.value }}">
+                    <td>
+                        <strong>
+                            {{ ticket.ticket_label.value }}
+                        </strong>
+                    </td>
+                    <td>
+                        MX ${{ ticket.price_label.value }}
+                    </td>
+                    <td>
+                        {{ ticket.qty }}
+                    </td>
+                    <td>MX ${{ ticket.total_label.value }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3" style="text-align: right;">
+                        Total:
+                    </td>
+                    <td>
+                        MX ${{cart.total_label}}
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div class="two-col columns">
-          <label for="{{ car_form.credit_card_exp_year.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_year.label|upper }}</label>
-          <input type="text" id = "{{ car_form.credit_card_exp_year.id_for_label }}" name = "{{ car_form.credit_card_exp_year.html_name}}" value = "{{ car_form.credit_card_exp_year.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_year.label|title}}" required>
+    </section>
+    <section>
+        <div class="one-col gray-border-box t-center mb40">
+            <a href="{{object.url}}">
+                <button class="btn-black btn-x2 mr20" name="button" type="submit">Cancel</button>
+            </a>
+            <button class="btn-aqua btn-x2 mr20" name="button" type="submit">Pay</button>
         </div>
-      </div>
-      <div class="one-col mb40">
-        <div class="one-col columns">
-          <label for="{{ car_form.credit_card_cvv.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_cvv.label|upper }}</label>
-          <input type="text" id = "{{ car_form.credit_card_cvv.id_for_label }}" name = "{{ car_form.credit_card_cvv.html_name}}" value = "{{ car_form.credit_card_cvv.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_cvv.label|upper}}" required>
-        </div>
-      </div>
-    </div>
-  </section>
-
-	<section>
-		<div class="wrap">
-			<div class="heading-separator mb40">
-      {% if no_tickets_selected %}
-        <h1 style="text-align: center; color:red;">
-          You need to select at least one ticket
-        </h1>
-      {% endif %}
-				<h2 class="t-lyonL c-gray">Tickets Selected</h2>
-
-			</div>
-			<table class="table-border-bottom mb40">
-				<tr>
-					<th>TICKET TYPE</th>
-					<th>PRICE</th>
-					<th>QTY</th>
-          <th>SUBTOTAL</th>
-				</tr>
-      {{ form.management_form }}
-      {% for ticket in form %}
-      {{ ticket.id }}
-				<tr data-price="{{ ticket.price_label.value }}">
-					<td>
-            <strong>
-              {{ ticket.ticket_label.value }}
-            </strong>
-          </td>
-					<td>
-            MX ${{ ticket.price_label.value }}
-          </td>
-					<td>
-            {{ ticket.qty }}
-          </td>
-          <td>MX ${{ ticket.total_label.value }}</td>
-				</tr>
-      {% endfor %}
-        <tr>
-          <td colspan="3" style="text-align: right;">
-            Total:
-          </td>
-          <td>
-            MX ${{cart.total_label}}
-          </td>
-        </tr>
-			</table>
-		</div>
-	</section>
-  <section>
-    <div class="one-col gray-border-box t-center mb40">
-      <a href="{{object.url}}">
-        <button class="btn-black btn-x2 mr20" name="button" type="submit">Cancel</button>
-      </a>
-      <button class="btn-aqua btn-x2 mr20" name="button" type="submit">Pay</button>
-    </div>
-  </section>
+    </section>
 </form>
 
 {% endblock %}
