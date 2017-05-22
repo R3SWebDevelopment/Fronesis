@@ -367,24 +367,24 @@ class EventGetTicketCheckOutFinished(FormView):
         if self.event is None:
             raise Http404
         cart_id = self.request.session.get('ticket_cart_id', None)
-        try:
-            self.cart = ShoppingCart.objects.get(id=cart_id, event=self.event, buyer=buyer)
-        except ShoppingCart.DoesNotExist:
-            raise Http404
+        # try:
+        #     self.cart = ShoppingCart.objects.get(id=cart_id, event=self.event, buyer=buyer)
+        # except ShoppingCart.DoesNotExist:
+        #     raise Http404
         return super(EventGetTicketCheckOutFinished, self).dispatch(request=request)
 
     def get(self, request, *args, **kwargs):
-        self.ticket_selection = TicketSelectionFormSet(queryset=TicketSelection.objects.filter(cart=self.cart).
-                                                       filter(selected=True))
-        self.form = EventGetTicketForm(instance=self.cart)
+        # self.ticket_selection = TicketSelectionFormSet(queryset=TicketSelection.objects.filter(cart=self.cart).
+        #                                                filter(selected=True))
+        # self.form = EventGetTicketForm(instance=self.cart)
         return super(EventGetTicketCheckOutFinished, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(EventGetTicketCheckOutFinished, self).get_context_data(**kwargs)
-        context['form'] = self.ticket_selection
-        context['car_form'] = self.form
+        # context['form'] = self.ticket_selection
+        # context['car_form'] = self.form
         context['BODY_CLASS'] = self.body_class or ''
         context['object'] = self.event
-        context['user'] = self.user
-        context['cart'] = self.cart
+        # context['user'] = self.user
+        # context['cart'] = self.cart
         return context
