@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+<form method="post">
+  {% csrf_token %}
+  <br>
+	<section>
+		<div class="wrap">
+			<div class="one-col">
+				<div class="one-col mb40">
+					<div class="profile-event-thumb mr20" style="background-image: url('{{ object.cover_url }}')"></div>
+					<div class="one-third">
+						<h1 class="mb20px">{{ object.name }} - {{ object.subtitle }}</h1>
+						<p class="mb20">
+                            {{ object.description|safe }}
+                         </p>
+						<p><strong>{{ object.begins_date|date:'F d, Y' }}</strong></p>
+					</div>
+				</div>
+				<div class="listed-elements mb40">
+        {% if object.organizer == user %}
+          <a href="{{ object.admin_url }}">
+            <button class="btn-black btn-x1 mr20">
+              Edit Event Details
+            </button>
+          </a>
+        {% endif %}
+          <a href="{{ object.url }}">
+            <button class="btn-black btn-x1 mr20">
+              View Event
+            </button>
+          </a>
+				</div>
+			</div>
+		</div>
+	</section>
+    <section>
+        <div class="wrap">
+          <div class="heading-separator mb40">
+            <h2 class="t-lyonL c-gray">Your Purchase</h2>
+          </div>
+         <div class="one-col mb40">
+             <h3>
+                 Your order is on process
+             </h3>
+             <p>
+                You'll receive an email when the transaction will be completed.
+             </p>
+         </div>
+        </div>
+    </section>
+
+</form>
+
+{% endblock %}
+
+{% block SCRIPT %}
+{{ block.super }}
+<script>
+  $('body').ready(function(){
+    var qty_input = $(this).find('.qty_input');
+    $(qty_input).prop('disabled', 'disabled');
+  });
+</script>
+{% endblock %}

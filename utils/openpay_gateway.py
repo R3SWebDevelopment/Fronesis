@@ -118,7 +118,10 @@ class PaymentGateway(object):
                 device_session_id=device_session_id
             )
             authorized = True
+            print("do_pay - authorized: {}".format(authorized))
+            print("do_pay - dir(self.charge): {}".format(dir(self.charge)))
             authorization = self.charge.authorization
+            print("do_pay - authorization: {}".format(self.charge.authorization))
         except openpay.error.InvalidRequestError as payment_error:
             self.payment_error = payment_error
             error_message = '{}'.format(payment_error)
