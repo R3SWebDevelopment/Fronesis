@@ -126,7 +126,7 @@ class Event(models.Model):
             return 0
 
     @denormalized(models.IntegerField, default=0)
-    @depend_on_related('TicketSales')
+    @depend_on_related('TicketSales', type='backward')
     def tickets_sold(self):
         try:
             return self.tickets_sales.all().count()
