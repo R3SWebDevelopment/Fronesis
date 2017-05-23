@@ -305,3 +305,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 LOGIN_REDIRECT_URL = '/'
+
+ADMINS = (
+    ('ricardo.tercero', 'ricardo.tercero@vordem.mx'),
+)
