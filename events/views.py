@@ -8,7 +8,8 @@ from django.http import Http404
 from datetime import datetime
 from .forms import EventForm, EventGetTicketForm, TicketSelectionFormSet
 from .models import Event, ShoppingCart, TicketSelection
-from utils.utils import  get_logged_user
+from utils.utils import get_logged_user
+from utils.views import FronesisBaseInnerView
 
 
 class DummyView(TemplateView):
@@ -26,9 +27,8 @@ class DummyView(TemplateView):
         return context
 
 
-class MyEventsView(ListView):
+class MyEventsView(ListView, FronesisBaseInnerView):
     template_name = 'events/my_events.html'
-    body_class = 'bg-white'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -42,15 +42,13 @@ class MyEventsView(ListView):
         context = super(MyEventsView, self).get_context_data(**kwargs)
         context['attending_by_you'] = Event.objects.none()
         context['past_events'] = Event.past.all()
-        context['BODY_CLASS'] = self.body_class or ''
         return context
 
 
-class CreateEventView(CreateView):
+class CreateEventView(CreateView, FronesisBaseInnerView):
 
     template_name = 'events/edit_view.html'
     form_class = EventForm
-    body_class = 'bg-white'
 
     @method_decorator(login_required)
     def dispatch(self, request, mode='create', event_uuid=None, *args, **kwargs):
@@ -61,7 +59,6 @@ class CreateEventView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(CreateEventView, self).get_context_data(**kwargs)
-        context['BODY_CLASS'] = self.body_class or ''
         context['mode'] = self.mode
         return context
 
@@ -112,12 +109,11 @@ class CreateEventView(CreateView):
             return self.event.admin_url
 
 
-class EventView(UpdateView):
+class EventView(UpdateView, FronesisBaseInnerView):
 
     template_name = 'events/edit_view.html'
     model = Event
     form_class = EventForm
-    body_class = 'bg-white'
 
     @method_decorator(login_required)
     def dispatch(self, request, mode='create', event_uuid=None, *args, **kwargs):
@@ -133,7 +129,6 @@ class EventView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(EventView, self).get_context_data(**kwargs)
-        context['BODY_CLASS'] = self.body_class or ''
         context['mode'] = self.mode
         return context
 
@@ -167,9 +162,8 @@ class EventView(UpdateView):
         return super(EventView, self).form_valid(form)
 
 
-class EventsPublished(ListView):
+class EventsPublished(ListView, FronesisBaseInnerView):
     template_name = 'events/published.html'
-    body_class = 'bg-white'
 
     def dispatch(self, request, *args, **kwargs):
         return super(EventsPublished, self).dispatch(request=request, **kwargs)
@@ -180,14 +174,12 @@ class EventsPublished(ListView):
     def get_context_data(self, **kwargs):
         context = super(EventsPublished, self).get_context_data(**kwargs)
         context['past_events'] = Event.publishedPast.all()
-        context['BODY_CLASS'] = self.body_class or ''
         return context
 
 
-class EventDetailPublished(DetailView):
+class EventDetailPublished(DetailView, FronesisBaseInnerView):
 
     template_name = 'events/public-view-event.html'
-    body_class = 'bg-white'
 
     def dispatch(self, request, year, month, day, slug, event_uuid, *args, **kwargs):
         begins_date = datetime.strptime('{}/{}/{}'.format(day, month, year), '%d/%B/%Y').date()
@@ -198,17 +190,15 @@ class EventDetailPublished(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(EventDetailPublished, self).get_context_data(**kwargs)
-        context['BODY_CLASS'] = self.body_class or ''
         return context
 
     def get_object(self, queryset=None):
         return self.event
 
 
-class EventGetTicket(FormView):
+class EventGetTicket(FormView, FronesisBaseInnerView):
     template_name = 'events/get-tickets.html'
     form_class = TicketSelectionFormSet
-    body_class = 'bg-white'
     no_tickets_selected = False
 
     def dispatch(self, request, year, month, day, slug, event_uuid, *args, **kwargs):
@@ -261,17 +251,15 @@ class EventGetTicket(FormView):
     def get_context_data(self, **kwargs):
         context = super(EventGetTicket, self).get_context_data(**kwargs)
         context['form'] = self.ticket_selection
-        context['BODY_CLASS'] = self.body_class or ''
         context['object'] = self.event
         context['user'] = self.user
         context['no_tickets_selected'] = self.no_tickets_selected
         return context
 
 
-class EventGetTicketCheckOut(FormView):
+class EventGetTicketCheckOut(FormView, FronesisBaseInnerView):
     template_name = 'events/get-tickets-checkout.html'
     form_class = TicketSelectionFormSet
-    body_class = 'bg-white'
     no_tickets_selected = False
     error_message = []
     ticket_selection = None
@@ -345,7 +333,6 @@ class EventGetTicketCheckOut(FormView):
         context = super(EventGetTicketCheckOut, self).get_context_data(**kwargs)
         context['form'] = self.ticket_selection
         context['car_form'] = self.form
-        context['BODY_CLASS'] = self.body_class or ''
         context['object'] = self.event
         context['user'] = self.user
         context['cart'] = self.cart
@@ -354,10 +341,9 @@ class EventGetTicketCheckOut(FormView):
         return context
 
 
-class EventGetTicketCheckOutFinished(FormView):
+class EventGetTicketCheckOutFinished(FormView, FronesisBaseInnerView):
     template_name = 'events/get-tickets-checkout_finish.html'
     form_class = TicketSelectionFormSet
-    body_class = 'bg-white'
 
     def dispatch(self, request, year, month, day, slug, event_uuid, *args, **kwargs):
         self.request = request
@@ -384,7 +370,6 @@ class EventGetTicketCheckOutFinished(FormView):
         context = super(EventGetTicketCheckOutFinished, self).get_context_data(**kwargs)
         # context['form'] = self.ticket_selection
         # context['car_form'] = self.form
-        context['BODY_CLASS'] = self.body_class or ''
         context['object'] = self.event
         # context['user'] = self.user
         # context['cart'] = self.cart
