@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <h1>
+    Hi <strong>{{name}}</strong>
+  </h1>
+  <p>
+    The <strong>Fronesis</strong> Team would like to welcome you to our platform.
+  </p>
+  <p>
+    Now you can Log-In at <a href="http://fronesis.vordem.mx">Fronesis</a>
+  </p>
+  <p>
+    Your log-in info is:
+    <ul>
+      <li>
+        Username: <strong>{{username}}</strong>
+      </li>
+  {% if password %}
+      <li>
+        Password: <strong>{{password}}</strong>
+      </li>
+      <li>
+        <smal>
+          This password is temporal we strongly recommend changing as soon as possible.
+        </smal>
+      </li>
+  {% endif %}
+    </ul>
+  </p>
+  <p>
+    <smal>We wish you a great day</smal>
+  </p>
+</body>
+</html>
