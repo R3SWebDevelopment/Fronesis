@@ -231,6 +231,10 @@ else:
     DEFAULT_FILE_STORAGE = 'fronesis.storages.MediaStorage'
 
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, '.static/')
+
+
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 INSTALLED_APPS += [PACKAGE_NAME_FILEBROWSER]
 
