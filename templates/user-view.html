@@ -17,15 +17,15 @@
           <li><a href="#nav1" class="triggerNav">Appointments</a></li>
           <li><a href="#">Coach Settings</a></li>
           <li><a href="#">Billing</a></li>
-          <li><a href="#">Events</a></li>
+          <li><a href="{% url 'events' %}">Events</a></li>
         </ul>
       </div>
     </div>
     <div class="booking-nav-hidden display">
       <ul>
-        <li class="active"><a href="#">My Events</a></li>
+        <li class="active"><a href="{% url 'my_events' %}">My Events</a></li>
         <li><a href="#">Events Settings</a></li>
-        <li><a href="#">Create new Event</a></li>
+        <li><a href="{% url 'my_events_create' %}">Create new Event</a></li>
       </ul>
     </div>
   </div>
