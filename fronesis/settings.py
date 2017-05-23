@@ -232,7 +232,7 @@ else:
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, '.static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
