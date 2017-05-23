@@ -151,7 +151,7 @@ class Event(models.Model):
     def url(self):
         year = self.begins_date.year
         month = self.begins_date.strftime('%B')
-        day = self.begins_date.day
+        day = self.begins_date.day if self.begins_date.day > 9 else '0{}'.format(self.begins_date.day)
         return reverse('public_event', kwargs={
             'year': year,
             'month': month,
@@ -164,7 +164,7 @@ class Event(models.Model):
     def get_tickets_url(self):
         year = self.begins_date.year
         month = self.begins_date.strftime('%B')
-        day = self.begins_date.day
+        day = self.begins_date.day if self.begins_date.day > 9 else '0{}'.format(self.begins_date.day)
         return reverse('public_event_tickets', kwargs={
             'year': year,
             'month': month,
@@ -177,7 +177,7 @@ class Event(models.Model):
     def get_tickets_checkout_url(self):
         year = self.begins_date.year
         month = self.begins_date.strftime('%B')
-        day = self.begins_date.day
+        day = self.begins_date.day if self.begins_date.day > 9 else '0{}'.format(self.begins_date.day)
         return reverse('public_event_tickets_checkout', kwargs={
             'year': year,
             'month': month,
@@ -190,7 +190,7 @@ class Event(models.Model):
     def get_tickets_checkout_finished_url(self):
         year = self.begins_date.year
         month = self.begins_date.strftime('%B')
-        day = self.begins_date.day
+        day = self.begins_date.day if self.begins_date.day > 9 else '0{}'.format(self.begins_date.day)
         return reverse('public_event_tickets_checkout_finish', kwargs={
             'year': year,
             'month': month,
