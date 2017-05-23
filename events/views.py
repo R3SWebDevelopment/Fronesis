@@ -125,7 +125,7 @@ class EventView(UpdateView):
         self.event_uuid = event_uuid
         self.organizer = get_logged_user(request)
         if self.event_uuid is not None:
-            self.event = Event.objects.filter(uuid =self.event_uuid).first()
+            self.event = Event.objects.filter(uuid=self.event_uuid).filter(organizer=self.organizer).first()
         return super(EventView, self).dispatch(request=request, **kwargs)
 
     def get_object(self, queryset=None):
@@ -149,8 +149,9 @@ class EventView(UpdateView):
 
     def form_valid(self, form):
         self.event = form.save(commit=False)
-        if self.mode == 'create':
-            self.event.organizer = self.organizer
+        # if self.mode == 'create':
+            # self.event.organizer = self.organizer
+        self.event.organizer = self.organizer
         self.event.save()
         if self.mode == 'update':
             current_tickets = []
