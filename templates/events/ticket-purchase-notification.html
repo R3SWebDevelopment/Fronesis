@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <h1>
+    Dear <strong>{{ name }}</strong>
+  </h1>
+  <p>
+    Your tickets purchases order has been authorized with the number <strong>{{order}}</strong>.
+  </p>
+  <p>
+    Payment info:
+    <ul>
+      <li>
+        Credit Card: <strong>{{credit_card|default:'**** **** **** ****'}}</strong>
+      </li>
+      <li>
+        Authorization number: <strong>{{authorization|default:'**********'}}</strong>
+      </li>
+      <li>
+        Total Paid: <strong>MX ${{total|default:'0.00'}}</strong>
+      </li>
+    </ul>
+  </p>
+  <p>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            No.
+          </th>
+          <th>
+            Name
+          </th>
+          <th>
+            Price
+          </th>
+          <th>
+            Ticket Number
+          </th>
+        </tr>
+      </thead>
+      <body>
+      {% for ticket in tickets %}
+        <tr>
+          <td>
+            {{ forloop.counter }}
+          </td>
+          <td>
+            {{ ticket.name }}
+          </td>
+          <td>
+            MX ${{ ticket.price }}
+          </td>
+          <td>
+            {{ ticket.uuid }}
+          </td>
+        </tr>
+      {% endfor %}
+      </body>
+    </table>
+  </p>
+  <p>
+    <smal>We wish you a great day</smal>
+  </p>
+</body>
+</html>

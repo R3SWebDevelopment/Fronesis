@@ -358,6 +358,7 @@ class EventGetTicketCheckOutFinished(FormView, FronesisBaseInnerView):
         #     self.cart = ShoppingCart.objects.get(id=cart_id, event=self.event, buyer=buyer)
         # except ShoppingCart.DoesNotExist:
         #     raise Http404
+        del self.request.session['ticket_cart_id']
         return super(EventGetTicketCheckOutFinished, self).dispatch(request=request)
 
     def get(self, request, *args, **kwargs):

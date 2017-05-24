@@ -290,6 +290,7 @@ class TicketSales(models.Model):
                                     related_name='tickets_bought')
     payment_authorization = models.CharField(null=False, blank=False, default='99999999', max_length=30)
     uuid = models.UUIDField(editable=False, null=False, blank=False, default=uuid.uuid4)
+    price = models.DecimalField(max_digits=8, decimal_places=2, default=0)
 
     @denormalized(models.CharField, null=False, blank=False, max_length=150, default='NO NAME')
     def buyer_name(self):
@@ -298,8 +299,12 @@ class TicketSales(models.Model):
     @classmethod
     def assign(cls, event, ticket_type, buyer, cc, autorization):
         ticket_sale = cls.objects.create(event=event, ticket_type=ticket_type, buyer=buyer, credit_card=cc,
-                                         payment_authorization=autorization)
+                                         payment_authorization=autorization, price=ticket_type.price)
         return ticket_sale
+
+    @property
+    def name(self):
+        return self.ticket_type.name
 
 
 class PaymentCustomer(models.Model):
@@ -446,7 +451,7 @@ class ShoppingCart(models.Model):
         return intcomma(self.total)
 
     def asign_tickets(self, authorization, cc):
-        purchared_tickets_id = []
+        purchared_tickets = []
         self.processing = False
         self.active = False
         self.checkout = True
@@ -455,8 +460,8 @@ class ShoppingCart(models.Model):
             ticket_sales = TicketSales.assign(event=self.event, ticket_type=ticket.ticket_type, buyer=self.buyer, cc=cc,
                                               autorization=authorization)
             ticket.clear_ticket_selection()
-            purchared_tickets_id.append(ticket_sales.id)
-        return  purchared_tickets_id
+            purchared_tickets.append(ticket_sales)
+        return purchared_tickets
 
     @property
     def selected_tickets(self):
