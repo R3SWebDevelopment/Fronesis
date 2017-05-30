@@ -93,8 +93,8 @@ class PaymentGateway(object):
             self.payment_credit_card = PaymentCreditCard.objects.get(customer=self.payment_customer,
                                                                      credit_card_number=credit_card_mask)
             self.card = self.customer.cards.retrieve(self.payment_credit_card.uuid)
-            self.card.holder_name = card_holder
-            self.card.save()
+            # self.card.holder_name = card_holder
+            # self.card.save()
         except (PaymentCreditCard.DoesNotExist, NameError, openpay.error.InvalidRequestError):
             try:
                 self.card_dict = {
@@ -131,10 +131,7 @@ class PaymentGateway(object):
                 device_session_id=device_session_id
             )
             authorized = True
-            print("do_pay - authorized: {}".format(authorized))
-            print("do_pay - dir(self.charge): {}".format(dir(self.charge)))
-            authorization = self.charge.authorization
-            print("do_pay - authorization: {}".format(self.charge.authorization))
+            authorization = self.charge.get('authorization')
         except openpay.error.InvalidRequestError as payment_error:
             self.payment_error = payment_error
             error_message = '{}'.format(payment_error)

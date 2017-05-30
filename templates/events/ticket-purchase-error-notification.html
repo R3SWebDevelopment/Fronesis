@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <h1>
+    Dear <strong>{{ name }}</strong>
+  </h1>
+  <p>
+    Unfortunately, there's have been an issue with your tickets purchase order number <strong>{{order}}</strong>.
+  </p>
+  <p>
+    Payment info:
+    <ul>
+      <li>
+        Credit Card: <strong>{{credit_card|default:'**** **** **** ****'}}</strong>
+      </li>
+
+      <li>
+        Total: <strong>MX ${{total|default:'0.00'}}</strong>
+      </li>
+      <li>
+        Error message: <strong>{{error}}</strong>
+      </li>
+    </ul>
+  </p>
+  <p>
+    <smal>We wish you a great day</smal>
+  </p>
+</body>
+</html>
