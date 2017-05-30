@@ -34,19 +34,19 @@
       {% endif %}
         <div class="one-col p20">
           <div class="two-col columns">
-            <label for="{{ form.email.id_for_label }}" class="dark-label mb20">{{ form.email.label|upper }}</label>
+            <label for="{{ form.email.id_for_label }}" class="dark-label mb20" style="color:white;">{{ form.email.label|upper }}</label>
             <input type="email" id = "{{ form.email.id_for_label }}" name = "{{ form.email.html_name }}" value = "{{ form.email.value|default:'' }}" class="border-bottom-input two-col columns" placeholder="Email Address" required>
           </div>
         </div>
         <div class="one-col p20">
           <div class="two-col columns">
-            <label for="{{ form.password1.id_for_label }}" class="dark-label mb20">{{ form.password1.label|upper }}</label>
+            <label for="{{ form.password1.id_for_label }}" class="dark-label mb20" style="color:white;">{{ form.password1.label|upper }}</label>
             <input type="password" id = "{{ form.password1.id_for_label }}" name = "{{ form.password1.html_name }}" value = "{{ form.password1.value|default:'' }}" class="border-bottom-input two-col columns" placeholder="Password" required>
           </div>
         </div>
         <div class="one-col p20">
           <div class="two-col columns">
-            <label for="{{ form.password2.id_for_label }}" class="dark-label mb20">{{ form.password2.label|upper }}</label>
+            <label for="{{ form.password2.id_for_label }}" class="dark-label mb20" style="color:white;">{{ form.password2.label|upper }}</label>
             <input type="password" id = "{{ form.password2.id_for_label }}" name = "{{ form.password2.html_name }}" value = "{{ form.password2.value|default:'' }}" class="border-bottom-input two-col columns" placeholder="Password again" required>
           </div>
         </div>
