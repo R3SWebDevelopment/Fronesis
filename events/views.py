@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 from datetime import datetime
 from .forms import EventForm, EventGetTicketForm, TicketSelectionFormSet
-from .models import Event, ShoppingCart, TicketSelection
+from .models import Event, ShoppingCart, TicketSelection, Ticket, TicketSalesOrder
 from utils.utils import get_logged_user
 from utils.views import FronesisBaseInnerView
 
@@ -130,6 +130,7 @@ class EventView(UpdateView, FronesisBaseInnerView):
     def get_context_data(self, **kwargs):
         context = super(EventView, self).get_context_data(**kwargs)
         context['mode'] = self.mode
+        context['event'] = self.event
         return context
 
     def get_success_url(self):
@@ -160,6 +161,29 @@ class EventView(UpdateView, FronesisBaseInnerView):
                 current_tickets.append(ticket)
             self.event.clean_tickets(exclude=current_tickets)
         return super(EventView, self).form_valid(form)
+
+
+class EventTicketSalesReport(ListView, FronesisBaseInnerView):
+    template_name = 'events/ticket_sales_report.html'
+    model = Ticket
+
+    @method_decorator(login_required)
+    def dispatch(self, request, event_uuid, *args, **kwargs):
+        self.uuid = event_uuid
+        self.instance = Event.objects.get(uuid=self.uuid)
+        return super(EventTicketSalesReport, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return super(EventTicketSalesReport, self).get_queryset().filter(event=self.instance)
+
+    def get_sales_order(self):
+        return self.instance.sales_order
+
+    def get_context_data(self, **kwargs):
+        context = super(EventTicketSalesReport, self).get_context_data(**kwargs)
+        context['event'] = self.instance
+        context['sales_order'] = self.get_sales_order()
+        return context
 
 
 class EventsPublished(ListView, FronesisBaseInnerView):

@@ -86,6 +86,29 @@ class Event(models.Model):
         ordering = ['begins_date', 'begins_time']
 
     @property
+    def sales_order(self):
+        sales_order = []
+        for ts in self.tickets_sales.all():
+            if not ts.order_no in [so.get('order_no') for so in sales_order]:
+                order_no = ts.order_no
+                buyer_name = ts.cc_buyer_name
+                date = ts.datetime
+                credit_card = ts.credit_card.credit_card_number
+                payment_authorization = ts.payment_authorization
+                qty = self.tickets_sales.filter(order_no=order_no).count()
+                total = self.tickets_sales.filter(order_no=order_no).aggregate(total=Sum('price')).get('total')
+                sales_order.append({
+                    'order_no': order_no,
+                    'buyer_name': buyer_name,
+                    'date': date,
+                    'credit_card': credit_card,
+                    'payment_authorization': payment_authorization,
+                    'qty': qty,
+                    'total': intcomma(total),
+                })
+        return sales_order
+
+    @property
     def assistants(self):
         return User.objects.all()
 
@@ -146,6 +169,11 @@ class Event(models.Model):
     def admin_url(self):
         uuid = "{}".format(self.uuid)
         return reverse('my_events_update', kwargs={'event_uuid': uuid})
+
+    @property
+    def admin_ticket_sales_report(self):
+        uuid = "{}".format(self.uuid)
+        return reverse('my_events_tickets_sales_report', kwargs={'event_uuid': uuid})
 
     @property
     def url(self):
@@ -276,6 +304,10 @@ class Ticket(models.Model):
         return "Selling"
 
     @property
+    def sales_ends(self):
+        return self.event.begins_date
+
+    @property
     def can_delete(self):
         if self.sold > 0:
             return False
@@ -291,20 +323,36 @@ class TicketSales(models.Model):
     payment_authorization = models.CharField(null=False, blank=False, default='99999999', max_length=30)
     uuid = models.UUIDField(editable=False, null=False, blank=False, default=uuid.uuid4)
     price = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    datetime = models.DateTimeField(auto_now_add=True, null=True)
+    order_no = models.CharField(default='9999999', max_length=10, null=True)
+
+    class Meta:
+        ordering = ['-datetime']
 
     @denormalized(models.CharField, null=False, blank=False, max_length=150, default='NO NAME')
     def buyer_name(self):
         return ""
 
     @classmethod
-    def assign(cls, event, ticket_type, buyer, cc, autorization):
+    def assign(cls, event, ticket_type, buyer, cc, autorization, order_no):
         ticket_sale = cls.objects.create(event=event, ticket_type=ticket_type, buyer=buyer, credit_card=cc,
-                                         payment_authorization=autorization, price=ticket_type.price)
+                                         payment_authorization=autorization, price=ticket_type.price, order_no=order_no)
         return ticket_sale
 
     @property
     def name(self):
         return self.ticket_type.name
+
+    @property
+    def qty(self):
+        return self.__class__.objects.filter(payment_authorization=self.autorization, event=self.event)
+
+    @property
+    def cc_buyer_name(self):
+        name = self.buyer.get_full_name()
+        if len(name.strip()) == 0:
+            name = self.buyer.username
+        return name
 
 
 class PaymentCustomer(models.Model):
@@ -458,7 +506,7 @@ class ShoppingCart(models.Model):
         self.save()
         for ticket in self.selected_tickets:
             ticket_sales = TicketSales.assign(event=self.event, ticket_type=ticket.ticket_type, buyer=self.buyer, cc=cc,
-                                              autorization=authorization)
+                                              autorization=authorization, order_no=self.order_id)
             ticket.clear_ticket_selection()
             purchared_tickets.append(ticket_sales)
         return purchared_tickets

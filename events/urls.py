@@ -1,5 +1,5 @@
 from .views import DummyView, CreateEventView, MyEventsView, EventsPublished, EventView, EventDetailPublished, \
-    EventGetTicket, EventGetTicketCheckOut, EventGetTicketCheckOutFinished
+    EventGetTicket, EventGetTicketCheckOut, EventGetTicketCheckOutFinished, EventTicketSalesReport
 from django.conf.urls import url
 
 urlpatterns = [
@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^my_events/create/$', CreateEventView.as_view(), {'mode': 'create'}, name='my_events_create'),
     url(r'^my_events/(?P<event_uuid>[0-9A-Fa-f-]+)/edit/$', EventView.as_view(), {'mode': 'update'},
         name='my_events_update'),
+    url(r'^my_events/(?P<event_uuid>[0-9A-Fa-f-]+)/tickets_sales_report/$', EventTicketSalesReport.as_view(),
+        name='my_events_tickets_sales_report'),
 
 
     # Dummy views

@@ -1,0 +1,107 @@
+{% extends 'user-view.html' %}
+{% load static %}
+{% load static %}
+
+
+{% block USER_VIEW %}
+  {{ block.super }}
+
+	<section>
+		<div class="wrap">
+			<div class="one-col">
+				<div class="one-col mb40">
+					<div class="profile-event-thumb mr20" style="background-image: url({{ event.cover.url }})"></div>
+					<div class="one-third">
+						<h1 class="mb20px">{{ event.name }} – {{ event.subtitle }}</h1>
+						<p class="mb20">
+              {{ event.description|safe }}
+            </p>
+						<p><strong>{{ event.begins_date }}</strong></p>
+					</div>
+				</div>
+				<div class="listed-elements mb40">
+          <a href="{{ event.admin_url }}">
+            <button type="button" class="btn-black btn-x1 mr20">Edit Event Details</button>
+          </a>
+				</div>
+			</div>
+			<div class="one-col mb40">
+				<div class="progress-bar-wrap">
+					<div class="title">
+						<div class="left-txt c-gray"><p>TICKETS SOLD</p></div>
+						<div class="right-txt c-gray"><p>TICKETS PENDING</p></div>
+					</div>
+					<div class="aqua-progress-bar">
+						<div class="left-txt c-white">{{ event.tickets_sold }}</div>
+						<div class="right-txt c-gray">{{ event.tickets_available }}</div>
+						<span class="bar" style="width:{{ event.sells_percentage }}%;"></span>
+					</div>
+				</div>
+			</div>
+			<div class="one-col mb40">
+				<p class="mb20 c-gray"><strong>YOUR EVENT’S URL</strong></p>
+				<div class="url-input">
+          <a href="{{ event.url }}">
+            {{ event.url }}
+          </a>
+        </div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="heading-separator mb40">
+				<h2 class="t-lyonL c-gray">Sales by Ticket Type</h2>
+			</div>
+			<table class="table-border-bottom mb40">
+				<tr>
+					<th>TICKET TYPE</th>
+					<th>PRICE</th>
+					<th>SOLD</th>
+					<th>STATUS</th>
+					<th>SALE ENDS</th>
+				</tr>
+      {% for ticket_type in ticket_list %}
+				<tr>
+					<td><strong>{{ ticket_type.name }}</strong></td>
+					<td>MX ${{ ticket_type.price }}</td>
+					<td>{{ ticket_type.sold }}/{{ ticket_type.total }}</td>
+					<td>{{ ticket_type.status }}</td>
+					<td>{{ ticket_type.sales_ends }}</td>
+				</tr>
+      {% endfor %}
+			</table>
+		</div>
+	</section>
+
+	<section>
+		<div class="wrap">
+			<div class="heading-separator mb40">
+				<h2 class="t-lyonL c-gray">Recent Orders</h2>
+			</div>
+			<table class="table-border-bottom mb40">
+				<tr>
+					<th>ORDER</th>
+					<th>BUYER</th>
+					<th>QTY</th>
+					<th>PRICE</th>
+					<th>DATE</th>
+					<th>PAYMENT</th>
+				</tr>
+      {% for order in sales_order %}
+				<tr>
+					<td>{{ order.order_no }}</td>
+					<td>{{ order.buyer_name }}</td>
+					<td>{{ order.qty }}</td>
+					<td>MX ${{ order.total }}</td>
+					<td>{{ order.date|date:'F d, Y' }}</td>
+					<td>Credit {{ order.credit_card }} ({{ order.payment_authorization }})</td>
+				</tr>
+      {% endfor %}
+			</table>
+		</div>
+	</section>
+
+
+{% endblock %}
