@@ -1,0 +1,44 @@
+{% extends 'user-view.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+
+	<section>
+		<div class="wrap">
+			<div class="heading-separator mb40">
+				<h2 class="t-lyonL c-gray">My recent orders</h2>
+			</div>
+			<table class="table-border-bottom mb40">
+				<tr>
+					<th>ORDER</th>
+					<th>BUYER</th>
+					<th>QTY</th>
+					<th>PRICE</th>
+					<th>DATE</th>
+					<th>PAYMENT</th>
+				</tr>
+      {% for order in object_list %}
+				<tr>
+					<td>{{ order.order_no }}</td>
+					<td>
+          {% if order.event.published %}
+            <a href="{{ order.event.url }}">
+              {{ order.event.name }}
+            </a>
+          {% else %}
+            {{ order.event.name }}
+          {% endif %}
+          </td>
+					<td>{{ order.qty }}</td>
+					<td>MX ${{ order.total }}</td>
+					<td>{{ order.date|date:'F d, Y' }}</td>
+					<td>Credit {{ order.credit_card }} ({{ order.payment_authorization }})</td>
+				</tr>
+      {% endfor %}
+			</table>
+		</div>
+	</section>
+
+{% endblock %}

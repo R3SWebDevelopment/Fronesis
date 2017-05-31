@@ -12,15 +12,15 @@
       {% if user.profile.avatar %}
         <div class="img" style="background-image: url('{{ user.profile.avatar.crop.128x128 }}')"></div>
       {% else %}
-        <div class="img" style="background-image: url('{{ user.profile.profile_image_url|default:'http://i.pravatar.cc/128?u=fake@pravatar.com' }}')"></div>
+        <div class="img" style="background-image: url('{{ user.profile.profile_image_url|default:'https://lelakisihat.com/wp-content/uploads/2016/09/avatar.jpg' }}')"></div>
       {% endif %}
         <p>{{ user.get_full_name|default:user.username }}</p>
       </div>
       <div class="nav">
         <ul>
-          <li><a href="#nav1" class="triggerNav">Appointments</a></li>
-          <li><a href="#">Coach Settings</a></li>
-          <li><a href="#">Billing</a></li>
+          {#<li><a href="#nav1" class="triggerNav">Appointments</a></li>#}
+          {#<li><a href="#">Coach Settings</a></li>#}
+          {#<li><a href="#">Billing</a></li>#}
           <li><a href="{% url 'events' %}">Events</a></li>
           <li><a href="{% url 'profile' %}">Profile</a></li>
         </ul>
@@ -29,6 +29,7 @@
     <div class="booking-nav-hidden display">
       <ul>
         <li class="active"><a href="{% url 'my_events' %}">My Events</a></li>
+        <li><a href="{% url 'MyTicketsListView' %}">My Tickets</a></li>
         {#<li><a href="#">Events Settings</a></li>#}
         <li><a href="{% url 'my_events_create' %}">Create new Event</a></li>
       </ul>

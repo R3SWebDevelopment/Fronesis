@@ -7,9 +7,11 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 from datetime import datetime
 from .forms import EventForm, EventGetTicketForm, TicketSelectionFormSet
-from .models import Event, ShoppingCart, TicketSelection, Ticket
+from .models import Event, ShoppingCart, TicketSelection, Ticket, TicketSales
 from utils.utils import get_logged_user
 from utils.views import FronesisBaseInnerView
+from django.contrib.humanize.templatetags.humanize import intcomma
+from django.db.models import Sum
 
 
 class DummyView(TemplateView):
@@ -398,4 +400,48 @@ class EventGetTicketCheckOutFinished(FormView, FronesisBaseInnerView):
         context['object'] = self.event
         # context['user'] = self.user
         # context['cart'] = self.cart
+        return context
+
+
+class MyTicketsListView(ListView, FronesisBaseInnerView):
+    template_name = 'events/my_tickets.html'
+    model = TicketSales
+    queryset = TicketSales.objects.all()
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.user = request.user
+        return super(MyTicketsListView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        qs = super(MyTicketsListView, self).get_queryset()
+        return qs.filter(buyer=self.user)
+
+    def get_list(self):
+        sales_order = []
+        qs = self.get_queryset()
+        for ts in qs:
+            if not ts.order_no in [so.get('order_no') for so in sales_order]:
+                order_no = ts.order_no
+                buyer_name = ts.cc_buyer_name
+                event = ts.event
+                date = ts.datetime
+                credit_card = ts.credit_card.credit_card_number
+                payment_authorization = ts.payment_authorization
+                qty = qs.filter(order_no=order_no).count()
+                total = qs.filter(order_no=order_no).aggregate(total=Sum('price')).get('total')
+                sales_order.append({
+                    'order_no': order_no,
+                    'event': event,
+                    'date': date,
+                    'credit_card': credit_card,
+                    'payment_authorization': payment_authorization,
+                    'qty': qty,
+                    'total': intcomma(total),
+                })
+        return sales_order
+
+    def get_context_data(self, **kwargs):
+        context = super(MyTicketsListView, self).get_context_data()
+        context['object_list'] = self.get_list()
         return context
