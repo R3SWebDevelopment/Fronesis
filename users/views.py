@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from .models import UserProfile
+from .forms import UserProfileForm
 from django.views.generic import TemplateView, FormView
 from utils.views import FronesisBaseInnerView
 from django.contrib.auth.decorators import login_required
@@ -57,7 +58,7 @@ class ProfileView(FormView, FronesisBaseInnerView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        self.user = request.user
+        self.user = User.objects.get(id=request.user.id)
         return super(ProfileView, self).dispatch(request,  *args, **kwargs)
 
     def get_object(self, queryset=None):
@@ -69,6 +70,7 @@ class ProfileView(FormView, FronesisBaseInnerView):
     def post(self, request, *args, **kwargs):
         user = self.get_object()
         data = request.POST
+        files = request.FILES
         form = self.form_class(instance=user, data=data)
         data['username'] = user.username
         data['date_joined'] = user.date_joined
@@ -85,6 +87,14 @@ class ProfileView(FormView, FronesisBaseInnerView):
                     update_session_auth_hash(request, user)
                 else:
                     return self.form_invalid(form)
+            avatar = files.get('avatar', None)
+            if avatar is not None:
+                avatar_data = request.POST
+                avatar_form = UserProfileForm(avatar_data, request.FILES,
+                                              instance=self.get_object().profile.userprofile)
+                if avatar_form.is_valid():
+                    avatar = avatar_form.save()
+                    avatar.save()
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
@@ -92,6 +102,7 @@ class ProfileView(FormView, FronesisBaseInnerView):
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data()
         context['password'] = SetPasswordForm(user=self.get_object())
+        context['avatar'] = UserProfileForm(instance=self.get_object().profile.userprofile)
         return context
 
     def form_valid(self, form):

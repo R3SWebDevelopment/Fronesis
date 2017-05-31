@@ -41,6 +41,17 @@
             <input type="text" id = "{{ password.new_password2.id_for_label }}" name = "{{password.new_password2.html_name}}" value = "{{password.new_password2.value|default:''}}" class="border-bottom-input two-col columns" placeholder="Password">
           </div>
         </div>
+        <div class="one-col">
+          <div class="one-col">
+            <input type="hidden" id = "{{ avatar.user.id_for_label }}" name = "{{avatar.user.html_name}}" value = "{{avatar.user.value|default:''}}">
+            <label for="{{ avatar.avatar.id_for_label }}" class="dark-label mb20">{{ avatar.avatar.label|upper }}</label>
+            <button class="upload-img" name="button">
+              <img id="output" width="100%" height="100%" {% if mode == 'update' %} src="{{ MEDIA_URL }}{{ avatar.avatar.value|default:'' }}" {% else %}style="display: none;"{% endif %}/>
+            </button>
+            <input id = "{{ avatar.avatar.id_for_label }}" name = "{{ avatar.avatar.html_name }}" type="file" accept="image/*" style = "display:none;">
+            <p class="smaller-txt">Ideal image size is 1280 x 1080, conisder file size should be under 1MB</p>
+          </div>
+        </div>
         <div class="one-col gray-border-box t-center mb40">
           <button class="btn-black btn-x2 mr20" name="button" type="submit">Save</button>
         </div>
@@ -51,4 +62,41 @@
 
 
 
+{% endblock %}
+
+{% block LIBRARIES %}
+  {{ block.super }}
+  <script>
+    $(document).ready(function() {
+      var cover = $('#{{ avatar.avatar.id_for_label }}');
+      var description = $('#{{ form.description.id_for_label }}');
+      var cover_trigger = $('.upload-img');
+      var cover_trigger_img = $('.upload-img::after');
+
+
+      $(cover_trigger).click(function(event){
+        event.preventDefault();
+        $(cover).click();
+      });
+
+      $(cover).change(function(){
+        preview_image(this, cover_trigger);
+      });
+
+      var preview_image = function(input, target) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $(target).find('img#output').attr('src', e.target.result).css({display: 'block'}).append(":-webkit-any(body):after {content: none;}");;
+          }
+
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+
+    });
+
+
+  </script>
 {% endblock %}
