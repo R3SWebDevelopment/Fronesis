@@ -80,8 +80,6 @@ class ProfileView(FormView, FronesisBaseInnerView):
             password = data.get('new_password1', None)
             if password is not None and password.strip():
                 password_form = SetPasswordForm(user=self.get_object(), data=data)
-                valid = password_form.is_valid()
-                errors = password_form.errors
                 if password_form.is_valid():
                     user = password_form.save()
                     update_session_auth_hash(request, user)
