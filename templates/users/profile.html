@@ -1,0 +1,54 @@
+{% extends 'user-view.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+
+<form method="post" enctype="multipart/form-data">
+  {{ form.errors }}
+  {% csrf_token %}
+  <section style="display: inline-block;">
+    <div class="wrap">
+      <div class="one-col">
+        <div class="heading-separator mb40">
+          <div class="blue-cir"><div class="txt"></div></div>
+          <h2 class="t-lyonL c-gray">Update Profile</h2>
+        </div>
+        <div class="one-col mb40">
+          <div class="one-col columns">
+            <label for="{{ form.email.id_for_label }}" class="dark-label mb20">{{ form.email.label|upper}}</label>
+            <input type="text" id = "{{ form.email.id_for_label }}" name = "{{form.email.html_name}}" value = "{{form.email.value|default:''}}" class="border-bottom-input two-col columns" placeholder="Email" required>
+          </div>
+        </div>
+        <div class="one-col mb40">
+          <div class="two-col columns">
+            <label for="{{ form.first_name.id_for_label }}" class="dark-label mb20">{{ form.first_name.label|upper}}</label>
+            <input type="text" id = "{{ form.first_name.id_for_label }}" name = "{{form.first_name.html_name}}" value = "{{form.first_name.value|default:''}}" class="border-bottom-input two-col columns" placeholder="First Name" required>
+          </div>
+          <div class="two-col columns">
+            <label for="{{ form.last_name.id_for_label }}" class="dark-label mb20">{{ form.last_name.label|upper}}</label>
+            <input type="text" id = "{{ form.last_name.id_for_label }}" name = "{{form.last_name.html_name}}" value = "{{form.last_name.value|default:''}}" class="border-bottom-input two-col columns" placeholder="Last Name" required>
+          </div>
+        </div>
+        <div class="one-col mb40">
+          <div class="two-col columns">
+            <label for="{{ password.new_password1.id_for_label }}" class="dark-label mb20">{{ password.new_password1.label|upper}}</label>
+            <input type="text" id = "{{ password.new_password1.id_for_label }}" name = "{{password.new_password1.html_name}}" value = "{{password.new_password1.value|default:''}}" class="border-bottom-input two-col columns" placeholder="Password">
+          </div>
+          <div class="two-col columns">
+            <label for="{{ password.new_password2.id_for_label }}" class="dark-label mb20">{{ password.new_password2.label|upper}}</label>
+            <input type="text" id = "{{ password.new_password2.id_for_label }}" name = "{{password.new_password2.html_name}}" value = "{{password.new_password2.value|default:''}}" class="border-bottom-input two-col columns" placeholder="Password">
+          </div>
+        </div>
+        <div class="one-col gray-border-box t-center mb40">
+          <button class="btn-black btn-x2 mr20" name="button" type="submit">Save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</form>
+
+
+
+{% endblock %}

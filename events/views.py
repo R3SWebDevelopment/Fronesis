@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 from datetime import datetime
 from .forms import EventForm, EventGetTicketForm, TicketSelectionFormSet
-from .models import Event, ShoppingCart, TicketSelection, Ticket, TicketSalesOrder
+from .models import Event, ShoppingCart, TicketSelection, Ticket
 from utils.utils import get_logged_user
 from utils.views import FronesisBaseInnerView
 
