@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from .models import UserProfile
+from django.views.generic import TemplateView
+from utils.views import FronesisBaseInnerView
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -37,3 +39,7 @@ class UserProfileViewSet(OnlyAlterOwnObjectsViewSet):
         return serializer.save(
             user=self.request.user
         )
+
+
+class DashboardView(TemplateView, FronesisBaseInnerView):
+    template_name = 'users/dashboard.html'
