@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'storages',
 
     'events',
+    'coaches',
 ]
 
 MIDDLEWARE_CLASSES = (
