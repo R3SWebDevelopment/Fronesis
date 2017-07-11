@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^docs/', get_swagger_view()),
 
     url(r'^events/', include('events.urls')),
+    url(r'^coach/', include('coaches.urls', namespace='coaches')),
 
     url("^", include("drum.links.urls")),
     url("^", include("mezzanine.urls"))
