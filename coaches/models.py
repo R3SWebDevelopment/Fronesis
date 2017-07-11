@@ -1,6 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+DAYS = (
+    (0, 'Sunday'),
+    (1, 'Monday'),
+    (2, 'Tuesday'),
+    (3, 'Wednesday'),
+    (4, 'Thursday'),
+    (5, 'Friday'),
+    (6, 'Saturday'),
+)
+
 
 class Coach(models.Model):
     user = models.ForeignKey(User, null=False)
@@ -25,7 +35,7 @@ class Coach(models.Model):
 
 class AvailableHour(models.Model):
     coach = models.ForeignKey(Coach, null=False)
-    day = models.IntegerField(default=0)
+    day = models.IntegerField(default=0, choices=DAYS)
     hour = models.IntegerField(default=0)
 
 
