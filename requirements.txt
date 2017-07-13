@@ -17,6 +17,7 @@ django-allauth==0.30.0
 django-celery-results==1.0.1
 django-contrib-comments==1.8.0
 django-cors-headers==2.0.2
+django-crum==0.7.2
 django-filter==1.0.1
 django-material==0.12.5
 django-postgrespool==0.3.1

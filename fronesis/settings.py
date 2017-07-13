@@ -84,6 +84,7 @@ MIDDLEWARE = [
     # 'mezzanine.core.middleware.SSLRedirectMiddleware',
     # 'mezzanine.pages.middleware.PageMiddleware',
     'mezzanine.core.middleware.FetchFromCacheMiddleware',
+    'crum.CurrentRequestUserMiddleware',
 ]
 
 TEMPLATES = [

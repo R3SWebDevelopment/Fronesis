@@ -1,0 +1,71 @@
+{% extends 'coaches/base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+<form method="post">
+  {% csrf_token %}
+  <section>
+    <div class="wrap">
+      <div class="one-col">
+        <div class="heading-separator mb40">
+          <div class="blue-cir"><div class="txt">1</div></div>
+          <h2 class="t-lyonL c-gray">Contact Details</h2>
+        </div>
+        <div class="one-col">
+          <div class="two-col columns">
+            <div class="one-col mb40">
+              <label class="dark-label mb20">FULL NAME</label>
+              <input type="text" class="border-bottom-input two-col columns" name="full_name" id="id_full_name" placeholder="Add full name" value="{{form.full_name.value|default:''}}">
+            </div>
+          </div>
+          <div class="two-col columns">
+            <div class="one-col">
+              <label class="dark-label mb20">SPECIALTY</label>
+              <input type="text" class="border-bottom-input two-col columns" name="specialty" id="id_specialty" placeholder="Add a descriptive specialty" value="{{form.specialty.value|default:''}}">
+            </div>
+          </div>
+        </div>
+        <div class="one-third columns">
+          <div class="one-col mb20">
+            <label class="dark-label mb20">OFFICE PHONE</label>
+            <input type="text" class="border-bottom-input two-col columns" name="office_phone" id="id_office_phone" placeholder="Add a phone" value="{{form.office_phone.value|default:''}}">
+          </div>
+          <div class="one-col mb20">
+            <label class="dark-label mb20">JOB TITLE (IF ANY)</label>
+            <input type="text" class="border-bottom-input two-col columns" name="job_title" id="id_job_title" placeholder="Add a job title" value="{{form.job_title.value|default:''}}">
+          </div>
+        </div>
+        <div class="one-third columns">
+          <div class="one-col mb20">
+            <label class="dark-label mb20">MOBILE PHONE</label>
+            <input type="text" class="border-bottom-input two-col columns" name="mobile_phone" id="id_mobile_phone" placeholder="Add a mobile phone" value="{{form.mobile_phone.value|default:''}}">
+          </div>
+          <div class="one-col mb20">
+            <label class="dark-label mb20">CURRENTLY AT</label>
+            <input type="text" class="border-bottom-input two-col columns" name="current_city" id="id_current_city" placeholder="Add a current city" value="{{form.current_city.value|default:''}}">
+          </div>
+        </div>
+        <div class="one-third columns">
+          <div class="one-col mb20">
+            <label class="dark-label mb20">EMAIL</label>
+            <input type="text" class="border-bottom-input two-col columns" name="email" id="id_email" placeholder="Add a email" value="{{form.email.value|default:''}}">
+          </div>
+          <div class="one-col mb20">
+            <label class="dark-label mb20">DEFAULT SKYPE ID</label>
+            <input type="text" class="border-bottom-input two-col columns" name="default_skype_id" id="id_default_skype_id" placeholder="Add a skype ID" value="{{form.default_skype_id.value|default:''}}">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="one-col t-center mtb40">
+        <button class="btn-aqua btn-x2" type="submit">Save changes</button>
+      </div>
+    </div>
+  </section>
+</form>
+{% endblock %}

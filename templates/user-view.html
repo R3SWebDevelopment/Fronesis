@@ -29,10 +29,12 @@
     </div>
     <div class="booking-nav-hidden display">
       <ul>
+      {% block SECTION_MENU %}
         <li class="active"><a href="{% url 'my_events' %}">My Events</a></li>
         <li><a href="{% url 'MyTicketsListView' %}">My Tickets</a></li>
         {#<li><a href="#">Events Settings</a></li>#}
         <li><a href="{% url 'my_events_create' %}">Create new Event</a></li>
+      {% endblock %}
       </ul>
     </div>
   </div>
