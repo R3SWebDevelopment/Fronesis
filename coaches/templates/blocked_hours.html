@@ -152,6 +152,21 @@
       $(inputs).prop('checked', is_checked);
     });
 
+    $('input[type="checkbox"]').not('[id="ALL"]').change(function(){
+      var is_checked = $(this).is(':checked');
+      if(!is_checked){
+        var container = $(this).parents('.day');
+        var check_all = $(container).find('input[type="checkbox"]').filter('[id="ALL"]');
+        $(check_all).prop('checked', false);
+      }else{
+        var container = $(this).parents('.day');
+        var inputs = $(container).find('input[type="checkbox"]');
+        var check_all = $(inputs).filter('[id="ALL"]');
+        var hours = $(inputs).not(check_all);
+        $(check_all).prop('checked', $(hours).not(':checked').length == 0)
+      }
+    });
+
     var set_selected_hours = function(){
       $(days).each(function(){
         var items = $(this).find('option');
