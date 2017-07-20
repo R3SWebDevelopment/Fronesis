@@ -5,8 +5,8 @@
 <li {% if contact == True %}class="active"{% endif %}>
   <a href="{% url 'coaches:contact_information' %}">Contact Information</a>
 </li>
-<li {% if block == True %}class="active"{% endif %}>
-  <a href="#">Blocked Hours</a>
+<li {% if blocked == True %}class="active"{% endif %}>
+  <a href="{% url 'coaches:blocked_hours' %}">Blocked Hours</a>
 </li>
 <li {% if settings == True %}class="active"{% endif %}>
   <a href="#">Booking Settings</a>

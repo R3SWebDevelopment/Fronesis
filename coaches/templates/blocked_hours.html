@@ -1,0 +1,192 @@
+{% extends 'coach_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+<form method="post" id="blocked_hours">
+  {% csrf_token %}
+  <section>
+    <div class="wrap mb40">
+      <div class="one-col mb40">
+        <div class="heading-separator mb40">
+          <h2 class="t-lyonL c-gray">Active Bundles</h2>
+        </div>
+        <div class="one-col mb40 c-gray">
+          <p>Mark the hours you wantto always show as <strong>unavailble</strong> in your schedule.</p>
+        </div>
+        <!-- #1 col -->
+        <div class="col14 columns day">
+          <div class="border-bottom-gray one-col c-black">
+            {{ form.sunday }}
+            <h3 class="mb10">Sun</h3>
+          </div>
+          {% for value, label in form.sunday.field.choices %}
+          <div class="one-col">
+            <div class="border-bottom-radio-input columns">
+              <div class="green-radio-input"><input type="checkbox" id='{{value}}' name='{{value}}'><span class="check"></span></div>
+              <p class="c-dark-purple">{{label}}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <!-- #2 col -->
+        <div class="col14 columns day">
+          <div class="border-bottom-gray one-col c-black">
+            {{ form.monday }}
+            <h3 class="mb10">Mon</h3>
+          </div>
+          {% for value, label in form.monday.field.choices %}
+          <div class="one-col">
+            <div class="border-bottom-radio-input columns">
+              <div class="green-radio-input"><input type="checkbox" id='{{value}}' name='{{value}}'><span class="check"></span></div>
+              <p class="c-dark-purple">{{label}}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <!-- #3 col -->
+        <div class="col14 columns day">
+          <div class="border-bottom-gray one-col c-black">
+            {{ form.tuesday }}
+            <h3 class="mb10">Tue</h3>
+          </div>
+          {% for value, label in form.tuesday.field.choices %}
+          <div class="one-col">
+            <div class="border-bottom-radio-input columns">
+              <div class="green-radio-input"><input type="checkbox" id='{{value}}' name='{{value}}'><span class="check"></span></div>
+              <p class="c-dark-purple">{{label}}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <!-- #4 col -->
+        <div class="col14 columns day">
+          <div class="border-bottom-gray one-col c-black">
+            {{ form.wednesday }}
+            <h3 class="mb10">Wed</h3>
+          </div>
+          {% for value, label in form.wednesday.field.choices %}
+          <div class="one-col">
+            <div class="border-bottom-radio-input columns">
+              <div class="green-radio-input"><input type="checkbox" id='{{value}}' name='{{value}}'><span class="check"></span></div>
+              <p class="c-dark-purple">{{label}}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <!-- #5 col -->
+        <div class="col14 columns day">
+          <div class="border-bottom-gray one-col c-black">
+            {{ form.thursday }}
+            <h3 class="mb10">Thu</h3>
+          </div>
+          {% for value, label in form.thursday.field.choices %}
+          <div class="one-col">
+            <div class="border-bottom-radio-input columns">
+              <div class="green-radio-input"><input type="checkbox" id='{{value}}' name='{{value}}'><span class="check"></span></div>
+              <p class="c-dark-purple">{{label}}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <!-- #6 col -->
+        <div class="col14 columns day">
+          <div class="border-bottom-gray one-col c-black">
+            {{ form.friday }}
+            <h3 class="mb10">Fri</h3>
+          </div>
+          {% for value, label in form.friday.field.choices %}
+          <div class="one-col">
+            <div class="border-bottom-radio-input columns">
+              <div class="green-radio-input"><input type="checkbox" id='{{value}}' name='{{value}}'><span class="check"></span></div>
+              <p class="c-dark-purple">{{label}}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <!-- #7 col -->
+        <div class="col14 columns day">
+          <div class="border-bottom-gray one-col c-black">
+            {{ form.saturday }}
+            <h3 class="mb10">Sat</h3>
+          </div>
+          {% for value, label in form.saturday.field.choices %}
+          <div class="one-col">
+            <div class="border-bottom-radio-input columns">
+              <div class="green-radio-input"><input type="checkbox" id='{{value}}' name='{{value}}'><span class="check"></span></div>
+              <p class="c-dark-purple">{{label}}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap mb40">
+      <div class="one-col t-center mb40">
+        <button class="btn-aqua btn-x2" type="submit">Save Changes</button>
+      </div>
+    </div>
+  </section>
+</form>
+{% endblock %}
+
+{% block SCRIPT %}
+{{block.super}}
+<script>
+  $(document).ready(function(){
+    var days = $(this).find('select.hidden')//.hide();
+    var form = $(this).find('form#blocked_hours');
+    $(form).submit(function(event){
+      get_selected_hours();
+      // event.preventDefault()
+      // return false;
+    });
+
+    $('input[type="checkbox"]').filter('[id="ALL"]').change(function(){
+      var container = $(this).parents('.day');
+      var inputs = $(container).find('input[type="checkbox"]').not(this);
+      var is_checked = $(this).is(':checked');
+      $(inputs).prop('checked', is_checked);
+    });
+
+    var set_selected_hours = function(){
+      $(days).each(function(){
+        var items = $(this).find('option');
+        var selected = $(items).filter(':selected');
+        var container = $(this).parents('.day');
+        var inputs = $(container).find('input[type="checkbox"]');
+        if(selected.length == 0 || (selected.length == 1 && selected.first().attr('value')=='ALL')){
+          $(inputs).prop('checked', true);
+        }else{
+          $(inputs).filter(function(index){
+            var id = $(this).attr('id');
+            if(id == 'ALL'){
+              return false;
+            }
+            return $(selected).filter('[value="' + id + '"]').length == 0
+          }).prop('checked', true);
+        }
+      });
+    }
+
+    var get_selected_hours = function(){
+      $(days).each(function(){
+        $(this).prop('selectedIndex', -1);
+        var items = $(this).find('option');
+        $(items).not('[values="ALL"]').prop('selected', true);
+        var container = $(this).parents('.day');
+        var inputs = $(container).find('input[type="checkbox"]').filter(':checked');
+        $(inputs).each(function(){
+          var id = $(this).attr('id');
+          $(items).filter('[value="' + id + '"]').prop('selected', false);
+        });
+      });
+    }
+
+    set_selected_hours();
+  });
+</script>
+{% endblock %}

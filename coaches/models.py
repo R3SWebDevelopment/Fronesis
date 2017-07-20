@@ -12,6 +12,26 @@ DAYS = (
 )
 
 
+AVAILABLE_HOURS = (
+    ('ALL', 'Check all'),
+    ('0700', '7:00 am'),
+    ('0800', '8:00 am'),
+    ('0900', '9:00 am'),
+    ('1000', '10:00 am'),
+    ('1100', '11:00 am'),
+    ('1200', '12:00 pm'),
+    ('1300', '1:00 pm'),
+    ('1400', '2:00 pm'),
+    ('1500', '3:00 pm'),
+    ('1600', '4:00 pm'),
+    ('1700', '5:00 pm'),
+    ('1800', '6:00 pm'),
+    ('1900', '7:00 pm'),
+    ('2000', '8:00 pm'),
+    ('2100', '9:00 pm'),
+)
+
+
 class Coach(models.Model):
     user = models.ForeignKey(User, null=False)
     specialty = models.CharField(max_length=150, null=False, default='')
@@ -34,9 +54,31 @@ class Coach(models.Model):
 
 
 class AvailableHour(models.Model):
-    coach = models.ForeignKey(Coach, null=False)
+    coach = models.ForeignKey(Coach, null=False, related_name='available_hours')
     day = models.IntegerField(default=0, choices=DAYS)
     hour = models.IntegerField(default=0)
+
+    @classmethod
+    def get_hours(cls, coach=None, day_name=None):
+        day = None
+        if day_name == 'sunday':
+            day = 0
+        elif day_name == 'monday':
+            day = 1
+        elif day_name == 'tuesday':
+            day = 2
+        elif day_name == 'wednesday':
+            day = 3
+        elif day_name == 'thursday':
+            day = 4
+        elif day_name == 'friday':
+            day = 5
+        elif day_name == 'saturday':
+            day = 6
+        if coach and day:
+            return ['0{}00'.format(h.get('hour')) if h.get('hour') < 10 else '{}00'.format(h.get('hour'))
+                    for h in cls.objects.filter(coach=coach).filter(day=day).values('hour')]
+        return []
 
 
 class Venue(models.Model):

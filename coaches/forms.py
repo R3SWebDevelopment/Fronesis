@@ -1,5 +1,5 @@
 from django import forms
-from .models import Coach
+from .models import Coach, AVAILABLE_HOURS, AvailableHour
 from django.contrib.auth.models import User
 
 
@@ -43,3 +43,50 @@ class CoachContactForm(forms.ModelForm):
         user.first_name = first_name
         user.last_name = last_name
         user.save()
+
+
+class CoachBlockedHours(forms.ModelForm):
+    sunday = forms.MultipleChoiceField(choices=AVAILABLE_HOURS)
+    monday = forms.MultipleChoiceField(choices=AVAILABLE_HOURS)
+    tuesday = forms.MultipleChoiceField(choices=AVAILABLE_HOURS)
+    wednesday = forms.MultipleChoiceField(choices=AVAILABLE_HOURS)
+    thursday = forms.MultipleChoiceField(choices=AVAILABLE_HOURS)
+    friday = forms.MultipleChoiceField(choices=AVAILABLE_HOURS)
+    saturday = forms.MultipleChoiceField(choices=AVAILABLE_HOURS)
+
+    class Meta:
+        model = Coach
+        fields = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+
+    def __init__(self, *args, **kwargs):
+        super(CoachBlockedHours, self).__init__(*args, **kwargs)
+        instance = kwargs.get('instance', None)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'hidden'
+            self.fields[field].required = False
+            if instance:
+                self.fields[field].initial = AvailableHour.get_hours(coach=instance, day_name=field)
+
+    def save(self, commit=False):
+        instance = super(CoachBlockedHours, self).save(commit=False)
+        days = []
+        days.append(self.cleaned_data.get('sunday', []))
+        days.append(self.cleaned_data.get('monday', []))
+        days.append(self.cleaned_data.get('tuesday', []))
+        days.append(self.cleaned_data.get('wednesday', []))
+        days.append(self.cleaned_data.get('thursday', []))
+        days.append(self.cleaned_data.get('friday', []))
+        days.append(self.cleaned_data.get('saturday', []))
+        instance.available_hours.all().delete()
+        day = 0
+        for day_hours in days:
+            for hour in day_hours:
+                if hour not in ['ALL']:
+                    try:
+                        hour = int(int(hour) / 100)
+                    except ValueError:
+                        hour = None
+                    if hour:
+                        AvailableHour.objects.get_or_create(coach=instance, day=day, hour=hour)
+            day += 1
+
