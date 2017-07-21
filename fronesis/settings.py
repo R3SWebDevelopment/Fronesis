@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 
     'events',
     'coaches',
+    'google',
 ]
 
 MIDDLEWARE_CLASSES = (
@@ -304,3 +305,6 @@ if os.environ.get('EMAIL_HOST_USER', ''):
     EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', '30'))
     EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
     EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False').lower() == 'true'
+
+
+GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = '../google/client_secrets.json'
