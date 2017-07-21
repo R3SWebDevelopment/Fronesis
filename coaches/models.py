@@ -66,7 +66,9 @@ class Coach(models.Model):
                 self.save()
 
     def set_google_calender_list(self, calender_list=None):
-        pass
+        if calender_list:
+            self.google_calender_list = calender_list
+            self.save()
 
 
 class AvailableHour(models.Model):
