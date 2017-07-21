@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 
     'events',
     'coaches',
-    'google',
+    'google_api',
 ]
 
 MIDDLEWARE_CLASSES = (
@@ -307,4 +307,4 @@ if os.environ.get('EMAIL_HOST_USER', ''):
     EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False').lower() == 'true'
 
 
-GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = '../google/client_secrets.json'
+GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = os.path.join(BASE_DIR, 'google_api/client_secrets.json')
