@@ -42,6 +42,7 @@ Jinja2==2.9.5
 jmespath==0.9.1
 MarkupSafe==0.23
 Mezzanine==4.2.2
+oauth2client==4.1.2
 oauthlib==2.0.1
 olefile==0.44
 openpay==0.3
