@@ -37,7 +37,12 @@
           <div class="one-col mb40">
             <label class="dark-label mb20">GOOGLE CALENDAR</label>
           </div>
-          <button class="btn-aqua btn-x2 mr20">Connect my account</button>
+
+            <button class="btn-aqua btn-x2 mr20">
+              <a href="{% url 'google:calendar_connect' %}">
+                Connect my account
+              </a>
+            </button>
         {% endif %}
         </div>
       {% if object.is_google_account_set %}

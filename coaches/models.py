@@ -33,7 +33,7 @@ AVAILABLE_HOURS = (
 
 
 class Coach(models.Model):
-    user = models.ForeignKey(User, null=False)
+    user = models.ForeignKey(User, null=False, related_name='coaches')
     specialty = models.CharField(max_length=150, null=False, default='')
     office_phone = models.CharField(max_length=10, null=False, default='')
     mobile_phone = models.CharField(max_length=10, null=False, default='')
