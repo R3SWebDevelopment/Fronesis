@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import JSONField
 
 DAYS = (
     (0, 'Sunday'),
@@ -44,6 +45,7 @@ class Coach(models.Model):
     ask_before_booking = models.BooleanField(default=False)
     google_calendar_account_id = models.CharField(max_length=50, null=False, default='')
     google_calendar_id = models.CharField(max_length=50, null=False, default='')
+    google_calender_list = JSONField(null=True, default=None)
     sunday_works = models.BooleanField(default=False)
     monday_works = models.BooleanField(default=False)
     tuesday_works = models.BooleanField(default=False)
@@ -55,6 +57,16 @@ class Coach(models.Model):
     @property
     def is_google_account_set(self):
         return True if self.google_calendar_account_id else False
+
+    def connect_google_account(self, data=None):
+        if data:
+            google_calendar_account_id = data.get('id', None)
+            if google_calendar_account_id:
+                self.google_calendar_account_id = google_calendar_account_id
+                self.save()
+
+    def set_google_calender_list(self, calender_list=None):
+        pass
 
 
 class AvailableHour(models.Model):
