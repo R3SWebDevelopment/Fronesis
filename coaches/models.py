@@ -52,6 +52,10 @@ class Coach(models.Model):
     friday_works = models.BooleanField(default=False)
     saturday_works = models.BooleanField(default=False)
 
+    @property
+    def is_google_account_set(self):
+        return True if self.google_calendar_account_id else False
+
 
 class AvailableHour(models.Model):
     coach = models.ForeignKey(Coach, null=False, related_name='available_hours')

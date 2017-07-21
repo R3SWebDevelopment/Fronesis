@@ -1,0 +1,71 @@
+{% extends 'coach_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+<form method="post">
+  {% csrf_token %}
+  <section>
+    <div class="wrap">
+      <div class="one-col">
+        <div class="heading-separator mb40">
+          <h2 class="t-lyonL c-gray">Booking Settings</h2>
+        </div>
+        <div class="two-col columns">
+          <div class="one-col mb40">
+            <label class="dark-label mb20">INSTANT BOOKING</label>
+            <div class="border-bottom-radio-input">
+              <div class="green-radio-input"><input type="radio" name="is_instante_booking_allow", id="id_is_instante_booking_allow" {{form.is_instante_booking_allow.value|yesno:'checked="checked",'}}><span class="check"></span></div>
+              <p class="c-dark-purple">Allow clients to book instantly</p>
+            </div>
+          </div>
+          <div class="one-col mb40">
+            <label class="dark-label mb20">INSTANT BOOKING</label>
+            <div class="border-bottom-radio-input">
+              <div class="green-radio-input"><input type="radio" name="ask_before_booking" id="id_ask_before_booking" {{form.ask_before_booking.value|yesno:'checked="checked",'}}><span class="check"></span></div>
+              <p class="c-dark-purple">Alway ask me befor booking</p>
+            </div>
+          </div>
+        {% if object.is_google_account_set %}
+          <div class="one-col mb40">
+            <label class="dark-label mb20">GOOGLE CALENDAR</label>
+            <p>Connected as <a href="#" class="c-bright-blue">nacho@gmail.com</a></p>
+          </div>
+          <button class="btn-danger btn-x2 mr20">Disconnect my account</button>
+        {% else %}
+          <div class="one-col mb40">
+            <label class="dark-label mb20">GOOGLE CALENDAR</label>
+          </div>
+          <button class="btn-aqua btn-x2 mr20">Connect my account</button>
+        {% endif %}
+        </div>
+        <div class="two-col columns">
+          <div class="one-col">
+            <label class="dark-label mb20">GOOGLE CALENDAR</label>
+            <input type="text" class="select-gray-border-input" value="CT 14:00">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="one-col t-center mtb40">
+        <button class="btn-aqua btn-x2">Save changes</button>
+      </div>
+    </div>
+  </section>
+</form>
+{% endblock %}
+{% block SCRIPT %}
+{{block.super}}
+<script>
+  $(document).ready(function(){
+    $('.border-bottom-radio-input').click(function(){
+      var input = $(this).find('input[type="radio"]');
+      $(input).prop('checked', !$(input).is(':checked'));
+    }).css('cursor', 'pointer');
+  });
+</script>
+{% endblock %}

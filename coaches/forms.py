@@ -90,3 +90,14 @@ class CoachBlockedHours(forms.ModelForm):
                         AvailableHour.objects.get_or_create(coach=instance, day=day, hour=hour)
             day += 1
 
+
+class CoachBookingSettings(forms.ModelForm):
+    class Meta:
+        model = Coach
+        fields = ['is_instante_booking_allow', 'ask_before_booking']
+
+    def __init__(self, *args, **kwargs):
+        super(CoachBookingSettings, self).__init__(*args, **kwargs)
+        instance = kwargs.get('instance', None)
+        for field in self.fields:
+            self.fields[field].widget = forms.CheckboxInput()

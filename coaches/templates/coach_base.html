@@ -9,7 +9,7 @@
   <a href="{% url 'coaches:blocked_hours' %}">Blocked Hours</a>
 </li>
 <li {% if settings == True %}class="active"{% endif %}>
-  <a href="#">Booking Settings</a>
+  <a href="{% url 'coaches:booking_settings' %}">Booking Settings</a>
 </li>
 <li {% if venues == True %}class="active"{% endif %}>
   <a href="#">My Venues</a>
