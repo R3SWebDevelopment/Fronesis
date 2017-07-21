@@ -40,12 +40,14 @@
           <button class="btn-aqua btn-x2 mr20">Connect my account</button>
         {% endif %}
         </div>
+      {% if object.is_google_account_set %}
         <div class="two-col columns">
           <div class="one-col">
             <label class="dark-label mb20">GOOGLE CALENDAR</label>
             <input type="text" class="select-gray-border-input" value="CT 14:00">
           </div>
         </div>
+      {% endif %}
       </div>
     </div>
   </section>
