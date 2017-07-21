@@ -33,6 +33,7 @@ drfdocs==0.0.11
 Drum==0.4.0
 filebrowser-safe==0.4.6
 future==0.16.0
+google-api-python-client==1.6.2
 grappelli-safe==0.4.5
 gunicorn==19.6.0
 html5lib==0.9999999
