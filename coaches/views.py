@@ -1,6 +1,6 @@
-from django.views.generic import DetailView, ListView, UpdateView
+from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from .models import Coach, Venue
-from .forms import CoachContactForm, CoachBlockedHours, CoachBookingSettings
+from .forms import CoachContactForm, CoachBlockedHours, CoachBookingSettings, VenuesForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
@@ -127,3 +127,26 @@ class MyVenues(ListView, FronesisBaseInnerView):
     def get_queryset(self):
         qs = super(MyVenues, self).get_queryset()
         return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
+
+
+class CreateVenues(CreateView, FronesisBaseInnerView):
+    model = Venue
+    queryset = Venue.objects.all()
+    template_name = 'new_venues.html'
+    form_class = VenuesForm
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateVenues, self).get_context_data(**kwargs)
+        context['venues'] = True
+        return context
+
+    def get_success_url(self):
+        return reverse('coaches:my_venues')
+
+
+class RemoveVenues(DeleteView, FronesisBaseInnerView):
+    model = Venue
+    queryset = Venue.objects.all()
+
+    def get_success_url(self):
+        return reverse('coaches:my_venues')

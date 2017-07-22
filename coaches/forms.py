@@ -1,6 +1,7 @@
 from django import forms
-from .models import Coach, AVAILABLE_HOURS, AvailableHour
+from .models import Coach, AVAILABLE_HOURS, AvailableHour, Venue
 from django.contrib.auth.models import User
+from crum import get_current_user
 
 
 class CoachContactForm(forms.ModelForm):
@@ -112,3 +113,15 @@ class CoachBookingSettings(forms.ModelForm):
         google_calendar = self.cleaned_data.get('google_calendar', None)
         instance.google_calendar_id = google_calendar
         instance.save()
+
+
+class VenuesForm(forms.ModelForm):
+
+    class Meta:
+        model = Venue
+        fields = ['coach', 'name', 'address']
+
+    def __init__(self, *args, **kwargs):
+        super(VenuesForm, self).__init__(*args, **kwargs)
+        self.fields['coach'].initial = get_current_user().coaches.first()
+        self.fields['coach'].widget = forms.HiddenInput()

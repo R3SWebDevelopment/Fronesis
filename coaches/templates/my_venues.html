@@ -4,13 +4,15 @@
 
 {% block CONTENT %}
  {{ block.super }}
+<form method="post">
+  {% csrf_token %}
   <section>
     <div class="wrap">
       <div class="one-col">
         <div class="heading-separator mb20">
           <h2 class="t-lyonL c-gray">New Venue</h2>
         </div>
-      {% for venue in venue_list %}
+        {% for venue in venue_list %}
         <div class="one-col border-bottom-gray ptb20">
           <div class="two-col">
             <p>{{venue.name}}</p>
@@ -18,18 +20,32 @@
           </div>
           <div class="two-col right-dir">
             <p>{{venue.address}}</p>
-            <p><a href="" class="danger">Delete</a></p>
+            <p><a href="{% url 'coaches:remove_venues' venue.pk %}" class="danger post_request">Delete</a></p>
           </div>
         </div>
-      {% endfor %}
+        {% endfor %}
       </div>
     </div>
   </section>
   <section>
     <div class="wrap">
       <div class="one-col t-center mtb40">
-        <button class="btn-aqua btn-x2">Add Venue</button>
+        <a href = "{% url 'coaches:add_venues' %}">
+          <button class="btn-aqua btn-x2">Add Venue</button>
+        </a>
       </div>
     </div>
   </section>
+</form>
+{% endblock %}
+{% block SCRIPT %}
+{{block.super}}
+<script>
+  $(document).ready(function(){
+    $(this).find('.post_request').click(function(event){
+      event.preventDefault();
+      $(this).parents('form').attr('action', $(this).attr('href')).submit();
+    });
+  });
+</script>
 {% endblock %}

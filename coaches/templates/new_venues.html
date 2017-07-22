@@ -1,0 +1,39 @@
+{% extends 'coach_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+<form method="post">
+  {% csrf_token %}
+  {{form.coach}}
+  <section>
+    <div class="wrap">
+      <div class="one-col">
+        <div class="heading-separator mb40">
+          <h2 class="t-lyonL c-gray">New Venue</h2>
+        </div>
+        <div class="one-col">
+          <div class="one-col mb40">
+            <label class="dark-label mb20">VENUE NAME</label>
+            <input type="text" class="border-bottom-input two-col columns" placeholder="Add a descriptive name for this venue" id="id_name" maxlength="150" name="name" required>
+          </div>
+        </div>
+        <div class="one-col">
+          <div class="one-col mb40">
+            <label class="dark-label mb20">ADDRESS</label>
+            <input type="text" class="border-bottom-input two-col columns" placeholder="Add a an address for this venue" id="id_address" name="address" required>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="one-col t-center mtb40">
+        <button class="btn-aqua btn-x2">Save New Venue</button>
+      </div>
+    </div>
+  </section>
+</form>
+{% endblock %}
