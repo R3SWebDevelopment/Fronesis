@@ -1,0 +1,31 @@
+{% extends 'coach_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+<section>
+  <div class="wrap mb40">
+    <div class="heading-separator">
+      <h2 class="t-lyonL c-gray">My Sessions</h2>
+    </div>
+  {% for service in session_list %}
+    <div class="one-col border-bottom-gray ptb20">
+      <div class="two-col">
+        <h3 class="c-gray t-lyon">{{service.length}} meeting</h3>
+        <p class="c-gray smaller-txt">{{service.name}}</p>
+      </div>
+      <div class="two-col right-dir">
+        <p class="c-gray">30 min / $100 USD</p>
+      {% if service.face_to_face %}
+        <p class="c-bright-green smaller-txt">Available online</p>
+      {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+  <div class="wrap mb60">
+    <button class="btn-black">Add New Sessions</button>
+  </div>
+</section>
+{% endblock %}

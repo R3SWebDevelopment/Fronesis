@@ -1,5 +1,5 @@
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from .models import Coach, Venue
+from .models import Coach, Venue, Session
 from .forms import CoachContactForm, CoachBlockedHours, CoachBookingSettings, VenuesForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
@@ -160,6 +160,10 @@ class EditVenues(UpdateView, FronesisBaseInnerView):
             'pk': self.object.pk
         })
 
+    def get_queryset(self):
+        qs = super(EditVenues, self).get_queryset()
+        return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
+
 
 class RemoveVenues(DeleteView, FronesisBaseInnerView):
     model = Venue
@@ -167,3 +171,36 @@ class RemoveVenues(DeleteView, FronesisBaseInnerView):
 
     def get_success_url(self):
         return reverse('coaches:my_venues')
+
+    def get_queryset(self):
+        qs = super(RemoveVenues, self).get_queryset()
+        return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
+
+
+class MyServices(ListView, FronesisBaseInnerView):
+    model = Session
+    queryset = Session.objects.all()
+    template_name = 'my_services.html'
+
+    def get_queryset(self):
+        qs = super(MyServices, self).get_queryset()
+        return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
+
+
+class CreateService(CreateView, FronesisBaseInnerView):
+    model = Session
+    queryset = Session.objects.all()
+    template_name = 'new_venues.html'
+    form_class = VenuesForm
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateService, self).get_context_data(**kwargs)
+        context['venues'] = True
+        return context
+
+    def get_success_url(self):
+        return reverse('coaches:my_venues')
+
+    def get_queryset(self):
+        qs = super(CreateService, self).get_queryset()
+        return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())

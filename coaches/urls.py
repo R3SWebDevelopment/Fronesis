@@ -1,4 +1,5 @@
-from .views import ContactDetail, BlockedHours, BookingSettings, MyVenues, CreateVenues, RemoveVenues, EditVenues
+from .views import ContactDetail, BlockedHours, BookingSettings, MyVenues, CreateVenues, RemoveVenues, EditVenues, \
+    MyServices
 from django.conf.urls import url
 
 urlpatterns = [
@@ -9,5 +10,6 @@ urlpatterns = [
     url(r'^my_venues/add/$', CreateVenues.as_view(), name='add_venues'),
     url(r'^my_venues/(?P<pk>\d+)/remove/$', RemoveVenues.as_view(), name='remove_venues'),
     url(r'^my_venues/(?P<pk>\d+)/edit/$', EditVenues.as_view(), name='edit_venues'),
+    url(r'^my_services/$', MyServices.as_view(), name='my_services'),
 ]
 
