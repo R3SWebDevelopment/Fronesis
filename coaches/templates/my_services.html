@@ -1,4 +1,4 @@
-{% extends 'coach_base.html' %}
+{% extends 'session_base.html' %}
 {% load static %}
 
 
@@ -25,7 +25,9 @@
   {% endfor %}
   </div>
   <div class="wrap mb60">
-    <button class="btn-black">Add New Sessions</button>
+    <a href="{% url 'coaches:add_services' %}">
+      <button type="button" class="btn-black">Add New Sessions</button>
+    </a>
   </div>
 </section>
 {% endblock %}

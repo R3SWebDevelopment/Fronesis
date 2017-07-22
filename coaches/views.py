@@ -190,7 +190,7 @@ class MyServices(ListView, FronesisBaseInnerView):
 class CreateService(CreateView, FronesisBaseInnerView):
     model = Session
     queryset = Session.objects.all()
-    template_name = 'new_venues.html'
+    template_name = 'new_service.html'
     form_class = VenuesForm
 
     def get_context_data(self, **kwargs):

@@ -1,0 +1,119 @@
+{% extends 'session_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+<form method="post">
+  {% csrf_token %}
+  <section>
+    <div class="wrap">
+      <h1 class="mb20">Create a New Session Type</h1>
+      <div class="one-col">
+        <div class="heading-separator mb40">
+          <div class="blue-cir"><div class="txt">1</div></div>
+          <h2 class="t-lyonL c-gray">Session Details</h2>
+        </div>
+        <div class="one-col mb40">
+          <label class="dark-label mb20">SESSION NAME</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="Add a descriptive name for your session">
+        </div>
+        <div class="one-col mb40">
+          <div class="two-third">
+            <label class="dark-label mb20">SESSION LENGHT</label>
+            <div class="two-col columns">
+              <input type="text" class="select-gray-border-input" placeholder="0">
+              <div class="suggestion-list suggestion-list-wrap">
+                <ul>
+                  <li>1</li>
+                  <li>2</li>
+                  <li>3</li>
+                  <li>4</li>
+                </ul>
+              </div>
+            </div>
+            <div class="two-col columns">
+              <input type="text" class="select-gray-border-input" placeholder="0">
+              <div class="suggestion-list show suggestion-list-wrap">
+                <ul>
+                  <li>1</li>
+                  <li>2</li>
+                  <li>3</li>
+                  <li>4</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="one-third columns">
+            <label class="dark-label mb20">SESSION PRICE (IN MXN)</label>
+            <input type="text" class="border-bottom-input two-col columns" placeholder="$100.00">
+          </div>
+        </div>
+        <div class="one-col mb40">
+          <label class="dark-label mb20">DESCRIPTION</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="Describe this session type (in less than 80 characters)">
+        </div>
+        <div class="one-col mb40 blue-tags">
+          <label class="dark-label mb20">CATEGORIES</label>
+          <input type="text" class="tags tags_1 border-bottom-input two-col columns" data-tagsinput-init="true" id="tags15007412529210" style="display: none;"><div id="tags15007412529210_tagsinput" class="tagsinput" style="width: auto;"><div id="tags15007412529210_addTag"><input id="tags15007412529210_tag" value="" class="add-tag" data-default="#addTags" style="color: rgb(255, 255, 255); width: 167px;"></div><div class="tags_clear"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="one-col">
+        <div class="heading-separator mb40">
+          <div class="blue-cir"><div class="txt">2</div></div>
+          <h2 class="t-lyonL c-gray">Availability</h2>
+        </div>
+      </div>
+      <div class="one-col mb40">
+        <div class="one-third columns">
+          <label class="dark-label mb20">ONLINE AVAILABILITY</label>
+          <div class="border-bottom-radio-input">
+            <div class="green-radio-input"><input type="radio" name="character1"><span class="check"></span></div>
+            <p class="c-dark-purple">Face to Face</p>
+          </div>
+        </div>
+        <div class="one-third columns">
+          <label class="dark-label mb20">AVAILABLE AT WHICH VENUES</label>
+          <div class="border-bottom-radio-input">
+            <div class="green-radio-input"><input type="radio" name="character2"><span class="check"></span></div>
+            <p class="c-dark-purple">Venue 1</p>
+          </div>
+          <div class="border-bottom-radio-input">
+            <div class="green-radio-input"><input type="radio" name="character2"><span class="check"></span></div>
+            <p class="c-dark-purple">Venue 2</p>
+          </div>
+          <div class="border-bottom-radio-input">
+            <div class="green-radio-input"><input type="radio" name="character2"><span class="check"></span></div>
+            <p class="c-dark-purple">Venue 3</p>
+          </div>
+        </div>
+      </div>
+      <div class="one-col mb40">
+        <div class="one-third columns">
+          <label class="dark-label mb20">GROUPS</label>
+          <div class="border-bottom-radio-input">
+            <div class="green-radio-input"><input type="radio" name="character1"><span class="check"></span></div>
+            <p class="c-dark-purple">One on one sessions</p>
+          </div>
+          <div class="border-bottom-radio-input">
+            <div class="green-radio-input"><input type="radio" name="character1"><span class="check"></span></div>
+            <p class="c-dark-purple">Available for groups</p>
+          </div>
+        </div>
+        <div class="one-third columns disable-events">
+          <label class="dark-label mb20">PRICE PER PERSON (FOR GROUPS)</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="$0.00">
+        </div>
+        <div class="one-third columns disable-events">
+          <label class="dark-label mb20">MAX CAPACITY (FOR GROUPS)</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="$0.00">
+        </div>
+      </div>
+    </div>
+  </section>
+</form>
+{% endblock %}
