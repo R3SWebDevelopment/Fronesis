@@ -32,21 +32,20 @@
             <label class="dark-label mb20">GOOGLE CALENDAR</label>
             <p>Connected as <a href="#" class="c-bright-blue">{{object.google_calendar_account_id}}</a></p>
           </div>
-          <button class="btn-danger btn-x2 mr20">
-            <a href="{% url 'google:calendar_disconnect' %}">
+          <a href="{% url 'google:calendar_disconnect' %}">
+            <button type="button" class="btn-danger btn-x2 mr20">
               Disconnect my account
-            </a>
-          </button>
+            </button>
+          </a>
         {% else %}
           <div class="one-col mb40">
             <label class="dark-label mb20">GOOGLE CALENDAR</label>
           </div>
-
-            <button class="btn-aqua btn-x2 mr20">
-              <a href="{% url 'google:calendar_connect' %}">
+            <a href="{% url 'google:calendar_connect' %}">
+              <button type="button" class="btn-aqua btn-x2 mr20">
                 Connect my account
-              </a>
-            </button>
+              </button>
+            </a>
         {% endif %}
         </div>
       {% if object.is_google_account_set %}

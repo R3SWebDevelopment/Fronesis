@@ -137,7 +137,7 @@
 {{block.super}}
 <script>
   $(document).ready(function(){
-    var days = $(this).find('select.hidden')//.hide();
+    var days = $(this).find('select.hidden').hide();
     var form = $(this).find('form#blocked_hours');
     $(form).submit(function(event){
       get_selected_hours();
