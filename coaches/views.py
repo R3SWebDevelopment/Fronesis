@@ -1,5 +1,5 @@
 from django.views.generic import DetailView, ListView, UpdateView
-from .models import Coach
+from .models import Coach, Venue
 from .forms import CoachContactForm, CoachBlockedHours, CoachBookingSettings
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
@@ -114,5 +114,16 @@ class BookingSettings(UpdateView, FronesisBaseInnerView):
         return reverse('coaches:booking_settings')
 
 
-class MyVenues(ListView):
-    pass
+class MyVenues(ListView, FronesisBaseInnerView):
+    model = Venue
+    queryset = Venue.objects.all()
+    template_name = 'my_venues.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MyVenues, self).get_context_data(**kwargs)
+        context['venues'] = True
+        return context
+
+    def get_queryset(self):
+        qs = super(MyVenues, self).get_queryset()
+        return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())

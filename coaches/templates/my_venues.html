@@ -1,0 +1,35 @@
+{% extends 'coach_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+  <section>
+    <div class="wrap">
+      <div class="one-col">
+        <div class="heading-separator mb20">
+          <h2 class="t-lyonL c-gray">New Venue</h2>
+        </div>
+      {% for venue in venue_list %}
+        <div class="one-col border-bottom-gray ptb20">
+          <div class="two-col">
+            <p>{{venue.name}}</p>
+            <p><a href="#" class="c-gray">Edit</a></p>
+          </div>
+          <div class="two-col right-dir">
+            <p>{{venue.address}}</p>
+            <p><a href="" class="danger">Delete</a></p>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="one-col t-center mtb40">
+        <button class="btn-aqua btn-x2">Add Venue</button>
+      </div>
+    </div>
+  </section>
+{% endblock %}
