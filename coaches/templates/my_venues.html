@@ -16,7 +16,7 @@
         <div class="one-col border-bottom-gray ptb20">
           <div class="two-col">
             <p>{{venue.name}}</p>
-            <p><a href="#" class="c-gray">Edit</a></p>
+            <p><a href="{% url 'coaches:edit_venues' venue.pk %}" class="c-gray">Edit</a></p>
           </div>
           <div class="two-col right-dir">
             <p>{{venue.address}}</p>
@@ -31,7 +31,7 @@
     <div class="wrap">
       <div class="one-col t-center mtb40">
         <a href = "{% url 'coaches:add_venues' %}">
-          <button class="btn-aqua btn-x2">Add Venue</button>
+          <button type="button" class="btn-aqua btn-x2">Add Venue</button>
         </a>
       </div>
     </div>

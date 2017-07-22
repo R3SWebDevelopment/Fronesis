@@ -144,6 +144,23 @@ class CreateVenues(CreateView, FronesisBaseInnerView):
         return reverse('coaches:my_venues')
 
 
+class EditVenues(UpdateView, FronesisBaseInnerView):
+    model = Venue
+    queryset = Venue.objects.all()
+    template_name = 'edit_venues.html'
+    form_class = VenuesForm
+
+    def get_context_data(self, **kwargs):
+        context = super(EditVenues, self).get_context_data(**kwargs)
+        context['venues'] = True
+        return context
+
+    def get_success_url(self):
+        return reverse('coaches:edit_venues', kwargs={
+            'pk': self.object.pk
+        })
+
+
 class RemoveVenues(DeleteView, FronesisBaseInnerView):
     model = Venue
     queryset = Venue.objects.all()
