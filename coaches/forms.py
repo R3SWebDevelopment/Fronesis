@@ -92,12 +92,23 @@ class CoachBlockedHours(forms.ModelForm):
 
 
 class CoachBookingSettings(forms.ModelForm):
+    google_calendar = forms.ChoiceField(required=False)
+
     class Meta:
         model = Coach
-        fields = ['is_instante_booking_allow', 'ask_before_booking']
+        fields = ['is_instante_booking_allow', 'ask_before_booking', 'google_calendar']
 
     def __init__(self, *args, **kwargs):
         super(CoachBookingSettings, self).__init__(*args, **kwargs)
         instance = kwargs.get('instance', None)
-        for field in self.fields:
+        for field in ['is_instante_booking_allow', 'ask_before_booking']:
             self.fields[field].widget = forms.CheckboxInput()
+        if instance:
+            if instance.is_google_account_set:
+                self.fields['google_calendar'].choices = instance.get_google_calendar_list_choices
+
+    def save(self, commit=False):
+        instance = super(CoachBookingSettings, self).save(commit=False)
+        google_calendar = self.cleaned_data.get('google_calendar', None)
+        instance.google_calendar_id = google_calendar
+        instance.save()

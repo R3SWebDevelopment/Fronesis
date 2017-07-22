@@ -42,7 +42,7 @@ def auth_return(request):
     credential = FLOW.step2_exchange(request.GET)
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
-    return HttpResponseRedirect("/")
+    return HttpResponseRedirect("/google/calendar/connect/")
 
 
 @login_required
@@ -64,4 +64,11 @@ def connect_calender(request):
             request.user.coaches.first().connect_google_account(items[0])
             calendars_data = service.calendarList().list(pageToken=None).execute()
             request.user.coaches.first().set_google_calender_list(calendars_data.get('items', []))
+    return HttpResponseRedirect(reverse('coaches:booking_settings'))
+
+
+@login_required
+def disconnect_calender(request):
+    CredentialsModel.objects.filter(id=request.user).delete()
+    request.user.coaches.first().disconnect_google_account()
     return HttpResponseRedirect(reverse('coaches:booking_settings'))

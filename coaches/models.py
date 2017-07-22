@@ -60,15 +60,29 @@ class Coach(models.Model):
 
     def connect_google_account(self, data=None):
         if data:
-            google_calendar_account_id = data.get('id', None)
+            google_calendar_account_id = data.get('scope', {}).get('value', None)
             if google_calendar_account_id:
                 self.google_calendar_account_id = google_calendar_account_id
                 self.save()
+
+    def disconnect_google_account(self):
+        self.google_calender_list = None
+        self.google_calendar_account_id = ''
+        self.google_calendar_id = ''
+        self.save()
 
     def set_google_calender_list(self, calender_list=None):
         if calender_list:
             self.google_calender_list = calender_list
             self.save()
+
+    @property
+    def get_google_calendar_list_choices(self):
+        if self.is_google_account_set and self.google_calender_list:
+            calendars = (('{}'.format(l.get('id')), '{}'.format(l.get('summary')))
+                         for l in self.google_calender_list if l.get('accessRole', None) == 'owner')
+            return calendars
+        return ()
 
 
 class AvailableHour(models.Model):
