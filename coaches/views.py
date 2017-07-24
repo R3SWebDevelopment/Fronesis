@@ -119,6 +119,10 @@ class MyVenues(ListView, FronesisBaseInnerView):
     queryset = Venue.objects.all()
     template_name = 'my_venues.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        Coach.objects.get_or_create(user=request.user)
+        return super(MyVenues, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(MyVenues, self).get_context_data(**kwargs)
         context['venues'] = True
@@ -135,6 +139,10 @@ class CreateVenues(CreateView, FronesisBaseInnerView):
     template_name = 'new_venues.html'
     form_class = VenuesForm
 
+    def dispatch(self, request, *args, **kwargs):
+        Coach.objects.get_or_create(user=request.user)
+        return super(CreateVenues, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(CreateVenues, self).get_context_data(**kwargs)
         context['venues'] = True
@@ -149,6 +157,10 @@ class EditVenues(UpdateView, FronesisBaseInnerView):
     queryset = Venue.objects.all()
     template_name = 'edit_venues.html'
     form_class = VenuesForm
+
+    def dispatch(self, request, *args, **kwargs):
+        Coach.objects.get_or_create(user=request.user)
+        return super(EditVenues, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(EditVenues, self).get_context_data(**kwargs)
@@ -169,6 +181,10 @@ class RemoveVenues(DeleteView, FronesisBaseInnerView):
     model = Venue
     queryset = Venue.objects.all()
 
+    def dispatch(self, request, *args, **kwargs):
+        Coach.objects.get_or_create(user=request.user)
+        return super(RemoveVenues, self).dispatch(request, *args, **kwargs)
+
     def get_success_url(self):
         return reverse('coaches:my_venues')
 
@@ -182,6 +198,10 @@ class MyServices(ListView, FronesisBaseInnerView):
     queryset = Session.objects.all()
     template_name = 'my_services.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        Coach.objects.get_or_create(user=request.user)
+        return super(MyServices, self).dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
         qs = super(MyServices, self).get_queryset()
         return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
@@ -192,6 +212,10 @@ class CreateService(CreateView, FronesisBaseInnerView):
     queryset = Session.objects.all()
     template_name = 'new_service.html'
     form_class = SessionForm
+
+    def dispatch(self, request, *args, **kwargs):
+        Coach.objects.get_or_create(user=request.user)
+        return super(CreateService, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(CreateService, self).get_context_data(**kwargs)
@@ -211,6 +235,10 @@ class EditService(UpdateView, FronesisBaseInnerView):
     queryset = Session.objects.all()
     template_name = 'edit_service.html'
     form_class = SessionForm
+
+    def dispatch(self, request, *args, **kwargs):
+        Coach.objects.get_or_create(user=request.user)
+        return super(EditService, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(EditService, self).get_context_data(**kwargs)
