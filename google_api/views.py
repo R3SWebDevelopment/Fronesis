@@ -28,7 +28,7 @@ def get_flow():
     flow = flow_from_clientsecrets(
         settings.GOOGLE_OAUTH2_CLIENT_SECRETS_JSON,
         scope='https://www.googleapis.com/auth/calendar',
-        redirect_uri='http://local.test.com{}'.format(oauth2callback))
+        redirect_uri='http://fronesis.vordem.mx{}'.format(oauth2callback))
     return flow
 
 
