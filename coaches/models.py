@@ -146,6 +146,28 @@ class Session(models.Model):
     person_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     max_capacity = models.IntegerField(default=None, null=True)
 
+    @property
+    def length(self):
+        length = ''
+        if self.length_hours:
+            length = '{} hours '.format(self.length_hours) \
+                if self.length_hours > 1 else '{} hour '.format(self.length_hours)
+        if self.length_minutes:
+            length += '{} minutes '.format(self.length_minutes) \
+                if self.length_minutes > 1 else '{} minute '.format(self.length_minutes)
+        return "{} meeting".format(length)
+
+    @property
+    def price_label(self):
+        length = ''
+        if self.length_hours:
+            length = '{} hrs '.format(self.length_hours) \
+                if self.length_hours > 1 else '{} hr '.format(self.length_hours)
+        if self.length_minutes:
+            length += '{} min '.format(self.length_minutes) \
+                if self.length_minutes > 1 else '{} min '.format(self.length_minutes)
+        return '{} / ${} MXN'.format(length, self.price)
+
 
 class Bundle(models.Model):
     coach = models.ForeignKey(Coach, null=False)

@@ -12,11 +12,11 @@
   {% for service in session_list %}
     <div class="one-col border-bottom-gray ptb20">
       <div class="two-col">
-        <h3 class="c-gray t-lyon">{{service.length}} meeting</h3>
+        <h3 class="c-gray t-lyon">{{service.length}}</h3>
         <p class="c-gray smaller-txt">{{service.name}}</p>
       </div>
       <div class="two-col right-dir">
-        <p class="c-gray">30 min / $100 USD</p>
+        <p class="c-gray">{{service.price_label}}</p>
       {% if service.face_to_face %}
         <p class="c-bright-green smaller-txt">Available online</p>
       {% endif %}
