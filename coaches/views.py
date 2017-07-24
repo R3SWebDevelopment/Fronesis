@@ -1,6 +1,6 @@
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from .models import Coach, Venue, Session
-from .forms import CoachContactForm, CoachBlockedHours, CoachBookingSettings, VenuesForm
+from .forms import CoachContactForm, CoachBlockedHours, CoachBookingSettings, VenuesForm, SessionForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
@@ -191,7 +191,7 @@ class CreateService(CreateView, FronesisBaseInnerView):
     model = Session
     queryset = Session.objects.all()
     template_name = 'new_service.html'
-    form_class = VenuesForm
+    form_class = SessionForm
 
     def get_context_data(self, **kwargs):
         context = super(CreateService, self).get_context_data(**kwargs)
@@ -199,7 +199,7 @@ class CreateService(CreateView, FronesisBaseInnerView):
         return context
 
     def get_success_url(self):
-        return reverse('coaches:my_venues')
+        return reverse('coaches:my_services')
 
     def get_queryset(self):
         qs = super(CreateService, self).get_queryset()

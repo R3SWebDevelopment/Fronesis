@@ -1,5 +1,5 @@
 from django import forms
-from .models import Coach, AVAILABLE_HOURS, AvailableHour, Venue
+from .models import Coach, AVAILABLE_HOURS, AvailableHour, Venue, Session
 from django.contrib.auth.models import User
 from crum import get_current_user
 
@@ -125,3 +125,19 @@ class VenuesForm(forms.ModelForm):
         super(VenuesForm, self).__init__(*args, **kwargs)
         self.fields['coach'].initial = get_current_user().coaches.first()
         self.fields['coach'].widget = forms.HiddenInput()
+
+
+class SessionForm(forms.ModelForm):
+
+    class Meta:
+        model = Session
+        fields = ['coach', 'name', 'length_hours', 'length_minutes', 'price', 'description', 'category', 'face_to_face',
+                  'one_on_one', 'groups_allow', 'person_price', 'max_capacity', 'allow_on_venues']
+
+    def __init__(self, *args, **kwargs):
+        super(SessionForm, self).__init__(*args, **kwargs)
+        coach = get_current_user().coaches.first()
+        self.fields['coach'].widget = forms.HiddenInput()
+        self.fields['coach'].initial = coach
+        for field in ['face_to_face', 'one_on_one', 'groups_allow', 'person_price', 'max_capacity']:
+            self.fields[field].required = False

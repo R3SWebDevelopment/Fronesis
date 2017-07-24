@@ -32,6 +32,14 @@ AVAILABLE_HOURS = (
     ('2100', '9:00 pm'),
 )
 
+LENGTH_HOUR_CHOICES = (
+    (h, '{} hours'.format(h)) if h > 1 else (h, '{} hour'.format(h)) for h in range(17)
+)
+
+LENGTH_MINUTE_CHOICES = (
+    (m, '{} minutes'.format(m)) if m > 1 else (m, '{} minute'.format(m)) for m in range(60)
+)
+
 
 class Coach(models.Model):
     user = models.ForeignKey(User, null=False, related_name='coaches')
@@ -114,16 +122,19 @@ class AvailableHour(models.Model):
 
 
 class Venue(models.Model):
-    coach = models.ForeignKey(Coach, null=False)
+    coach = models.ForeignKey(Coach, null=False, related_name='venues')
     name = models.CharField(max_length=150, null=False, default='')
     address = models.TextField(null=False)
+
+    def __str__(self):
+        return self.name
 
 
 class Session(models.Model):
     coach = models.ForeignKey(Coach, null=False)
     name = models.CharField(max_length=150, null=False, default='')
-    length_hours = models.IntegerField(default=0)
-    length_minutes = models.IntegerField(default=0)
+    length_hours = models.IntegerField(default=0, choices=LENGTH_HOUR_CHOICES)
+    length_minutes = models.IntegerField(default=0, choices=LENGTH_MINUTE_CHOICES)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     description = models.TextField(null=False)
     category = models.CharField(max_length=150, null=False, default='')
@@ -132,8 +143,8 @@ class Session(models.Model):
     allow_on_venues = models.ManyToManyField(Venue)
     one_on_one = models.BooleanField(default=False)
     groups_allow = models.BooleanField(default=False)
-    person_price = models.DecimalField(max_digits=8, decimal_places=2)
-    max_capacity = models.IntegerField(default=0)
+    person_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    max_capacity = models.IntegerField(default=None, null=True)
 
 
 class Bundle(models.Model):
