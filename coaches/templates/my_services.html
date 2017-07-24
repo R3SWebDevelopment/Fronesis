@@ -12,8 +12,10 @@
   {% for service in session_list %}
     <div class="one-col border-bottom-gray ptb20">
       <div class="two-col">
-        <h3 class="c-gray t-lyon">{{service.length}}</h3>
-        <p class="c-gray smaller-txt">{{service.name}}</p>
+        <a href="{% url 'coaches:edit_services' pk=service.pk %}">
+          <h3 class="c-gray t-lyon">{{service.length}}</h3>
+          <p class="c-gray smaller-txt">{{service.name}}</p>
+        </a>
       </div>
       <div class="two-col right-dir">
         <p class="c-gray">{{service.price_label}}</p>

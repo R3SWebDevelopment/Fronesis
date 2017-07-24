@@ -204,3 +204,25 @@ class CreateService(CreateView, FronesisBaseInnerView):
     def get_queryset(self):
         qs = super(CreateService, self).get_queryset()
         return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
+
+
+class EditService(UpdateView, FronesisBaseInnerView):
+    model = Session
+    queryset = Session.objects.all()
+    template_name = 'edit_service.html'
+    form_class = SessionForm
+
+    def get_context_data(self, **kwargs):
+        context = super(EditService, self).get_context_data(**kwargs)
+        context['venues'] = True
+        return context
+
+    def get_success_url(self):
+        return reverse('coaches:edit_services', kwargs={
+            'pk': self.object.pk
+        })
+
+    def get_queryset(self):
+        qs = super(EditService, self).get_queryset()
+        return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
+

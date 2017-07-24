@@ -9,7 +9,7 @@
   {{form.coach}}
   <section>
     <div class="wrap">
-      <h1 class="mb20">Create a New Session Type</h1>
+      <h1 class="mb20">Edit Session Type</h1>
       <div class="one-col">
         <div class="heading-separator mb40">
           <div class="blue-cir"><div class="txt">1</div></div>
@@ -84,19 +84,19 @@
         <div class="one-third columns">
           <label class="dark-label mb20">GROUPS</label>
           <div class="border-bottom-radio-input">
-            <div class="green-radio-input"><input type="radio" name="one_on_one" ind="id_one_on_one" {{form.one_on_one.value|yesno:'checked="checked",'}}><span class="check"></span></div>
+            <div class="green-radio-input"><input type="radio" name="one_on_one" id="id_one_on_one" {{form.one_on_one.value|yesno:'checked="checked",'}}><span class="check"></span></div>
             <p class="c-dark-purple">One on one sessions</p>
           </div>
           <div class="border-bottom-radio-input">
-            <div class="green-radio-input"><input type="radio" name="groups_allow" ind="id_groups_allow" {{form.groups_allow.value|yesno:'checked="checked",'}}><span class="check"></span></div>
+            <div class="green-radio-input"><input type="radio" name="groups_allow" id="id_groups_allow" {{form.groups_allow.value|yesno:'checked="checked",'}}><span class="check"></span></div>
             <p class="c-dark-purple">Available for groups</p>
           </div>
         </div>
-        <div class="one-third columns disable-events">
+        <div class="one-third columns">
           <label class="dark-label mb20">PRICE PER PERSON (FOR GROUPS)</label>
           <input type="text" class="border-bottom-input two-col columns" placeholder="$0.00" name="person_price" id="id_person_price" value="{{ form.person_price.value|default:'' }}">
         </div>
-        <div class="one-third columns disable-events">
+        <div class="one-third columns">
           <label class="dark-label mb20">MAX CAPACITY (FOR GROUPS)</label>
           <input type="text" class="border-bottom-input two-col columns" placeholder="$0.00" name="max_capacity" id="id_max_capacity" value="{{ form.max_capacity.value|default:'' }}">
         </div>
@@ -110,7 +110,7 @@
       </div>
       <div class="one-col gray-border-box t-center mb40">
         <button type="reset" class="btn-danger btn-x2 mr20">Discard Changes</button>
-        <button type="submit" class="btn-aqua btn-x2">Save New Session</button>
+        <button type="submit" class="btn-aqua btn-x2">Save Session</button>
       </div>
     </div>
   </section>
@@ -143,6 +143,14 @@
     $(allow_on_venues).find('option:selected').each(function(){
       var value = $(this).attr('value');
       $('#venue[value="' + value + '"]').prop('checked', true);
+    });
+    $('#id_groups_allow').each(function(){
+      var is_checked = $(this).is(':checked');
+        if(is_checked){
+          $('#id_person_price , #id_max_capacity').parents('.columns').removeClass('disable-events');
+        }else{
+          $('#id_person_price , #id_max_capacity').parents('.columns').addClass('disable-events');
+        }
     });
   });
 </script>
