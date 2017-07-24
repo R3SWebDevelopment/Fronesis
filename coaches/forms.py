@@ -88,6 +88,7 @@ class CoachBlockedHours(forms.ModelForm):
                     except ValueError:
                         hour = None
                     if hour:
+                        print("Coach: {} - day: {} - hour: {}".format(instance, day, hour))
                         AvailableHour.objects.get_or_create(coach=instance, day=day, hour=hour)
             day += 1
 

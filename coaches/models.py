@@ -115,9 +115,10 @@ class AvailableHour(models.Model):
             day = 5
         elif day_name == 'saturday':
             day = 6
-        if coach and day:
-            return ['0{}00'.format(h.get('hour')) if h.get('hour') < 10 else '{}00'.format(h.get('hour'))
-                    for h in cls.objects.filter(coach=coach).filter(day=day).values('hour')]
+        if coach and day >= 0:
+            hours = ['0{}00'.format(h.get('hour')) if h.get('hour') < 10 else '{}00'.format(h.get('hour'))
+                     for h in cls.objects.filter(coach=coach).filter(day=day).values('hour')]
+            return hours
         return []
 
 
