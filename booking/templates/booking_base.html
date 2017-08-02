@@ -3,16 +3,16 @@
 
 {% block SECTION_MENU %}
 <li {% if calendar == True %}class="active"{% endif %}>
-  <a href="{% url 'coaches:contact_information' %}">Calendar View</a>
+  <a href="{% url 'booking:calendar_view' %}">Calendar View</a>
 </li>
 <li {% if history == True %}class="active"{% endif %}>
-  <a href="{% url 'coaches:blocked_hours' %}">Appointments History</a>
+  <a href="{% url 'booking:history' %}">Appointments History</a>
 </li>
 <li {% if clients == True %}class="active"{% endif %}>
-  <a href="{% url 'coaches:booking_settings' %}">Your Clients</a>
+  <a href="{% url 'booking:clients' %}">Your Clients</a>
 </li>
 <li {% if bundles == True %}class="active"{% endif %}>
-  <a href="{% url 'coaches:my_venues' %}">Active Bundles</a>
+  <a href="{% url 'booking:bundles' %}">Active Bundles</a>
 </li>
 {% endblock %}
 
