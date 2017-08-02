@@ -13,6 +13,7 @@ urlpatterns = [
 
     url(r'^events/', include('events.urls')),
     url(r'^coach/', include('coaches.urls', namespace='coaches')),
+    url(r'^booking/', include('booking.urls', namespace='booking')),
     url(r'^google/', include('google_api.urls', namespace='google')),
 
     url("^", include("drum.links.urls")),

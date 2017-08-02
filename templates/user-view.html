@@ -18,10 +18,10 @@
       </div>
       <div class="nav">
         <ul>
-          {#<li><a href="#nav1" class="triggerNav">Appointments</a></li>#}
           {#<li><a href="#">Coach Settings</a></li>#}
           {#<li><a href="#">Billing</a></li>#}
           <li><a href="{% url 'coaches:my_services' %}">My Services</a></li>
+          <li><a href="{% url 'booking:calendar_view' %}" class="triggerNav">Appointments</a></li>
           <li><a href="{% url 'coaches:contact_information' %}">Coach Settings</a></li>
           <li><a href="{% url 'events' %}">Events</a></li>
           <li><a href="{% url 'profile' %}">Profile</a></li>
