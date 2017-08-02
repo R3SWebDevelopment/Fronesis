@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 
     'events',
     'coaches',
+    'booking',
     'google_api',
 ]
 

@@ -41,6 +41,11 @@ LENGTH_MINUTE_CHOICES = (
 )
 
 
+class Client(models.Model):
+    full_name = models.CharField(max_length=250, null=False, blank=False)
+    email = models.EmailField(max_length=250, null=False, blank=False)
+
+
 class Coach(models.Model):
     user = models.ForeignKey(User, null=False, related_name='coaches')
     specialty = models.CharField(max_length=150, null=False, default='')
@@ -61,6 +66,7 @@ class Coach(models.Model):
     thursday_works = models.BooleanField(default=False)
     friday_works = models.BooleanField(default=False)
     saturday_works = models.BooleanField(default=False)
+    clients = models.ManyToManyField(Client)
 
     @property
     def is_google_account_set(self):
