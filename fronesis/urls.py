@@ -19,4 +19,5 @@ urlpatterns = [
     url("^", include("drum.links.urls")),
     url("^", include("mezzanine.urls")),
     url(r'^api/', include('coaches.api.urls')),
+    url(r'^api/', include('booking.api.urls')),
 ]
