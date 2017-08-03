@@ -138,7 +138,7 @@ class Venue(models.Model):
 
 
 class Session(models.Model):
-    coach = models.ForeignKey(Coach, null=False)
+    coach = models.ForeignKey(Coach, null=False, related_name="services")
     name = models.CharField(max_length=150, null=False, default='')
     length_hours = models.IntegerField(default=0, choices=LENGTH_HOUR_CHOICES)
     length_minutes = models.IntegerField(default=0, choices=LENGTH_MINUTE_CHOICES)
