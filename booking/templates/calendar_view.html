@@ -4,4 +4,23 @@
 
 {% block CONTENT %}
  {{ block.super }}
+<div id="add_appoinment_modal_form">
+</div>
+<div class="wrap mb40">
+  <div class="one-col t-right mb40">
+    <button id="add_appointment" data-url="{% url 'booking:add_appointment' %}" class="btn-aqua btn-x2">Add Appoitment</button>
+  </div>
+</div>
+{% endblock %}
+{% block SCRIPT %}
+{{block.super}}
+<script>
+  $(document).ready(function(){
+      var add_appointment = $(this).find('button#add_appointment');
+      var add_appoinment_modal_form = $(this).find('#add_appoinment_modal_form');
+      $(add_appointment).click(function(){
+        $(add_appoinment_modal_form).dialog();
+      });
+  });
+</script>
 {% endblock %}

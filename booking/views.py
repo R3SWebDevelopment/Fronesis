@@ -1,5 +1,6 @@
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from .models import Appointments, Coach, Client
+from .forms import AddAppointmentForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
@@ -91,3 +92,11 @@ class BundleView(ListView, FronesisBaseInnerView):
 
     def get_queryset(self, *args, **kwargs):
         return super(BundleView, self).get_queryset()
+
+
+class AddAppointmentView(CreateView, FronesisBaseInnerView):
+    model = Appointments
+    queryset = Appointments.objects.all()
+    template_name = 'clients.html'
+    form_class = AddAppointmentForm
+

@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^google/', include('google_api.urls', namespace='google')),
 
     url("^", include("drum.links.urls")),
-    url("^", include("mezzanine.urls"))
+    url("^", include("mezzanine.urls")),
+    url(r'^api/', include('coaches.api.urls')),
 ]
