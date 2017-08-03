@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Client, Session
+from ..models import Client, Session, Venue
 from crum import get_current_user
 
 
@@ -19,8 +19,15 @@ class ClientSerializer(serializers.ModelSerializer):
         return instance
 
 
+class VenueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Venue
+        fields = ('id', 'name', 'address')
+
+
 class SessionSerializer(serializers.ModelSerializer):
     length = serializers.SerializerMethodField(read_only=True)
+    allow_on_venues = VenueSerializer(many=True)
 
     class Meta:
         model = Session
