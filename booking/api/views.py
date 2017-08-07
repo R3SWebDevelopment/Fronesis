@@ -67,6 +67,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 })
         if venue_id:
             venues = session.allow_on_venues.all() if session else coach.venues.all()
+            venues = coach.venues.all()
             venue = venues.filter(pk=venue_id).first()
             if venue:
                 response_data.update({

@@ -1,14 +1,30 @@
 from rest_framework import serializers
 from ..models import Appointments, Coach
 from coaches.models import AvailableHour
+from coaches.api.serializers import VenueSerializer, ClientSerializer, SessionSerializer
 from datetime import datetime
 
 
 class AppointmentsSerializer(serializers.ModelSerializer):
+    starts_datetime = serializers.DateTimeField(read_only=True)
+    ends_datetime = serializers.DateTimeField(read_only=True)
+    custome_venue = serializers.CharField(required=False)
+    online_call = serializers.BooleanField(required=False, default=False)
+    venue = VenueSerializer(read_only=True)
+    venue_id = serializers.IntegerField(write_only=True, required=False)
+    client = ClientSerializer(read_only=True)
+    client_id = serializers.IntegerField(write_only=True, required=True)
+    service = SessionSerializer(read_only=True)
+    service_id = serializers.IntegerField(write_only=True, required=True)
+    date = serializers.DateField(write_only=True, required=True, input_formats='%Y-%m-%d')
+    time = serializers.IntegerField(write_only=True, required=True)
+    already_paid = serializers.BooleanField(write_only=True, default=False)
+    send_payment_link = serializers.BooleanField(write_only=True, default=False)
 
     class Meta:
         model = Appointments
-        fields = '__all__'
+        fields = ('starts_datetime', 'ends_datetime', 'custome_venue', 'online_call', 'venue', 'venue_id', 'client',
+                  'client_id', 'service', 'service_id', 'date', 'time', 'already_paid', 'send_payment_link')
 
 
 class PreviewAppointmentsSerializer(serializers.Serializer):
