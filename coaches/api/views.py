@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .serializers import Client, Session
-from .serializers import ClientSerializer, SessionSerializer
+from .serializers import Client, Session, Venue
+from .serializers import ClientSerializer, SessionSerializer, VenueSerializer
 from django.db.models import Q
 
 
@@ -32,4 +32,23 @@ class SessionViewSet(viewsets.ModelViewSet):
             qs = coach.services.all()
         else:
             qs = self.queryset.none()
+        return qs
+
+
+class VenueViewSet(viewsets.ModelViewSet):
+    queryset = Venue.objects.all()
+    serializer_class = VenueSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        user = self.request.user
+        coach = user.coaches.first()
+        if coach:
+            qs = coach.venues.all()
+        else:
+            qs = self.queryset.none()
+        service_id = self.request.query_params.get('service', None)
+        if service_id:
+            service = Session.objects.filter(id=service_id).first()
+            if service:
+                qs = qs if service.all_venues else service.allow_on_venues.all()
         return qs
