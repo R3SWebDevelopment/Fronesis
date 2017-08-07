@@ -43,7 +43,15 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         hour = self.request.query_params.get('hour', None)
         venue_id = self.request.query_params.get('venue_id', None)
         date_time_available = False
-        response_data = {}
+        response_data = {
+            'session_name': '',
+            'session_time': '',
+            'session_date': '',
+            'session_price': '',
+            'venue_name': '',
+            'client_name': '',
+            'date_time_available': False,
+        }
         if client_id:
             client = coach.clients.filter(pk=client_id).first()
             if client:
@@ -54,7 +62,8 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             session = coach.services.filter(pk=session_id).first()
             if session:
                 response_data.update({
-                    'session_name': session.name
+                    'session_name': session.name,
+                    'session_price': '{:,.2f}'.format(session.price),
                 })
         if venue_id:
             venues = session.allow_on_venues.all() if session else coach.venues.all()
