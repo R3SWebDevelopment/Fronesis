@@ -46,7 +46,7 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
             if request:
                 query_date = request.query_params.get('date', None)
                 try:
-                    query_date = datetime.strptime(query_date, '%d/%m/%Y').date()
+                    query_date = datetime.strptime(query_date, '%Y-%m-%d').date()
                     date = query_date if date < query_date else date
                 except:
                     pass
@@ -60,7 +60,7 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
             if request:
                 query_date = request.query_params.get('date', None)
                 try:
-                    query_date = datetime.strptime(query_date, '%d/%m/%Y').date()
+                    query_date = datetime.strptime(query_date, '%Y-%m-%d').date()
                     date = query_date if date < query_date else date
                 except:
                     pass
@@ -75,7 +75,7 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
             if request:
                 query_date = request.query_params.get('date', None)
                 try:
-                    query_date = datetime.strptime(query_date, '%d/%m/%Y').date()
+                    query_date = datetime.strptime(query_date, '%Y-%m-%d').date()
                     date = query_date if date < query_date else date
                 except:
                     pass
