@@ -11,6 +11,16 @@ class AppointmentsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PreviewAppointmentsSerializer(serializers.Serializer):
+    session_name = serializers.CharField(max_length=200)
+    session_time = serializers.CharField(max_length=200)
+    session_date = serializers.CharField(max_length=200)
+    session_price = serializers.CharField(max_length=200)
+    client_name = serializers.CharField(max_length=200)
+    venue_name = serializers.CharField(max_length=200)
+    date_time_available = serializers.BooleanField()
+
+
 class AvailableHourSerializer(serializers.ModelSerializer):
     time = serializers.SerializerMethodField(read_only=True)
 
