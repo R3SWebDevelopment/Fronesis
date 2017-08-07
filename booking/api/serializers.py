@@ -25,10 +25,32 @@ class AvailableHourSerializer(serializers.ModelSerializer):
 class AvailableTimeSerializer(serializers.ModelSerializer):
     appointments = serializers.SerializerMethodField(read_only=True)
     date_times = serializers.SerializerMethodField(read_only=True)
+    small_date = serializers.SerializerMethodField(read_only=True)
+    min_date = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Coach
-        fields = ('appointments', 'date_times')
+        fields = ('appointments', 'date_times', 'small_date', 'min_date')
+
+    def get_min_date(self, obj, *args, **kwargs):
+        context = self.context
+        date = datetime.now().date()
+        return date.strftime('%Y-%m-%d')
+
+
+    def get_small_date(self, obj, *args, **kwargs):
+        context = self.context
+        date = datetime.now().date()
+        if context:
+            request = context.get('request', None)
+            if request:
+                query_date = request.query_params.get('date', None)
+                try:
+                    query_date = datetime.strptime(query_date, '%d/%m/%Y').date()
+                    date = query_date if date < query_date else date
+                except:
+                    pass
+        return date.strftime('%b %d')
 
     def get_appointments(self, obj, *args, **kwargs):
         context = self.context
