@@ -11,3 +11,5 @@ class Appointments(models.Model):
     venue = models.ForeignKey(Venue, null=True, related_name='appointments')
     client = models.ForeignKey(Client, null=False, related_name='appointments')
     service = models.ForeignKey(Session, null=True, related_name='appointments')
+    already_paid = models.BooleanField(default=False)
+    send_payment_link = models.BooleanField(default=False)
