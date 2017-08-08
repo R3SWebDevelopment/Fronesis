@@ -25,11 +25,21 @@ class AppointmentsSerializer(serializers.ModelSerializer):
     time = serializers.IntegerField(write_only=True, required=True)
     already_paid = serializers.BooleanField(write_only=True, default=False)
     send_payment_link = serializers.BooleanField(write_only=True, default=False)
+    begins = serializers.SerializerMethodField(read_only=True)
+    ends = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Appointments
-        fields = ('id', 'starts_datetime', 'ends_datetime', 'custome_venue', 'online_call', 'venue', 'venue_id', 'client',
-                  'client_id', 'service', 'service_id', 'date', 'time', 'already_paid', 'send_payment_link')
+        fields = ('id', 'starts_datetime', 'ends_datetime', 'custome_venue', 'online_call', 'venue', 'venue_id',
+                  'client', 'client_id', 'service', 'service_id', 'date', 'time', 'already_paid', 'send_payment_link',
+                  'begins', 'ends')
+
+    def get_ends(self, obj, *args, **kwargs):
+        return obj.ends_datetime.strftime('%I:%M %p')
+
+    def get_begins(self, obj, *args, **kwargs):
+        return obj.starts_datetime.strftime('%I:%M %p')
+
 
     def create(self, validated_data):
         current_user = get_current_user()
@@ -140,7 +150,6 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
         date = datetime.now().date()
         return date.strftime('%Y-%m-%d')
 
-
     def get_small_date(self, obj, *args, **kwargs):
         context = self.context
         date = datetime.now().date()
@@ -185,5 +194,9 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
                 except:
                     pass
         weekday = date.isoweekday()
-        available = obj.available_hours.filter(day=weekday)
+        appointments = obj.appointments.all()
+        appointments = appointments.filter(starts_datetime__range=(datetime.combine(date, time.min),
+                                                                   datetime.combine(date, time.max)))
+        exclude = [int(h.get('starts_datetime').strftime('%H')) for h in appointments.values('starts_datetime')]
+        available = obj.available_hours.filter(day=weekday).exclude(hour__in=exclude)
         return AvailableHourSerializer(available, many=True).data
