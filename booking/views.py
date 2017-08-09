@@ -19,7 +19,11 @@ class CalendarView(ListView, FronesisBaseInnerView):
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
         self.coach = coach
-        self.date = datetime.now().date()
+        try:
+            self.date = datetime.strptime(request.GET.get('date', None), '%d-%m-%Y').date() \
+                if request.GET.get('date', None) else datetime.now().date()
+        except:
+            self.date = datetime.now().date()
         return super(CalendarView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -30,6 +34,8 @@ class CalendarView(ListView, FronesisBaseInnerView):
                                     starts_datetime__day=self.date.day)
         context['date'] = self.date
         context['week'] = self.get_week_appointments(qs)
+        context['next'] = (self.date + timedelta(days=1)).strftime('%d-%m-%Y')
+        context['prev'] = (self.date - timedelta(days=1)).strftime('%d-%m-%Y')
         return context
 
     def get_week_appointments(self, qs):

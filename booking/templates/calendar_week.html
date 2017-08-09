@@ -3,12 +3,12 @@
       <div class="six-col-slider carrousel slider-container slick-initialized slick-slider">
          <div class="slider-nav-container">
             <div class="arrow-container">
-               <span class="slick-prev slick-arrow" style="display: inline-block;"></span>
+               <span class="slick-prev slick-arrow prev-week" style="display: inline-block;"></span>
                <p>Your Week</p>
-               <span class="slick-next slick-arrow" style="display: inline-block;"></span>
+               <span class="slick-next slick-arrow next-week" style="display: inline-block;"></span>
             </div>
          </div>
-         <div aria-live="polite" class="slick-list draggable">
+         <div aria-live="polite" class="slick-list draggable" id="week">
             <div class="slick-track" role="listbox" style="opacity: 1; width: 3648px; transform: translate3d(-1152px, 0px, 0px);">
               <div class="slider-item slick-slide slick-cloned" data-slick-index="{{forloop.counter}}" aria-hidden="true" tabindex="-6" role="option" aria-describedby="slick-slide12" style="width: 192px;"></div>
               <div class="slider-item slick-slide slick-cloned" data-slick-index="{{forloop.counter}}" aria-hidden="true" tabindex="-5" role="option" aria-describedby="slick-slide12" style="width: 192px;"></div>
@@ -21,7 +21,9 @@
                {% for appointment in day.appointments %}
                   <div class="listed-event">
                   {% if forloop.first %}
-                    <h3>{{ day.day|date:'D d' }}</h3>
+                    <h3>
+                      {{ day.day|date:'D d' }}
+                    </h3>
                   {% endif %}
                      <div class="description">
                         <p class="t-lyon c-gray">{{appointment.starts_datetime|time:'P'}}</p>

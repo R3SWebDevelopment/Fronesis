@@ -23,6 +23,22 @@
 {{block.super}}
 <script>
   $(document).ready(function(){
+      var prev_week = $('.prev-week')
+      var next_week = $('.next-week')
+      var week = $('#week');
+
+      $(prev_week).click(function(){
+        var slides = $(week).find('.slick-active');
+        var first_slide = $(slides).first()
+        $(first_slide).hide('slow');
+      }).css('cursor', 'pointer');
+
+      $(next_week).click(function(){
+        var slides = $(week).find('.slick-active');
+        var first_slide = $(slides).first()
+        $(first_slide).show('slow');
+      }).css('cursor', 'pointer');
+
       var add_appointment = $(this).find('button#add_appointment');
       var add_appoinment_modal_form = $(this).find('#add_appoinment_modal_form');
       $(add_appointment).click(function(){

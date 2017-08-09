@@ -2,9 +2,13 @@
   <div class="one-col-slider carrousel slider-container slick-initialized slick-slider">
     <div class="slider-nav-container">
       <div class="arrow-container">
-        <span class="slick-prev slick-arrow" style="display: inline-block;"></span>
+        <a href="{% url 'booking:calendar_view' %}?date={{prev}}">
+          <span class="slick-prev slick-arrow" style="display: inline-block;"></span>
+        </a>
         <p>Today</p>
-        <span class="slick-next slick-arrow" style="display: inline-block;"></span>
+        <a href="{% url 'booking:calendar_view' %}?date={{next}}">
+          <span class="slick-next slick-arrow" style="display: inline-block;"></span>
+        </a>
       </div>
     </div>
     <div aria-live="polite" class="slick-list draggable">
@@ -21,8 +25,8 @@
               <div class="event-type-cir bg-aqua">A</div>
             </div>
             <div class="description">
-              <p class="t-lyon c-light-gray"><span class="c-black">10:00 am</span> - Venue Name</p>
-              <p class="t-proxima c-gray"><strong>Type of Session</strong> with <strong>Client’s Name</strong></p>
+              <p class="t-lyon c-light-gray"><span class="c-black">{{appointment.starts_datetime|time:'P'}}</span> - {{appointment.venue_name}}</p>
+              <p class="t-proxima c-gray"><strong>{{appointment.service_name}}</strong> with <strong>{{appointment.client_name}}</strong></p>
             </div>
           </div>
         {% endfor %}
