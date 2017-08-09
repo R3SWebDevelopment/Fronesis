@@ -13,3 +13,16 @@ class Appointments(models.Model):
     service = models.ForeignKey(Session, null=True, related_name='appointments')
     already_paid = models.BooleanField(default=False)
     send_payment_link = models.BooleanField(default=False)
+
+
+    @property
+    def venue_name(self):
+        return self.venue.name if self.venue else self.custome_venue
+
+    @property
+    def service_name(self):
+        return self.service.name
+
+    @property
+    def client_name(self):
+        return self.client.full_name

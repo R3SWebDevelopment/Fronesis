@@ -3,5 +3,45 @@
 
 
 {% block CONTENT %}
- {{ block.super }}
+  {{ block.super }}
+  <section>
+    <div class="wrap">
+      <div class="one-col mb40">
+        <div class="heading-separator">
+          <h2 class="t-lyonL c-gray">My Clients</h2>
+        </div>
+      {% for client in object_list %}
+        <div class="one-col border-bottom-gray c-gray p20">
+          <div class="one-third columns">
+            <div class="square-profile-thumb">
+              <div class="img" style="background-image: url('img/profile3.png')"></div>
+              <div class="txt c-light-gray">
+                <p>
+                  <strong>
+                    <span class="c-black">
+                      {{client.full_name}}
+                    </span>
+                    - Member
+                  </strong>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="one-third mt10 center-dir columns">
+          {% with session=client.sessions_data %}
+            <p><strong>{{session.total}} Sessions</strong>
+            {% if session.total > 0 %}
+              (<strong>{{session.past}}</strong> past, <strong>{{session.upcoming}}</strong> upcoming)
+            {% endif %}
+            </p>
+          {% endwith %}
+          </div>
+          <div class="one-third mt10 center-dir columns">
+            <p><strong>{{client.bundles_count}}</strong> active bundles</p>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
 {% endblock %}

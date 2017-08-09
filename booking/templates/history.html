@@ -4,4 +4,52 @@
 
 {% block CONTENT %}
  {{ block.super }}
+  <section>
+    <div class="wrap">
+      <div class="one-col mb40">
+        <div class="heading-separator">
+          <h2 class="t-lyonL c-gray">Upcomming</h2>
+        </div>
+      {% for appointment in upcoming %}
+        <div class="one-col border-bottom-gray c-gray p20">
+          <div class="two-col">
+            <div class="col10">
+              <div class="blue-cir bg-aqua top"><div class="txt smaller-txt">E</div></div>
+            </div>
+            <div class="three-col mt10 t-lyon">
+              <p><strong><span class="c-black">{{appointment.starts_datetime|date:'h:i A' }}</span> - {{appointment.venue_name}}</strong></p>
+            </div>
+          </div>
+          <div class="two-col right-dir mt10">
+            <p><strong>{{appointment.service_name}}</strong> with <strong>{{appointment.client_name}}</strong></p>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      <div class="one-col mb40">
+        <div class="heading-separator">
+          <h2 class="t-lyonL c-gray">Past</h2>
+        </div>
+      {% for appointment in past %}
+        <div class="one-col border-bottom-gray c-gray p20">
+          <div class="two-col">
+            <div class="col10">
+              <div class="blue-cir bg-aqua top"><div class="txt smaller-txt">E</div></div>
+            </div>
+            <div class="three-col mt10 t-lyon">
+              <p><strong><span class="c-black">{{appointment.starts_datetime|date:'h:i A' }}</span> - {{appointment.venue_name}}</strong></p>
+            </div>
+          </div>
+          <div class="two-col right-dir mt10">
+            <p><strong>{{appointment.service_name}}</strong> with <strong>{{appointment.client_name}}</strong></p>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
 {% endblock %}

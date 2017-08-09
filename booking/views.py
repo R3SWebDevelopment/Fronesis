@@ -4,6 +4,7 @@ from .forms import AddAppointmentForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
+from datetime import datetime
 
 
 class CalendarView(ListView, FronesisBaseInnerView):
@@ -47,13 +48,13 @@ class ClientsView(ListView, FronesisBaseInnerView):
         return context
 
     def get_queryset(self, *args, **kwargs):
-        return super(ClientsView, self).get_queryset()
+        return self.coach.clients.all()
 
 
 class HistoryView(ListView, FronesisBaseInnerView):
-    model = Client
-    queryset = Client.objects.all()
-    template_name = 'clients.html'
+    model = Appointments
+    queryset = Appointments.objects.all()
+    template_name = 'history.html'
     month = None
     year = None
     coach = None
@@ -69,7 +70,15 @@ class HistoryView(ListView, FronesisBaseInnerView):
         return context
 
     def get_queryset(self, *args, **kwargs):
-        return super(HistoryView, self).get_queryset()
+        return super(HistoryView, self).get_queryset().filter(coach=self.coach)
+
+    def get_context_data(self, *args, **kwargs):
+        now = datetime.now()
+        context = super(HistoryView, self).get_context_data(*args, **kwargs)
+        qs = context['object_list']
+        context['past'] = qs.filter(ends_datetime__lte=now)
+        context['upcoming'] = qs.filter(starts_datetime__gte=now)
+        return context
 
 
 class BundleView(ListView, FronesisBaseInnerView):

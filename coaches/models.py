@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
+from datetime import datetime
 
 DAYS = (
     (0, 'Sunday'),
@@ -44,6 +45,21 @@ LENGTH_MINUTE_CHOICES = (
 class Client(models.Model):
     full_name = models.CharField(max_length=250, null=False, blank=False)
     email = models.EmailField(max_length=250, null=False, blank=False)
+
+
+    @property
+    def sessions_data(self):
+        bp = self.appointments.all()
+        now = datetime.now()
+        return {
+            'total': bp.count(),
+            'past': bp.filter(ends_datetime__lte=now).count(),
+            'upcoming': bp.filter(starts_datetime__gte=now).count(),
+        }
+
+    @property
+    def bundles_count(self):
+        return 0
 
 
 class Coach(models.Model):
