@@ -5,6 +5,7 @@ from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
 from datetime import datetime, timedelta
+from rest_framework.authtoken.models import Token
 
 
 class CalendarView(ListView, FronesisBaseInnerView):
@@ -18,6 +19,7 @@ class CalendarView(ListView, FronesisBaseInnerView):
 
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
+        Token.objects.create(user=request.user)
         self.coach = coach
         try:
             self.date = datetime.strptime(request.GET.get('date', None), '%d-%m-%Y').date() \
@@ -36,6 +38,7 @@ class CalendarView(ListView, FronesisBaseInnerView):
         context['week'] = self.get_week_appointments(qs)
         context['next'] = (self.date + timedelta(days=1)).strftime('%d-%m-%Y')
         context['prev'] = (self.date - timedelta(days=1)).strftime('%d-%m-%Y')
+        context['token'] = self.request.user.auth_token
         return context
 
     def get_week_appointments(self, qs):
