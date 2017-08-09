@@ -138,6 +138,6 @@ class BundleView(ListView, FronesisBaseInnerView):
 class AddAppointmentView(CreateView, FronesisBaseInnerView):
     model = Appointments
     queryset = Appointments.objects.all()
-    template_name = 'clients.html'
+    template_name = 'add.html'
     form_class = AddAppointmentForm
 

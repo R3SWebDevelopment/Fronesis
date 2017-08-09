@@ -4,13 +4,13 @@
 
 {% block CONTENT %}
  {{ block.super }}
-
+{% include 'add_appointment_modal.html' %}
 <section class="pb100">
    <div class="wrap hidden">
       <div class="two-col columns">
          <h3 class="c-light-gray">Hello Nacho</h3>
          <h1 class="t-lyon c-gray mb20">Here are your appointments for the day.</h1>
-         <button class="stroke-btn block mb20">Book a New Meeting</button>
+         <button class="stroke-btn block mb20" id="add_appointment">Book a New Meeting</button>
          <button class="stroke-btn block">Create an Event</button>
       </div>
       {% include 'calendar_today.html' %}
@@ -42,8 +42,45 @@
       var add_appointment = $(this).find('button#add_appointment');
       var add_appoinment_modal_form = $(this).find('#add_appoinment_modal_form');
       $(add_appointment).click(function(){
-        $(add_appoinment_modal_form).dialog();
+        dialog.dialog( "open" );
       });
+
+    function addUser() {
+      var valid = true;
+      allFields.removeClass( "ui-state-error" );
+
+      valid = valid && checkLength( name, "username", 3, 16 );
+      valid = valid && checkLength( email, "email", 6, 80 );
+      valid = valid && checkLength( password, "password", 5, 16 );
+
+      valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
+      valid = valid && checkRegexp( email, emailRegex, "eg. ui@jquery.com" );
+      valid = valid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+
+      if ( valid ) {
+        $( "#users tbody" ).append( "<tr>" +
+          "<td>" + name.val() + "</td>" +
+          "<td>" + email.val() + "</td>" +
+          "<td>" + password.val() + "</td>" +
+        "</tr>" );
+        dialog.dialog( "close" );
+      }
+      return valid;
+    }
+
+
+    dialog = $( "#dialog-form" ).dialog({
+      autoOpen: false,
+      height: 530,
+      width: 860,
+      modal: true,
+      resizable: false,
+      modal: true,
+      open: function (event, ui) {
+        $('#dialog-form').css('overflow', 'hidden');
+      }
+    });
+
   });
 </script>
 {% endblock %}
