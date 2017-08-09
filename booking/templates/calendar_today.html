@@ -1,0 +1,33 @@
+<div class="two-col columns">
+  <div class="one-col-slider carrousel slider-container slick-initialized slick-slider">
+    <div class="slider-nav-container">
+      <div class="arrow-container">
+        <span class="slick-prev slick-arrow" style="display: inline-block;"></span>
+        <p>Today</p>
+        <span class="slick-next slick-arrow" style="display: inline-block;"></span>
+      </div>
+    </div>
+    <div aria-live="polite" class="slick-list draggable">
+      <div class="slick-track" role="listbox" style="opacity: 1; width: 2710px; transform: translate3d(-542px, 0px, 0px);">
+        <div class="slider-item slick-slide slick-cloned" style="width: 542px;">
+        </div>
+        <div class="slider-item slick-slide slick-current slick-active" style="width: 542px;">
+          <p class="date f-right c-light-gray mt20">
+            {{ date|date:'l, F jS' }}
+          </p>
+        {% for appointment in today %}
+          <div class="listed-event">
+            <div class="type">
+              <div class="event-type-cir bg-aqua">A</div>
+            </div>
+            <div class="description">
+              <p class="t-lyon c-light-gray"><span class="c-black">10:00 am</span> - Venue Name</p>
+              <p class="t-proxima c-gray"><strong>Type of Session</strong> with <strong>Client’s Name</strong></p>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

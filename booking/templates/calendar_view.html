@@ -4,13 +4,20 @@
 
 {% block CONTENT %}
  {{ block.super }}
-<div id="add_appoinment_modal_form">
-</div>
-<div class="wrap mb40">
-  <div class="one-col t-right mb40">
-    <button id="add_appointment" data-url="{% url 'booking:add_appointment' %}" class="btn-aqua btn-x2">Add Appoitment</button>
-  </div>
-</div>
+
+<section class="pb100">
+   <div class="wrap hidden">
+      <div class="two-col columns">
+         <h3 class="c-light-gray">Hello Nacho</h3>
+         <h1 class="t-lyon c-gray mb20">Here are your appointments for the day.</h1>
+         <button class="stroke-btn block mb20">Book a New Meeting</button>
+         <button class="stroke-btn block">Create an Event</button>
+      </div>
+      {% include 'calendar_today.html' %}
+   </div>
+</section>
+{% include 'calendar_week.html' %}
+
 {% endblock %}
 {% block SCRIPT %}
 {{block.super}}

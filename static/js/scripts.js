@@ -27,7 +27,7 @@ $('#triggerStMenu, #closeBtn').click(function(){
 
 
 // SLIDER ONE COLUMN
-$('.one-col-slider').slick({
+$('.one-col-sliders').slick({
 	slidesToShow: 1,
 	slide: '.slider-item',
 	arrows: true,
@@ -38,7 +38,7 @@ $('.one-col-slider').slick({
 
 
 // SLIDER SIX COLUMNS
-$('.six-col-slider').slick({
+$('.six-col-sliders').slick({
 	slidesToShow: 6,
 	infinite: true,
 	slidesToScroll: 1,
