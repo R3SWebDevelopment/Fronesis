@@ -19,7 +19,8 @@ class CalendarView(ListView, FronesisBaseInnerView):
 
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
-        Token.objects.create(user=request.user)
+        if not Token.objects.filter(user=request.user).exists():
+            Token.objects.create(user=request.user)
         self.coach = coach
         try:
             self.date = datetime.strptime(request.GET.get('date', None), '%d-%m-%Y').date() \
