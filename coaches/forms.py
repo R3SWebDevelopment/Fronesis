@@ -140,5 +140,6 @@ class SessionForm(forms.ModelForm):
         coach = get_current_user().coaches.first()
         self.fields['coach'].widget = forms.HiddenInput()
         self.fields['coach'].initial = coach
+        self.fields['allow_on_venues'].queryset = coach.venues.all()
         for field in ['face_to_face', 'one_on_one', 'groups_allow', 'person_price', 'max_capacity', 'allow_on_venues']:
             self.fields[field].required = False
