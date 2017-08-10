@@ -39,7 +39,10 @@ def auth_return(request):
     state = str.encode(state)
     if not xsrfutil.validate_token(settings.SECRET_KEY, state, request.user):
         return HttpResponseBadRequest()
-    credential = FLOW.step2_exchange(request.GET)
+    try:
+        credential = FLOW.step2_exchange(request.GET)
+    except:
+        return HttpResponseRedirect("/coach/booking_settings/")
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     storage.put(credential)
     return HttpResponseRedirect("/google/calendar/connect/")
