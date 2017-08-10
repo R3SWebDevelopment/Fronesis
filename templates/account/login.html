@@ -2,6 +2,10 @@
 {% load account %}
 
 
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+
 {% block CONTENT %}
 <div class="c-center t-center">
   <div class="med-wrap ptb100 c-white">
@@ -48,9 +52,9 @@
         </div>
       </div>
       <div class="one-col p20 c-white t-center">
-        <a href="{% url 'account_reset_password' %}" class="c-white">Olvidé mi contraseña</a>
+        <a href="{% url 'account_reset_password' %}" class="c-white">I forgot my password</a>
         |
-        <a href="{% url 'account_signup' %}" class="c-white">¿Cómo obtener una cuenta?</a>
+        <a href="{% url 'account_signup' %}" class="c-white">How do I get an account?</a>
       </div>
     </form>
   </div>

@@ -4,6 +4,12 @@ from drum.links.models import Profile
 from .models import UserProfile
 from .tasks import notify_user_creation
 
+def force_language(sender, environ, **kwargs):
+    from django.utils import translation
+    translation.activate('en-us')
+    environ.update({
+        'HTTP_ACCEPT_LANGUAGE': translation.get_language()
+    })
 
 def create_user_profile(sender, **kwargs):
     # When an user is created verify if has password if not generate a random one and send it.
