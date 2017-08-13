@@ -21,7 +21,7 @@ class PastEvent(models.Manager):
         now = datetime.now()
         today = now.date()
         time = now.time()
-        return super(PastEvent, self).get_queryset().filter(ends_date__lt=today, ends_time__lt=time)
+        return super(PastEvent, self).get_queryset().filter(ends_date__lte=today)
 
 
 class PublishedEvent(models.Manager):
