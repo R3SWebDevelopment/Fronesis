@@ -8,10 +8,12 @@
 <section class="pb100">
    <div class="wrap hidden">
       <div class="two-col columns">
-         <h3 class="c-light-gray">Hello Nacho</h3>
+         <h3 class="c-light-gray">Hello {{user.first_name|default:user.email}}</h3>
          <h1 class="t-lyon c-gray mb20">Here are your appointments for the day.</h1>
          <button class="stroke-btn block mb20" id="add_appointment">Book a New Meeting</button>
-         <button class="stroke-btn block">Create an Event</button>
+         <a href="{% url 'my_events_create' %}">
+           <button class="stroke-btn block">Create an Event</button>
+         </a>
       </div>
       {% include 'calendar_today.html' %}
    </div>

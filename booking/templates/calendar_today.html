@@ -5,7 +5,7 @@
         <a href="{% url 'booking:calendar_view' %}?date={{prev}}">
           <span class="slick-prev slick-arrow" style="display: inline-block;"></span>
         </a>
-        <p>Today</p>
+        <p>{{ date|date:'l, F jS' }}</p>
         <a href="{% url 'booking:calendar_view' %}?date={{next}}">
           <span class="slick-next slick-arrow" style="display: inline-block;"></span>
         </a>
@@ -17,7 +17,7 @@
         </div>
         <div class="slider-item slick-slide slick-current slick-active" style="width: 542px;">
           <p class="date f-right c-light-gray mt20">
-            {{ date|date:'l, F jS' }}
+
           </p>
         {% for appointment in today %}
           <div class="listed-event">
