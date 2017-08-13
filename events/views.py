@@ -207,6 +207,7 @@ class EventsPublished(ListView, FronesisBaseInnerView):
     def get_context_data(self, **kwargs):
         context = super(EventsPublished, self).get_context_data(**kwargs)
         context['past_events'] = Event.publishedPast.all()
+        context['events'] = True
         return context
 
 
