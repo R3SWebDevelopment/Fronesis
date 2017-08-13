@@ -67,7 +67,7 @@
             <div class="one-col">
               <div class="two-col">
                 <label for="{{ form.cover.id_for_label }}" class="dark-label mb20">{{ form.cover.label|upper }}</label>
-                <button class="upload-img" name="button">
+                <button class="upload-img {% if form.cover.value %}image_upload_placeholder_filled {% endif %}" name="button">
                   <img id="output" width="100%" height="100%" {% if mode == 'update' %} src="{{ MEDIA_URL }}{{ form.cover.value|default:'' }}" {% else %}style="display: none;"{% endif %}/>
                 </button>
                 <input id = "{{ form.cover.id_for_label }}" name = "{{ form.cover.html_name }}" type="file" accept="image/*" style = "display:none;">

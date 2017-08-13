@@ -45,7 +45,7 @@
           <div class="one-col">
             <input type="hidden" id = "{{ avatar.user.id_for_label }}" name = "{{avatar.user.html_name}}" value = "{{avatar.user.value|default:''}}">
             <label for="{{ avatar.avatar.id_for_label }}" class="dark-label mb20">{{ avatar.avatar.label|upper }}</label>
-            <button class="upload-img" name="button">
+            <button class="upload-img {% if avatar.avatar.value %}image_upload_placeholder_filled{% endif %}" name="button">
               <img id="output" width="100%" height="100%" {% if mode == 'update' %} src="{{ MEDIA_URL }}{{ avatar.avatar.value|default:'' }}" {% else %}style="display: none;"{% endif %}/>
             </button>
             <input id = "{{ avatar.avatar.id_for_label }}" name = "{{ avatar.avatar.html_name }}" type="file" accept="image/*" style = "display:none;">
