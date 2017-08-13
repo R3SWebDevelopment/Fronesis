@@ -174,9 +174,7 @@ class EditVenues(UpdateView, FronesisBaseInnerView):
         return context
 
     def get_success_url(self):
-        return reverse('coaches:edit_venues', kwargs={
-            'pk': self.object.pk
-        })
+        return reverse('coaches:my_venues')
 
     def get_queryset(self):
         qs = super(EditVenues, self).get_queryset()
