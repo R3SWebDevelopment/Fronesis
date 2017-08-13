@@ -89,6 +89,7 @@
 
           reader.onload = function (e) {
               $(target).find('img#output').attr('src', e.target.result).css({display: 'block'}).append(":-webkit-any(body):after {content: none;}");;
+              $(target).addClass('image_upload_placeholder_filled');
           }
 
           reader.readAsDataURL(input.files[0]);
