@@ -15,7 +15,6 @@ class Appointments(models.Model):
     send_payment_link = models.BooleanField(default=False)
     google_calander_url = models.URLField(null=True)
 
-
     @property
     def venue_name(self):
         return self.venue.name if self.venue else self.custome_venue
@@ -27,3 +26,8 @@ class Appointments(models.Model):
     @property
     def client_name(self):
         return self.client.full_name
+
+    @property
+    def google_calendar_data(self):
+        data = {}
+        return data

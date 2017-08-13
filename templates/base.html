@@ -41,14 +41,14 @@
 			</div>
 			<div class="st-menu">
 				<ul>
-					<li><a href="#">About</a></li>
+					{#<li><a href="#">About</a></li>#}
 					<li><a href="#">Philios</a></li>
         {% if user_display and user_display|length > 0 %}
           <li><a href="{% url 'my_events' %}">My Events</a></li>
         {% endif %}
 					<li><a href="/events/">Events</a></li>
-					<li><a href="#">Community</a></li>
-					<li><a href="#">Bookings</a></li>
+					{#<li><a href="#">Community</a></li>#}
+					<li><a href="{% url 'booking:calendar_view' %}">Bookings</a></li>
         {% if user_display == None or user_display|length == 0 %}
           <li><a href="{% url 'account_login' %}">Log-In</a></li>
         {% else %}

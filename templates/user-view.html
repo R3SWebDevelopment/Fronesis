@@ -20,21 +20,20 @@
         <ul>
           {#<li><a href="#">Coach Settings</a></li>#}
           {#<li><a href="#">Billing</a></li>#}
-          <li><a href="{% url 'coaches:my_services' %}">My Services</a></li>
-          <li><a href="{% url 'booking:calendar_view' %}">Appointments</a></li>
-          <li><a href="{% url 'coaches:contact_information' %}">Coach Settings</a></li>
-          <li><a href="{% url 'events' %}">Events</a></li>
-          <li><a href="{% url 'profile' %}">Profile</a></li>
+          <li class="{{my_services_section|yesno:'current,'}}"><a href="{% url 'coaches:my_services' %}">My Services</a></li>
+          <li class="{{appointments_section|yesno:'current,'}}"><a href="{% url 'booking:calendar_view' %}">Appointments</a></li>
+          <li class="{{coach_settings_section|yesno:'current,'}}"><a href="{% url 'coaches:contact_information' %}">Coach Settings</a></li>
+          <li class="{{events_section|yesno:'current,'}}"><a href="{% url 'events' %}">Events</a></li>
+          <li class="{{profile_section|yesno:'current,'}}"><a href="{% url 'profile' %}">Profile</a></li>
         </ul>
       </div>
     </div>
     <div class="booking-nav-hidden display">
       <ul>
       {% block SECTION_MENU %}
-        <li class="active"><a href="{% url 'my_events' %}">My Events</a></li>
-        <li><a href="{% url 'MyTicketsListView' %}">My Tickets</a></li>
-        {#<li><a href="#">Events Settings</a></li>#}
-        <li><a href="{% url 'my_events_create' %}">Create new Event</a></li>
+        <li class="{{ my_events|yesno:'active,'}}"><a href="{% url 'my_events' %}">My Events</a></li>
+        <li class="{{ my_tikets|yesno:'active,'}}"><a href="{% url 'MyTicketsListView' %}">My Tickets</a></li>
+        <li class="{{ create_event|yesno:'active,'}}"><a href="{% url 'my_events_create' %}">Create new Event</a></li>
       {% endblock %}
       </ul>
     </div>

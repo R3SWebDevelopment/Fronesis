@@ -31,6 +31,7 @@ class DummyView(TemplateView):
 
 class MyEventsView(ListView, FronesisBaseInnerView):
     template_name = 'events/my_events.html'
+    events_section = True
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -44,6 +45,7 @@ class MyEventsView(ListView, FronesisBaseInnerView):
         context = super(MyEventsView, self).get_context_data(**kwargs)
         context['attending_by_you'] = Event.objects.none()
         context['past_events'] = Event.past.all()
+        context['my_events'] = True
         return context
 
 
@@ -51,6 +53,7 @@ class CreateEventView(CreateView, FronesisBaseInnerView):
 
     template_name = 'events/edit_view.html'
     form_class = EventForm
+    events_section = True
 
     @method_decorator(login_required)
     def dispatch(self, request, mode='create', event_uuid=None, *args, **kwargs):
@@ -62,6 +65,7 @@ class CreateEventView(CreateView, FronesisBaseInnerView):
     def get_context_data(self, **kwargs):
         context = super(CreateEventView, self).get_context_data(**kwargs)
         context['mode'] = self.mode
+        context['create_event'] = True if self.mode == 'create' else False
         return context
 
     def get_form(self, form_class=None):
@@ -116,6 +120,7 @@ class EventView(UpdateView, FronesisBaseInnerView):
     template_name = 'events/edit_view.html'
     model = Event
     form_class = EventForm
+    events_section = True
 
     @method_decorator(login_required)
     def dispatch(self, request, mode='create', event_uuid=None, *args, **kwargs):
@@ -168,6 +173,7 @@ class EventView(UpdateView, FronesisBaseInnerView):
 class EventTicketSalesReport(ListView, FronesisBaseInnerView):
     template_name = 'events/ticket_sales_report.html'
     model = Ticket
+    events_section = True
 
     @method_decorator(login_required)
     def dispatch(self, request, event_uuid, *args, **kwargs):
@@ -190,6 +196,7 @@ class EventTicketSalesReport(ListView, FronesisBaseInnerView):
 
 class EventsPublished(ListView, FronesisBaseInnerView):
     template_name = 'events/published.html'
+    events_section = True
 
     def dispatch(self, request, *args, **kwargs):
         return super(EventsPublished, self).dispatch(request=request, **kwargs)
@@ -407,6 +414,7 @@ class MyTicketsListView(ListView, FronesisBaseInnerView):
     template_name = 'events/my_tickets.html'
     model = TicketSales
     queryset = TicketSales.objects.all()
+    events_section = True
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -444,4 +452,5 @@ class MyTicketsListView(ListView, FronesisBaseInnerView):
     def get_context_data(self, **kwargs):
         context = super(MyTicketsListView, self).get_context_data()
         context['object_list'] = self.get_list()
+        context['my_tikets'] = True
         return context

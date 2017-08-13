@@ -12,6 +12,7 @@ class ContactDetail(UpdateView, FronesisBaseInnerView):
     form_class = CoachContactForm
     object = None
     template_name = 'detail.html'
+    coach_settings_section = True
 
     def get_form(self, form_class=None):
         form_class = self.get_form_class()
@@ -48,6 +49,7 @@ class BlockedHours(UpdateView, FronesisBaseInnerView):
     form_class = CoachBlockedHours
     object = None
     template_name = 'blocked_hours.html'
+    coach_settings_section = True
 
     def get_form(self, form_class=None):
         form_class = self.get_form_class()
@@ -84,6 +86,7 @@ class BookingSettings(UpdateView, FronesisBaseInnerView):
     form_class = CoachBookingSettings
     object = None
     template_name = 'settings.html'
+    coach_settings_section = True
 
     def get_form(self, form_class=None):
         form_class = self.get_form_class()
@@ -118,6 +121,7 @@ class MyVenues(ListView, FronesisBaseInnerView):
     model = Venue
     queryset = Venue.objects.all()
     template_name = 'my_venues.html'
+    coach_settings_section = True
 
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
@@ -138,6 +142,7 @@ class CreateVenues(CreateView, FronesisBaseInnerView):
     queryset = Venue.objects.all()
     template_name = 'new_venues.html'
     form_class = VenuesForm
+    coach_settings_section = True
 
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
@@ -157,6 +162,7 @@ class EditVenues(UpdateView, FronesisBaseInnerView):
     queryset = Venue.objects.all()
     template_name = 'edit_venues.html'
     form_class = VenuesForm
+    coach_settings_section = True
 
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
@@ -180,6 +186,7 @@ class EditVenues(UpdateView, FronesisBaseInnerView):
 class RemoveVenues(DeleteView, FronesisBaseInnerView):
     model = Venue
     queryset = Venue.objects.all()
+    coach_settings_section = True
 
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
@@ -197,6 +204,7 @@ class MyServices(ListView, FronesisBaseInnerView):
     model = Session
     queryset = Session.objects.all()
     template_name = 'my_services.html'
+    my_services_section = True
 
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
@@ -212,6 +220,7 @@ class CreateService(CreateView, FronesisBaseInnerView):
     queryset = Session.objects.all()
     template_name = 'new_service.html'
     form_class = SessionForm
+    my_services_section = True
 
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
@@ -235,6 +244,7 @@ class EditService(UpdateView, FronesisBaseInnerView):
     queryset = Session.objects.all()
     template_name = 'edit_service.html'
     form_class = SessionForm
+    my_services_section = True
 
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)

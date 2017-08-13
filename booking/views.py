@@ -16,6 +16,7 @@ class CalendarView(ListView, FronesisBaseInnerView):
     year = None
     coach = None
     date = None
+    appointments_section = True
 
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
@@ -72,6 +73,7 @@ class ClientsView(ListView, FronesisBaseInnerView):
     month = None
     year = None
     coach = None
+    appointments_section = True
 
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
@@ -94,16 +96,12 @@ class HistoryView(ListView, FronesisBaseInnerView):
     month = None
     year = None
     coach = None
+    appointments_section = True
 
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
         self.coach = coach
         return super(HistoryView, self).dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(HistoryView, self).get_context_data(**kwargs)
-        context['history'] = True
-        return context
 
     def get_queryset(self, *args, **kwargs):
         return super(HistoryView, self).get_queryset().filter(coach=self.coach)
@@ -111,6 +109,7 @@ class HistoryView(ListView, FronesisBaseInnerView):
     def get_context_data(self, *args, **kwargs):
         now = datetime.now()
         context = super(HistoryView, self).get_context_data(*args, **kwargs)
+        context['history'] = True
         qs = context['object_list']
         context['past'] = qs.filter(ends_datetime__lte=now)
         context['upcoming'] = qs.filter(starts_datetime__gte=now)
@@ -124,6 +123,7 @@ class BundleView(ListView, FronesisBaseInnerView):
     month = None
     year = None
     coach = None
+    appointments_section = True
 
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
@@ -144,4 +144,5 @@ class AddAppointmentView(CreateView, FronesisBaseInnerView):
     queryset = Appointments.objects.all()
     template_name = 'add.html'
     form_class = AddAppointmentForm
+    appointments_section = True
 

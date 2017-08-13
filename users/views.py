@@ -55,6 +55,7 @@ class ProfileView(FormView, FronesisBaseInnerView):
     template_name = 'users/profile.html'
     model = User
     form_class = UserChangeForm
+    profile_section = True
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
