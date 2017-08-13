@@ -35,7 +35,7 @@ class CalendarView(ListView, FronesisBaseInnerView):
         qs = context['object_list']
         context['calendar'] = True
         context['today'] = qs.filter(starts_datetime__year=self.date.year, starts_datetime__month=self.date.month,
-                                    starts_datetime__day=self.date.day)
+                                    starts_datetime__day=self.date.day).order_by('starts_datetime')
         context['date'] = self.date
         context['week'] = self.get_week_appointments(qs)
         context['next'] = (self.date + timedelta(days=1)).strftime('%d-%m-%Y')
@@ -58,7 +58,7 @@ class CalendarView(ListView, FronesisBaseInnerView):
             week.append({
                 'day': date,
                 'appointments': qs.filter(starts_datetime__year=date.year, starts_datetime__month=date.month,
-                                          starts_datetime__day=date.day),
+                                          starts_datetime__day=date.day).order_by('starts_datetime'),
             })
         return week
 
