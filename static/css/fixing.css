@@ -24,3 +24,9 @@
     padding-left: 10px;
     height: 22px;
 }
+
+
+.clear-link{
+    text-decoration: none;
+    color: black;
+}
