@@ -138,7 +138,14 @@
           </div>
           <div class="col20 columns">
             <label class="dark-label mb20">TICKET PRICE</label>
-            $<input type="number" min="0" step="any" class="border-bottom-input two-col columns" placeholder="$0.00" id="price" name="price[]" value="{{ticket.price|default:'0'|floatformat:2}}">
+            <div class="border-bottom-input two-col columns">
+              <div class="money_symbol">
+                $
+              </div>
+              <div class="money_amount">
+                <input type="number" min="0" step="any" class="" placeholder="$0.00" id="price" name="price[]" value="{{ticket.price|default:'0'|floatformat:2}}">
+              </div>
+            </div>
           </div>
           <div class="col20 columns">
             <label class="dark-label mb20">TICKETS AVAILABLE</label>
@@ -160,7 +167,12 @@
           </div>
           <div class="col20 columns">
             <label class="dark-label mb20">TICKET PRICE</label>
-            $<input type="number" min="0" step="any" class="border-bottom-input two-col columns" placeholder="0.00" id="price" name="price[]">
+            <div class="money_symbol">
+              $
+            </div>
+            <div class="money_amount">
+              <input type="number" min="0" step="any" class="" placeholder="0.00" id="price" name="price[]">
+            </div>
           </div>
           <div class="col20 columns">
             <label class="dark-label mb20">TICKETS AVAILABLE</label>

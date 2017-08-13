@@ -23,7 +23,16 @@ from django.urls import reverse
 # Console <http://code.google.com/apis/console>
 
 
-def get_flow():
+def get_flow(url):
+    oauth2callback = '/google/oauth2callback/'
+    flow = flow_from_clientsecrets(
+        settings.GOOGLE_OAUTH2_CLIENT_SECRETS_JSON,
+        scope='https://www.googleapis.com/auth/calendar',
+        redirect_uri='http://fronesis.vordem.mx{}'.format(oauth2callback))
+    return flow
+
+
+def get_flow_add(url):
     oauth2callback = '/google/oauth2callback/'
     flow = flow_from_clientsecrets(
         settings.GOOGLE_OAUTH2_CLIENT_SECRETS_JSON,
@@ -49,6 +58,22 @@ def auth_return(request):
 
 
 @login_required
+def auth_return_appointment(request):
+    FLOW = get_flow()
+    state = request.GET.get('state', None)
+    state = str.encode(state)
+    if not xsrfutil.validate_token(settings.SECRET_KEY, state, request.user):
+        return HttpResponseBadRequest()
+    try:
+        credential = FLOW.step2_exchange(request.GET)
+    except:
+        return HttpResponseRedirect("/coach/booking_settings/")
+    storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
+    storage.put(credential)
+    return HttpResponseRedirect("/google/calendar/add/")
+
+
+@login_required
 def connect_calender(request):
     FLOW = get_flow()
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
@@ -69,6 +94,10 @@ def connect_calender(request):
             request.user.coaches.first().set_google_calender_list(calendars_data.get('items', []))
     return HttpResponseRedirect(reverse('coaches:booking_settings'))
 
+
+@login_required
+def add_appointment_to_calendar(request):
+    FLOW = get_flow_add()
 
 @login_required
 def disconnect_calender(request):
