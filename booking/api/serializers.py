@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Appointments, Coach
+from ..models import Appointments, Coach, Session
 from coaches.models import AvailableHour
 from coaches.api.serializers import VenueSerializer, ClientSerializer, SessionSerializer
 from datetime import datetime
@@ -184,6 +184,7 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
     def get_date_times(self, obj, *args, **kwargs):
         context = self.context
         date = datetime.now().date()
+        session = None
         if context:
             request = context.get('request', None)
             if request:
@@ -193,10 +194,22 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
                     date = query_date if date < query_date else date
                 except:
                     pass
+                session_id = request.query_params.get('service', None)
+                session = Session.objects.filter(pk=session_id).first()
         weekday = date.isoweekday()
         appointments = obj.appointments.all()
         appointments = appointments.filter(starts_datetime__range=(datetime.combine(date, time.min),
                                                                    datetime.combine(date, time.max)))
         exclude = [int(h.get('starts_datetime').strftime('%H')) for h in appointments.values('starts_datetime')]
         available = obj.available_hours.filter(day=weekday).exclude(hour__in=exclude)
+        if session:
+            available_hours = []
+            length_hours = session.length_hours
+            length_hours += 1 if session.length_minutes > 0 else 0
+            hours = set([h.get('hour') for h in available.values('hour')])
+            for h in hours:
+                hours_needed = set(range(h, h + length_hours))
+                if hours_needed.issubset(hours):
+                    available_hours.append(h)
+            available = available.filter(hour__in=available_hours)
         return AvailableHourSerializer(available, many=True).data
