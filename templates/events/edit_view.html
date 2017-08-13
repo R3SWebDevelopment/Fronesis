@@ -249,7 +249,7 @@
         event.preventDefault();
         var row = $(ticket_template).clone(true);
         var last_ticket = $('.ticket-container').last();
-        $(row).insertAfter(ticket_template).find(':input').val('');
+        $(row).insertAfter(last_ticket).find(':input').val('');
 
       });
 
