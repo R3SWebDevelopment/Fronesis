@@ -160,15 +160,6 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
     def get_min_date(self, obj, *args, **kwargs):
         context = self.context
         date = datetime.now().date()
-        if context:
-            request = context.get('request', None)
-            if request:
-                query_date = request.query_params.get('date', None)
-                try:
-                    query_date = datetime.strptime(query_date, '%Y-%m-%d').date()
-                    date = query_date if date < query_date else date
-                except:
-                    pass
         return date.strftime('%Y-%m-%d')
 
     def get_small_date(self, obj, *args, **kwargs):
