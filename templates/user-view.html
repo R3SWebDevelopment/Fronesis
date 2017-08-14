@@ -9,8 +9,8 @@
   <div class="wrap">
     <div class="booking-nav">
       <div class="profile">
-      {% if user.profile.avatar %}
-        <div class="img" style="background-image: url('{{ user.profile.avatar.crop.128x128 }}')"></div>
+      {% if user.profile.userprofile.avatar %}
+        <div class="img" style="background-image: url('/media/{{ user.profile.userprofile.avatar }}')"></div>
       {% else %}
         <div class="img" style="background-image: url('{{ user.profile.profile_image_url|default:'https://lelakisihat.com/wp-content/uploads/2016/09/avatar.jpg' }}')"></div>
       {% endif %}

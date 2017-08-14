@@ -61,10 +61,14 @@
         <p class="c-aqua mb20">ATTENDING</p>
         <ul class="display-inline mrb10 mb20">
     {% with assistants=object.assistants %}
-      {% for assistant in object.assistants %}
+      {% for assistant in assistants %}
         {% if forloop.counter < 10 %}
           <li>
-            <div class="profile-x1" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+          {% if assistant.profile.userprofile.avatar %}
+            <div class="profile-x1" style="background-image: url('/media/{{ assistant.profile.userprofile.avatar }}')"></div>
+          {% else %}
+            <div class="profile-x1" style="background-image: url('https://lelakisihat.com/wp-content/uploads/2016/09/avatar.jpg')"></div>
+          {% endif %}
           </li>
         {% endif %}
       {% endfor %}
@@ -75,7 +79,11 @@
       <div class="one-col mb40">
         <p class="c-aqua mb20">ORGANIZER</p>
         <div class="display-inline mb20">
-          <div class="profile-x1 mr20" style="background-image: url('{% static 'img/profile3.png' %}')"></div>
+        {% if object.organizer.profile.userprofile.avatar %}
+          <div class="profile-x1 mr20" style="background-image: url('/media/{{ object.organizer.profile.userprofile.avatar }}')"></div>
+        {% else %}
+          <div class="profile-x1 mr20" style="background-image: url('https://lelakisihat.com/wp-content/uploads/2016/09/avatar.jpg')"></div>
+        {% endif %}
           <div>
             <p><strong>{{ object.organizer_name|title }}</strong></p>
             {#<p>Agent</p>#}
