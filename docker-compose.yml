@@ -9,7 +9,7 @@ db:
 redis:
   image: redis:3.2
   volumes:
-    - /srv/minute/redis:/data
+    - /srv/fronesis/redis:/data
 app: &app
   build: .
   env_file: .env
