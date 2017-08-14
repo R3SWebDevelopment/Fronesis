@@ -95,6 +95,7 @@ class ProfileView(FormView, FronesisBaseInnerView):
                                               instance=self.get_object().profile.userprofile)
                 if avatar_form.is_valid():
                     avatar = avatar_form.save()
+                    avatar.avatar = request.FILES['avatar']
                     avatar.save()
             return self.form_valid(form)
         else:
