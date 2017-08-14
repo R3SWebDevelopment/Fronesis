@@ -8,6 +8,7 @@ from rest_framework import status
 from datetime import datetime
 from datetime import time
 from datetime import timedelta
+from django.urls import reverse
 
 
 class AppointmentsSerializer(serializers.ModelSerializer):
@@ -27,6 +28,8 @@ class AppointmentsSerializer(serializers.ModelSerializer):
     send_payment_link = serializers.BooleanField(write_only=True, default=False)
     begins = serializers.SerializerMethodField(read_only=True)
     ends = serializers.SerializerMethodField(read_only=True)
+    google_push_url = serializers.SerializerMethodField(read_only=True)
+    google_calendar_url = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Appointments
@@ -37,9 +40,18 @@ class AppointmentsSerializer(serializers.ModelSerializer):
     def get_ends(self, obj, *args, **kwargs):
         return obj.ends_datetime.strftime('%I:%M %p')
 
+    def get_google_calendar_url(self, obj):
+        return obj.google_calender_url or None
+
+    def get_google_push_url(self, obj):
+        if obj.google_calender_url is None and obj.coach.google_calendar_account_id:
+            return reverse('google:add_appointment', kwargs={
+                'pk': obj.pk
+            })
+        return None
+
     def get_begins(self, obj, *args, **kwargs):
         return obj.starts_datetime.strftime('%I:%M %p')
-
 
     def create(self, validated_data):
         current_user = get_current_user()
@@ -148,6 +160,15 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
     def get_min_date(self, obj, *args, **kwargs):
         context = self.context
         date = datetime.now().date()
+        if context:
+            request = context.get('request', None)
+            if request:
+                query_date = request.query_params.get('date', None)
+                try:
+                    query_date = datetime.strptime(query_date, '%Y-%m-%d').date()
+                    date = query_date if date < query_date else date
+                except:
+                    pass
         return date.strftime('%Y-%m-%d')
 
     def get_small_date(self, obj, *args, **kwargs):
@@ -195,7 +216,8 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
                 except:
                     pass
                 session_id = request.query_params.get('service', None)
-                session = Session.objects.filter(pk=session_id).first()
+                if session_id:
+                    session = Session.objects.filter(pk=session_id).first()
         weekday = date.isoweekday()
         appointments = obj.appointments.all()
         appointments = appointments.filter(starts_datetime__range=(datetime.combine(date, time.min),
