@@ -10,6 +10,7 @@ from datetime import time
 from datetime import timedelta
 from django.urls import reverse
 from dateutil import tz
+import pytz
 
 LOCAL = tz.gettz('America/Monterrey')
 
@@ -91,7 +92,7 @@ class AppointmentsSerializer(serializers.ModelSerializer):
             hour = validated_data.get('time', None)
             if date and hour:
                 if date:
-                    date = datetime.combine(date, datetime.min.time())
+                    date = datetime.combine(date, datetime.min.time()).replace(tzinfo=LOCAL).astimezone(pytz.utc)
                     weekday = date.isoweekday()
                     hours = coach.available_hours.filter(day=weekday)
                     hour = hours.filter(pk=hour).first()
@@ -102,7 +103,8 @@ class AppointmentsSerializer(serializers.ModelSerializer):
                             length_minutes = session.length_minutes or 0
                             session_delta = timedelta(minutes=length_minutes, hours=length_hours)
                             ends_datetime = begins_datetime + session_delta
-                            appointments = coach.appointments.exclude(starts_datetime__gte=ends_datetime). \
+                            appointments = coach.appointments.\
+                                exclude(starts_datetime__gte=ends_datetime).\
                                 exclude(ends_datetime__lte=begins_datetime)
                             if appointments.exists():
                                 raise serializers.ValidationError('You already have an appointment at this this',
