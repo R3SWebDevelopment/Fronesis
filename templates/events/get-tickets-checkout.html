@@ -4,7 +4,7 @@
 
 {% block CONTENT %}
  {{ block.super }}
-<form method="post">
+<form method="post" id="payment">
   {% csrf_token %}
   <br>
     <section>
@@ -113,7 +113,7 @@
             <div class="one-col mb40">
                 <div class="two-col columns">
                     <label for="{{ car_form.postal_code.id_for_label }}" class="dark-label mb20">{{ car_form.postal_code.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.postal_code.id_for_label }}" name = "{{ car_form.postal_code.html_name}}" value = "{{ car_form.postal_code.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.postal_code.label|title}}" required>
+                    <input type="text" maxlength="5" type="text" id = "{{ car_form.postal_code.id_for_label }}" name = "{{ car_form.postal_code.html_name}}" value = "{{ car_form.postal_code.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.postal_code.label|title}}" required>
                 </div>
                 <div class="two-col columns">
                     <label for="{{ car_form.city.id_for_label }}" class="dark-label mb20">{{ car_form.city.label|upper }}</label>
@@ -133,7 +133,7 @@
                 </div>
                 <div class="two-col columns">
                     <label for="{{ car_form.phone_number.id_for_label }}" class="dark-label mb20">{{ car_form.phone_number.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.phone_number.id_for_label }}" name = "{{ car_form.phone_number.html_name}}" value = "{{ car_form.phone_number.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.phone_number.label|title}}" required>
+                    <input maxlength="10" type="text" id = "{{ car_form.phone_number.id_for_label }}" name = "{{ car_form.phone_number.html_name}}" value = "{{ car_form.phone_number.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.phone_number.label|title}}" required>
                 </div>
             </div>
         </div>
@@ -153,23 +153,55 @@
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.credit_card_number.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_number.label|upper }}</label>
-                    <input class="just-number" type="text" maxlength="16" id = "{{ car_form.credit_card_number.id_for_label }}" name = "{{ car_form.credit_card_number.html_name}}" value = "{{ car_form.credit_card_number.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_number.label|title}}" required>
+                    <input type="text" maxlength="16" id = "{{ car_form.credit_card_number.id_for_label }}" name = "{{ car_form.credit_card_number.html_name}}" value = "{{ car_form.credit_card_number.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.credit_card_number.label|title}}" required>
                 </div>
             </div>
             <div class="one-col mb40">
                 <div class="two-col columns">
-                    <label for="{{ car_form.credit_card_exp_month.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_month.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.credit_card_exp_month.id_for_label }}" name = "{{ car_form.credit_card_exp_month.html_name}}" value = "{{ car_form.credit_card_exp_month.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_month.label|title}}" required>
+                  <label for="{{ car_form.credit_card_exp_month.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_month.label|upper }}</label>
+                  {#<input type="text" id = "{{ car_form.credit_card_exp_month.id_for_label }}" name = "{{ car_form.credit_card_exp_month.html_name}}" value = "{{ car_form.credit_card_exp_month.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_month.label|title}}" required>#}
+                  <select id = "{{ car_form.credit_card_exp_month.id_for_label }}" name = "{{ car_form.credit_card_exp_month.html_name}}" class="border-bottom-input two-col columns">
+                    <option value="-1" selected>Select Month</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                  </select>
                 </div>
                 <div class="two-col columns">
-                    <label for="{{ car_form.credit_card_exp_year.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_year.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.credit_card_exp_year.id_for_label }}" name = "{{ car_form.credit_card_exp_year.html_name}}" value = "{{ car_form.credit_card_exp_year.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_year.label|title}}" required>
+                  <label for="{{ car_form.credit_card_exp_year.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_year.label|upper }}</label>
+                  {#<input type="text" id = "{{ car_form.credit_card_exp_year.id_for_label }}" name = "{{ car_form.credit_card_exp_year.html_name}}" value = "{{ car_form.credit_card_exp_year.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_year.label|title}}" required>#}
+                  <select id = "{{ car_form.credit_card_exp_year.id_for_label }}" name = "{{ car_form.credit_card_exp_year.html_name}}" class="border-bottom-input two-col columns">
+                    <option value="-1" selected>Select Year</option>
+                    <option value="17">2017</option>
+                    <option value="18">2018</option>
+                    <option value="19">2019</option>
+                    <option value="20">2020</option>
+                    <option value="21">2021</option>
+                    <option value="22">2022</option>
+                    <option value="23">2023</option>
+                    <option value="24">2024</option>
+                    <option value="25">2025</option>
+                    <option value="26">2026</option>
+                    <option value="27">2027</option>
+                    <option value="28">2028</option>
+                    <option value="29">2029</option>
+                    <option value="30">2030</option>
+                  </select>
                 </div>
             </div>
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.credit_card_cvv.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_cvv.label|upper }}</label>
-                    <input class="just-number" type="text" maxlength="3" id = "{{ car_form.credit_card_cvv.id_for_label }}" name = "{{ car_form.credit_card_cvv.html_name}}" value = "{{ car_form.credit_card_cvv.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_cvv.label|upper}}" required>
+                    <input type="text" maxlength="3" id = "{{ car_form.credit_card_cvv.id_for_label }}" name = "{{ car_form.credit_card_cvv.html_name}}" value = "{{ car_form.credit_card_cvv.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.credit_card_cvv.label|upper}}" required>
                 </div>
             </div>
         </div>
@@ -254,6 +286,59 @@
         if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
             e.preventDefault();
         }
+    });
+    $(this).find('#payment').submit(function(e){
+      var valid = true;
+      var phone_number = $(this).find('#id_phone_number');
+      var postal_code = $(this).find('#id_postal_code');
+      var credit_card_number = $(this).find('#id_credit_card_number');
+      var credit_card_exp_month = $(this).find('#id_credit_card_exp_month');
+      var credit_card_exp_year = $(this).find('#id_credit_card_exp_year');
+      var credit_card_cvv = $(this).find('#id_credit_card_cvv');
+      var msg = "";
+      if($(phone_number).val().trim().length != 10){
+        msg += "Phone number is not valid.\n";
+        valid = false;
+      }
+      if($(postal_code).val().trim().length != 5){
+        msg += "Postal code is not valid.\n";
+        valid = false;
+      }
+      if($(credit_card_number).val().trim().length != 16){
+        msg += "Credit Card Number is not valid.\n";
+        valid = false;
+      }
+      if($(credit_card_cvv).val().trim().length != 3){
+        msg += "Credit Card CVV Number is not valid.\n";
+        valid = false;
+      }
+      if($(credit_card_exp_month).val() == '-1'){
+        msg += "You need to select the expiration month.\n";
+        valid = false;
+      }
+      if($(credit_card_exp_year).val() == '-1'){
+        msg += "You need to select the expiration year.\n";
+        valid = false;
+      }
+      if($(credit_card_exp_month).val() != '-1' && $(credit_card_exp_year).val() != '-1'){
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = now.getMonth();
+        var selectedMonth = parseInt($(credit_card_exp_month).val());
+        var selectedYear = parseInt("20" + $(credit_card_exp_year).val());
+        if(year == selectedYear && month>selectedMonth){
+          msg += "The expiration date is not valid.\n";
+          valid = false;
+        }
+      }
+
+
+
+
+      if(!valid){
+        e.preventDefault();
+        alert(msg)
+      }
     });
   });
 </script>
