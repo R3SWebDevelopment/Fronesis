@@ -25,7 +25,14 @@
               <div class="event-type-cir bg-aqua">A</div>
             </div>
             <div class="description">
-              <p class="t-lyon c-light-gray"><span class="c-black">{{appointment.starts_datetime|time:'P'}}</span> - {{appointment.venue_name}}</p>
+              <p class="t-lyon c-light-gray">
+                <span class="c-black">{{appointment.starts_datetime|time:'P'}}</span> - {{appointment.venue_name}}
+              {% if appointment.google_calendar_url %}
+                <a href="{{appointment.google_calendar_url}}" target="_blank">
+                  <img class="google-calendar-icon" src="https://www.gstatic.com/images/branding/product/1x/calendar_64dp.png">
+                </a>
+              {% endif %}
+              </p>
               <p class="t-proxima c-gray"><strong>{{appointment.service_name}}</strong> with <strong>{{appointment.client_name}}</strong></p>
             </div>
           </div>
