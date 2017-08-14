@@ -41,10 +41,10 @@ class AppointmentsSerializer(serializers.ModelSerializer):
         return obj.ends_datetime.strftime('%I:%M %p')
 
     def get_google_calendar_url(self, obj):
-        return obj.google_calender_url or None
+        return obj.google_calendar_url or None
 
     def get_google_push_url(self, obj):
-        if obj.google_calender_url is None and obj.coach.google_calendar_account_id:
+        if obj.google_calendar_url is None and obj.coach.google_calendar_account_id:
             return reverse('google:add_appointment', kwargs={
                 'pk': obj.pk
             })

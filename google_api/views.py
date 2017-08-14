@@ -77,12 +77,15 @@ def add_appointment(request, pk):
         try:
             event = service.events().insert(calendarId=google_calendar_id, sendNotifications=True,
                                             body=event_data).execute()
+            #print("event: {}".format(event))
+            #print("event ITEMS: {}".format(event.items))
             htmlLink = event.get('htmlLink', None)
+            #print("htmlLink: {}".format(htmlLink))
             if htmlLink:
                 appointment.google_calendar_url = htmlLink
                 appointment.save()
-        except:
-            pass
+        except Exception as e:
+            print("Exception: {}".format(e))
     return HttpResponseRedirect(reverse('booking:calendar_view'))
 
 

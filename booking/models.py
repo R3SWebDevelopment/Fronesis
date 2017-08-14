@@ -16,7 +16,7 @@ class Appointments(models.Model):
     service = models.ForeignKey(Session, null=True, related_name='appointments')
     already_paid = models.BooleanField(default=False)
     send_payment_link = models.BooleanField(default=False)
-    google_calender_url = models.URLField(null=True)
+    google_calendar_url = models.URLField(null=True)
 
     @property
     def venue_name(self):
