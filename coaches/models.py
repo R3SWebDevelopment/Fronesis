@@ -46,7 +46,6 @@ class Client(models.Model):
     full_name = models.CharField(max_length=250, null=False, blank=False)
     email = models.EmailField(max_length=250, null=False, blank=False)
 
-
     @property
     def sessions_data(self):
         bp = self.appointments.all()

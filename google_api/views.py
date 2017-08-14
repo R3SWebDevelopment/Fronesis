@@ -56,10 +56,40 @@ def auth_return(request):
 
 
 @login_required
+def add_appointment(request, pk):
+    request.session[SESSION_GOOGLE_SUCESS_URL_KEY] = reverse('google:add_appointment', kwargs={
+        'pk': pk
+    })
+    request.session[SESSION_GOOGLE_ERROR_URL_KEY] = reverse('booking:calendar_view')
+    storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
+    credential = storage.get()
+    if credential is None or credential.invalid:
+        FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY, request.user)
+        authorize_url = FLOW.step1_get_authorize_url()
+        return HttpResponseRedirect(authorize_url)
+    coach = request.user.coaches.first()
+    appointment = coach.appointments.filter(pk=pk).first()
+    if coach and appointment:
+        http = credential.authorize(httplib2.Http())
+        service = discovery.build('calendar', 'v3', http=http)
+        google_calendar_id = coach.google_calendar_id or 'primary'
+        event_data = appointment.google_calendar_data
+        try:
+            event = service.events().insert(calendarId=google_calendar_id, sendNotifications=True,
+                                            body=event_data).execute()
+            htmlLink = event.get('htmlLink', None)
+            if htmlLink:
+                appointment.google_calendar_url = htmlLink
+                appointment.save()
+        except:
+            pass
+    return HttpResponseRedirect(reverse('booking:calendar_view'))
+
+
+@login_required
 def connect_calender(request):
     request.session[SESSION_GOOGLE_SUCESS_URL_KEY] = reverse('google:calendar_connect')
     request.session[SESSION_GOOGLE_ERROR_URL_KEY] = reverse('coaches:booking_settings')
-    print(request.session.items())
     storage = DjangoORMStorage(CredentialsModel, 'id', request.user, 'credential')
     credential = storage.get()
     if credential is None or credential.invalid:
@@ -77,6 +107,7 @@ def connect_calender(request):
             calendars_data = service.calendarList().list(pageToken=None).execute()
             request.user.coaches.first().set_google_calender_list(calendars_data.get('items', []))
     return HttpResponseRedirect(reverse('coaches:booking_settings'))
+
 
 @login_required
 def disconnect_calender(request):
