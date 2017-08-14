@@ -44,7 +44,7 @@ class CalendarView(ListView, FronesisBaseInnerView):
         return context
 
     def get_week_appointments(self, qs):
-        today = datetime.now().date()
+        today = self.date
         if today.isoweekday() == 1:
             monday = today
         elif today.isoweekday() == 7:
