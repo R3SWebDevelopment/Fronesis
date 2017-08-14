@@ -35,7 +35,7 @@ class AppointmentsSerializer(serializers.ModelSerializer):
         model = Appointments
         fields = ('id', 'starts_datetime', 'ends_datetime', 'custome_venue', 'online_call', 'venue', 'venue_id',
                   'client', 'client_id', 'service', 'service_id', 'date', 'time', 'already_paid', 'send_payment_link',
-                  'begins', 'ends')
+                  'begins', 'ends', 'google_push_url', 'google_calendar_url')
 
     def get_ends(self, obj, *args, **kwargs):
         return obj.ends_datetime.strftime('%I:%M %p')
