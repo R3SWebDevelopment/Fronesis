@@ -23,7 +23,7 @@ from django.urls import reverse
 # Console <http://code.google.com/apis/console>
 
 OAUTH2CALLBACK = '/google/oauth2callback/'
-DOMAIN = 'http://local.test.com' # 'http://fronesis.vordem.mx'
+DOMAIN = 'http://fronesis.vordem.mx' # 'http://local.test.com' #
 
 SESSION_GOOGLE_SUCESS_URL_KEY = 'GOOGLE_SUCESS_URL'
 SESSION_GOOGLE_ERROR_URL_KEY = 'GOOGLE_ERROR_URL'
