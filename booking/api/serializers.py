@@ -9,11 +9,14 @@ from datetime import datetime
 from datetime import time
 from datetime import timedelta
 from django.urls import reverse
+from dateutil import tz
+
+LOCAL = tz.gettz('America/Monterrey')
 
 
 class AppointmentsSerializer(serializers.ModelSerializer):
-    starts_datetime = serializers.DateTimeField(read_only=True)
-    ends_datetime = serializers.DateTimeField(read_only=True)
+    starts_datetime = serializers.SerializerMethodField(read_only=True)
+    ends_datetime = serializers.SerializerMethodField(read_only=True)
     custome_venue = serializers.CharField(required=False, allow_blank=True)
     online_call = serializers.BooleanField(required=False, default=False)
     venue = VenueSerializer(read_only=True)
@@ -36,6 +39,13 @@ class AppointmentsSerializer(serializers.ModelSerializer):
         fields = ('id', 'starts_datetime', 'ends_datetime', 'custome_venue', 'online_call', 'venue', 'venue_id',
                   'client', 'client_id', 'service', 'service_id', 'date', 'time', 'already_paid', 'send_payment_link',
                   'begins', 'ends', 'google_push_url', 'google_calendar_url')
+
+
+    def get_starts_datetime(self, obj):
+        return obj.starts_datetime.replace(tzinfo=LOCAL)
+
+    def get_ends_datetime(self, obj):
+        return obj.ends_datetime.replace(tzinfo=LOCAL)
 
     def get_ends(self, obj, *args, **kwargs):
         return obj.ends_datetime.strftime('%I:%M %p')
@@ -213,7 +223,13 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
         appointments = obj.appointments.all()
         appointments = appointments.filter(starts_datetime__range=(datetime.combine(date, time.min),
                                                                    datetime.combine(date, time.max)))
-        exclude = [int(h.get('starts_datetime').strftime('%H')) for h in appointments.values('starts_datetime')]
+
+        exclude = []
+        for a in appointments.values('ends_datetime', 'starts_datetime'):
+            b = a.get('starts_datetime').strftime('%H')
+            e = a.get('ends_datetime').strftime('%H')
+            for h in range(int(b), int(e) + 1):
+                exclude.append(h)
         available = obj.available_hours.filter(day=weekday).exclude(hour__in=exclude)
         if session:
             available_hours = []
