@@ -110,7 +110,9 @@ class Event(models.Model):
 
     @property
     def assistants(self):
-        return User.objects.all()
+        return User.objects.filter(pk__in=[b.get('buyer__pk')
+                                           for b in TicketSales.objects.filter(event=self).values('buyer__pk')]).\
+            distinct()
 
     @property
     def organizer_name(self):
