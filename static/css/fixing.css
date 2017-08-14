@@ -30,3 +30,10 @@
     text-decoration: none;
     color: black;
 }
+
+
+img.google-calendar-icon{
+    float: right;
+    width: 20px;
+
+}
