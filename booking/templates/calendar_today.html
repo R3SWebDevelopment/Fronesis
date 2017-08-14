@@ -26,7 +26,7 @@
             </div>
             <div class="description">
               <p class="t-lyon c-light-gray">
-                <span class="c-black">{{appointment.starts_datetime|time:'P'}}</span> - {{appointment.venue_name}}
+                <span class="c-black">{{appointment.starts_datetime_local|time:'P'}}</span> - {{appointment.venue_name}}
               {% if appointment.google_calendar_url %}
                 <a href="{{appointment.google_calendar_url}}" target="_blank">
                   <img class="google-calendar-icon" src="https://www.gstatic.com/images/branding/product/1x/calendar_64dp.png">

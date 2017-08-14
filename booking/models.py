@@ -41,6 +41,14 @@ class Appointments(models.Model):
             if self.custome_venue else 'No Location info'
 
     @property
+    def starts_datetime_local(self):
+        return self.starts_datetime.replace(tzinfo=LOCAL)
+
+    @property
+    def ends_datetime_local(self):
+        return self.ends_datetime.replace(tzinfo=LOCAL)
+
+    @property
     def start(self):
         return {
             'dateTime': self.starts_datetime.replace(tzinfo=LOCAL).strftime('%Y-%m-%dT%H:%M:%S%z')
