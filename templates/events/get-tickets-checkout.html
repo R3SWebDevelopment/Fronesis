@@ -142,7 +142,7 @@
     <section>
         <div class="wrap">
             <div class="heading-separator mb40">
-                <h2 class="t-lyonL c-gray">Your Credit Cart Info</h2>
+                <h2 class="t-lyonL c-gray">Your Credit Card Info</h2>
             </div>
             <div class="one-col mb40">
                 <div class="one-col columns">
@@ -153,7 +153,7 @@
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.credit_card_number.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_number.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.credit_card_number.id_for_label }}" name = "{{ car_form.credit_card_number.html_name}}" value = "{{ car_form.credit_card_number.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_number.label|title}}" required>
+                    <input class="just-number" type="text" maxlength="16" id = "{{ car_form.credit_card_number.id_for_label }}" name = "{{ car_form.credit_card_number.html_name}}" value = "{{ car_form.credit_card_number.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_number.label|title}}" required>
                 </div>
             </div>
             <div class="one-col mb40">
@@ -169,7 +169,7 @@
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.credit_card_cvv.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_cvv.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.credit_card_cvv.id_for_label }}" name = "{{ car_form.credit_card_cvv.html_name}}" value = "{{ car_form.credit_card_cvv.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_cvv.label|upper}}" required>
+                    <input class="just-number" type="text" maxlength="3" id = "{{ car_form.credit_card_cvv.id_for_label }}" name = "{{ car_form.credit_card_cvv.html_name}}" value = "{{ car_form.credit_card_cvv.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_cvv.label|upper}}" required>
                 </div>
             </div>
         </div>
@@ -240,6 +240,21 @@
   $('body').ready(function(){
     var qty_input = $(this).find('.qty_input');
     $(qty_input).prop('disabled', 'disabled');
+    $(this).find('.just-number').keydown(function(e){
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A, Command+A
+            (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
   });
 </script>
 {% endblock %}
