@@ -19,11 +19,32 @@ from django.db import transaction
 from .models import Post
 from .serializers import _invalidate
 from PIL import Image
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
+from rest_framework.authtoken.models import Token
+
+
+@login_required
+def philios_web(request):
+    if not Token.objects.filter(user=request.user).exists():
+        Token.objects.create(user=request.user)
+    return render(request, 'philios/index.html', {
+        'token': request.user.auth_token,
+        'email': request.user.email,
+    })
 
 
 class PostViewSet(OnlyAlterOwnObjectsViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(PostViewSet, self).dispatch(*args, **kwargs)
 
     def _process_image_link(self, serializer):
         # now download the image and validate it
@@ -106,6 +127,10 @@ class CommentViewSet(OnlyAlterOwnObjectsViewSet):
     filter_fields = CommentSerializer.Meta.filter_fields
     queryset = Comment.objects.all()
 
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(CommentViewSet, self).dispatch(*args, **kwargs)
+
     def get_serializer_context(self):
         return {'request': self.request}
 
@@ -127,6 +152,10 @@ class RatingViewSet(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
     filter_fields = RatingSerializer.Meta.filter_fields
     queryset = Rating.objects.all()
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(RatingViewSet, self).dispatch(*args, **kwargs)
 
     def get_serializer_context(self):
         return {'request': self.request}

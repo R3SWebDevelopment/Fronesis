@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <link rel="shortcut icon" href="/favicon.ico">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>FRONESIS | Philios®</title>
+      <link href="{% static 'css/main.e07178eb.css' %}" rel="stylesheet">
+   </head>
+   <body>
+      <div id="root" data-token="{{token}}" data-user="{{email}}"></div>
+      <script type="text/javascript" src="{% static 'js/main.d695ada2.js' %}"></script>
+   </body>
+   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+   <script src="http://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+   <script src="{% static 'js/jquery.tagsinput.js' %}"></script>
+   <script src="{% static 'js/scripts.js' %}"></script>
+</html>
