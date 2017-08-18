@@ -275,6 +275,7 @@ SERVICE_LENGTH_CHOICE = (
     ('7', 'More than 6 hours'),
 )
 
+
 class CommunityView(ListView, FronesisBaseInnerView):
     model = Coach
     queryset = Coach.objects.all()
@@ -338,4 +339,14 @@ class CommunityView(ListView, FronesisBaseInnerView):
         context['online'] = self.online
         context['length_choices'] = SERVICE_LENGTH_CHOICE
         context['length_filter'] = self.length_filter
+        return context
+
+
+class CoachDetailView(DetailView, FronesisBaseInnerView):
+    model = Coach
+    queryset = Coach.objects.all()
+    template_name = 'coach_detail.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(CoachDetailView, self).get_context_data(*args, **kwargs)
         return context

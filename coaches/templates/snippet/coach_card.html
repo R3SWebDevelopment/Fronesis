@@ -8,7 +8,11 @@
              </div>
           </div>
           <div class="txt">
-             <h4 class="c-black t-lyon">{{coach.full_name}}</h4>
+             <h4 class="c-black t-lyon">
+               <a href="{% url 'coaches:detail' pk=coach.pk %}" class="clear-link">
+                 {{coach.full_name}}
+               </a>
+             </h4>
              <p class="c-light-gray">{{coach.specialty|default:'No Specialty'}}</p>
              <p class="c-light-gray">{{coach.job_title|default:'No Job Title'}}</p>
           </div>
