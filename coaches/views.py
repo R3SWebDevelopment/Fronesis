@@ -4,6 +4,7 @@ from .forms import CoachContactForm, CoachBlockedHours, CoachBookingSettings, Ve
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 
 
 class ContactDetail(UpdateView, FronesisBaseInnerView):
@@ -262,6 +263,17 @@ class EditService(UpdateView, FronesisBaseInnerView):
         qs = super(EditService, self).get_queryset()
         return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
 
+SERVICE_LENGTH_CHOICE = (
+    ('-1', 'Select option'),
+    ('0', 'Less than an hour'),
+    ('1', '1 hour'),
+    ('2', '2 hours'),
+    ('3', '3 hours'),
+    ('4', '4 hours'),
+    ('5', '5 hours'),
+    ('6', '6 hours'),
+    ('7', 'More than 6 hours'),
+)
 
 class CommunityView(ListView, FronesisBaseInnerView):
     model = Coach
@@ -271,6 +283,7 @@ class CommunityView(ListView, FronesisBaseInnerView):
     max_price_filter = 10000
     face2face = False
     online = False
+    length_filter = -1
 
     def dispatch(self, request, *args, **kwargs):
         print(request.GET)
@@ -278,6 +291,7 @@ class CommunityView(ListView, FronesisBaseInnerView):
         self.max_price_filter = request.GET.get('price-max', self.max_price_filter)
         self.face2face = True if request.GET.get('face2face', '') == 'on' else False
         self.online = True if request.GET.get('online', '') == 'on' else False
+        self.length_filter = request.GET.get('length_filter', self.length_filter)
         return super(CommunityView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -285,6 +299,35 @@ class CommunityView(ListView, FronesisBaseInnerView):
         qs = qs.filter(services__price__range=(self.min_price_filter, self.max_price_filter))
         qs = qs.filter(services__face_to_face=self.face2face)
         qs = qs.filter(services__online=self.online)
+        if self.length_filter != '-1':
+            if self.length_filter == '0':
+                qs = qs.filter(services__length_hours=0, services__length_minutes__gte=0)
+            elif self.length_filter == '1':
+                qs = qs.filter(services__length_hours=1, services__length_minutes=0)
+            elif self.length_filter == '2':
+                q1 = Q(services__length_hours=1, services__length_minutes__gt=0)
+                q2 = Q(services__length_hours=2, services__length_minutes=0)
+                qs = qs.filter(q1 | q2)
+            elif self.length_filter == '3':
+                q1 = Q(services__length_hours=2, services__length_minutes__gt=0)
+                q2 = Q(services__length_hours=3, services__length_minutes=0)
+                qs = qs.filter(q1 | q2)
+            elif self.length_filter == '4':
+                q1 = Q(services__length_hours=3, services__length_minutes__gt=0)
+                q2 = Q(services__length_hours=4, services__length_minutes=0)
+                qs = qs.filter(q1 | q2)
+            elif self.length_filter == '5':
+                q1 = Q(services__length_hours=4, services__length_minutes__gt=0)
+                q2 = Q(services__length_hours=5, services__length_minutes=0)
+                qs = qs.filter(q1 | q2)
+            elif self.length_filter == '6':
+                q1 = Q(services__length_hours=5, services__length_minutes__gt=0)
+                q2 = Q(services__length_hours=6, services__length_minutes=0)
+                qs = qs.filter(q1 | q2)
+            elif self.length_filter == '7':
+                q1 = Q(services__length_hours=6, services__length_minutes__gt=0)
+                q2 = Q(services__length_hours__gte=7)
+                qs = qs.filter(q1 | q2)
         return qs.distinct()
 
     def get_context_data(self, *args, **kwargs):
@@ -293,4 +336,6 @@ class CommunityView(ListView, FronesisBaseInnerView):
         context['max_price_filter'] = self.max_price_filter
         context['face2face'] = self.face2face
         context['online'] = self.online
+        context['length_choices'] = SERVICE_LENGTH_CHOICE
+        context['length_filter'] = self.length_filter
         return context

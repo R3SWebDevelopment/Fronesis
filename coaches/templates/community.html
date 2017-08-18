@@ -70,6 +70,10 @@
       }
     });
 
+    $(this).find('#length_filter').change(function(){
+      $(filtering_form).submit();
+    });
+
     $(this).find('.border-bottom-radio-input').click(function(){
       var check_input = $(this).find('input[type="checkbox"]');
       if($(check_input).is(':checked')){

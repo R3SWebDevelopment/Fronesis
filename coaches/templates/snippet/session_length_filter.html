@@ -1,14 +1,12 @@
  <div class="one-col mb20">
-    <p class="dark-label mb20"><strong>SESSION LENGHT</strong></p>
+    <p class="dark-label mb20"><strong>SESSION LENGHT {{length_filter}}</strong></p>
     <div class="one-col mb20">
-       <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset"><input type="text" class="select-gray-border-input" placeholder="0"></div>
-       <div class="suggestion-list">
-          <ul>
-             <li>1</li>
-             <li>2</li>
-             <li>3</li>
-             <li>4</li>
-          </ul>
+       <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+        <select id="length_filter" name="length_filter" class="select-gray-border-input">
+         {% for id, label in length_choices %}
+          <option value="{{id}}" {% if id == length_filter %}selected{% endif %}>{{label}}</option>
+         {% endfor %}
+        </select>
        </div>
     </div>
  </div>
