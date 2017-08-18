@@ -11,7 +11,7 @@ class CoachContactForm(forms.ModelForm):
     class Meta:
         model = Coach
         fields = ['full_name', 'email', 'specialty', 'office_phone', 'mobile_phone', 'job_title', 'current_city',
-                  'default_skype_id']
+                  'default_skype_id', 'short_bio']
 
     def __init__(self, *args, **kwargs):
         super(CoachContactForm, self).__init__(*args, **kwargs)
