@@ -262,3 +262,15 @@ class EditService(UpdateView, FronesisBaseInnerView):
         qs = super(EditService, self).get_queryset()
         return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
 
+
+class CommunityView(ListView, FronesisBaseInnerView):
+    model = Coach
+    queryset = Coach.objects.all()
+    template_name = 'community.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(CommunityView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        qs = super(CommunityView, self).get_queryset()
+        return qs
