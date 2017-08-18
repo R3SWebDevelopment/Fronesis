@@ -82,6 +82,7 @@ class Coach(models.Model):
     friday_works = models.BooleanField(default=False)
     saturday_works = models.BooleanField(default=False)
     clients = models.ManyToManyField(Client)
+    short_bio = models.TextField(null=False, blank=True, default='')
 
     @property
     def avatar(self):
@@ -179,7 +180,6 @@ class Session(models.Model):
     groups_allow = models.BooleanField(default=False)
     person_price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     max_capacity = models.IntegerField(default=None, null=True)
-    short_bio = models.TextField(null=False, blank=True, default='')
 
     @property
     def length(self):
