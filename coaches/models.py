@@ -84,6 +84,10 @@ class Coach(models.Model):
     clients = models.ManyToManyField(Client)
 
     @property
+    def full_name(self):
+        return self.user.get_full_name or self.user.email
+
+    @property
     def is_google_account_set(self):
         return True if self.google_calendar_account_id else False
 
