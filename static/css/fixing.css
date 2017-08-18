@@ -37,3 +37,14 @@ img.google-calendar-icon{
     width: 20px;
 
 }
+
+.ui-slider-range{
+    background-color: #92bc45;
+}
+
+
+span.ui-slider-handle.ui-corner-all.ui-state-default{
+    background: #92bc45;
+    border-radius: 15px;
+    border: 2px solid #fff;
+}

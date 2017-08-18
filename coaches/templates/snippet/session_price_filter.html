@@ -2,26 +2,26 @@
     <p class="dark-label mb20"><strong>AVERAGE HOURLY RATE</strong></p>
     <div data-role="main" class="ui-content">
        <form method="post" action="/action_page_post.php">
+         <div id="slider-range"></div>
+
+
+
           <div data-role="rangeslider" class="ui-rangeslider">
              <div class="half-col">
                 <div class="amount-input">
-                   <div class="ui-slider"><input class="smaller-txt ui-shadow-inset ui-corner-all ui-slider-input ui-rangeslider-first ui-body-inherit" type="number" data-type="range" name="price-min" id="price-min" value="2000" min="0" max="10000"></div>
+                   <div class="ui-slider">
+                     <input class="smaller-txt ui-shadow-inset ui-corner-all ui-slider-input ui-rangeslider-first ui-body-inherit" type="number" data-type="range" name="price-min" id="price-min" value="0" min="0" max="10000" data-value="0">
+                   </div>
                 </div>
              </div>
              <div class="half-col t-right">
                 <div class="amount-input">
-                   <div class="ui-slider"><input class="smaller-txt ui-shadow-inset ui-corner-all ui-slider-input ui-rangeslider-last ui-body-inherit" type="number" data-type="range" name="price-max" id="price-max" value="9000" min="0" max="10000"></div>
+                   <div class="ui-slider">
+                     <input class="smaller-txt ui-shadow-inset ui-corner-all ui-slider-input ui-rangeslider-last ui-body-inherit" type="number" data-type="range" name="price-max" id="price-max" value="10000" min="0" max="10000" data-value="10000">
+                   </div>
                 </div>
              </div>
-             <div class="ui-rangeslider-sliders">
-                <div role="application" class="ui-slider-track ui-shadow-inset ui-bar-inherit ui-corner-all" aria-disabled="false">
-                   <div class="ui-slider-bg ui-btn-active" style="width: 70%; margin-left: 20%;"></div>
-                </div>
-                <div role="application" class="ui-slider-track ui-shadow-inset ui-bar-inherit ui-corner-all" aria-disabled="false">
-                   <div class="ui-slider-bg ui-btn-active" style="width: 70%; margin-left: 20%;"></div>
-                   <a href="#" class="ui-slider-handle ui-btn ui-shadow ui-btn-null" role="slider" aria-valuemin="0" aria-valuemax="10000" aria-valuenow="2000" aria-valuetext="2000" title="2000" aria-labelledby="price-min-label" style="left: 20%;"></a><a href="#" class="ui-slider-handle ui-btn ui-shadow ui-btn-null" role="slider" aria-valuemin="0" aria-valuemax="10000" aria-valuenow="9000" aria-valuetext="9000" title="9000" aria-labelledby="price-max-label" style="left: 90%;"></a>
-                </div>
-             </div>
+             <div id="slider-range"></div>
           </div>
        </form>
     </div>
