@@ -4,24 +4,28 @@
 
 {% block CONTENT %}
  {{ block.super }}
-<section>
-   <div class="wrap mt60">
-      <h1 class="t-lyon">Bookings</h1>
-      <p class="c-gray">Book a session with one of the top Coaches inside our network.</p>
-   </div>
-</section>
-<section>
-   <div class="wrap mt40">
-      {% include 'snippet/community_coaches_filter.html' %}
-      {% include 'snippet/community_coaches_list.html' %}
-   </div>
-</section>
+<form method="get" action="" id="filtering">
+  <section>
+     <div class="wrap mt60">
+        <h1 class="t-lyon">Bookings</h1>
+        <p class="c-gray">Book a session with one of the top Coaches inside our network.</p>
+     </div>
+  </section>
+  <section>
+     <div class="wrap mt40">
+        {% include 'snippet/community_coaches_filter.html' %}
+        {% include 'snippet/community_coaches_list.html' %}
+     </div>
+  </section>
+</form>
 {% endblock %}
 {% block SCRIPT %}
 {{block.super}}
 <script>
   $(document).ready(function(){
     cleanFilters(this);
+
+    var filtering_form = $(this).find('#filtering');
 
     var price_filter_input = $(this).find('.ui-slider-input');
     var price_min = $(price_filter_input).filter('#price-min');
@@ -47,6 +51,7 @@
         if(is_valid){
           $("#slider-range").slider("values", [$(price_min).val(), $(price_max).val()]);
           $(this).data('value', $(this).val())
+          $(filtering_form).submit();
         }else{
           $(this).val($(this).data('value'))
         }
@@ -57,10 +62,11 @@
       range: true,
       min: 0,
       max: 10000,
-      values: [ 0, 10000 ],
+      values: [ {{min_price_filter|default:0}}, {{max_price_filter|default:10000}} ],
       slide: function(event, ui){
         $(price_min).val(ui.values[0])
         $(price_max).val(ui.values[1])
+        $(filtering_form).submit();
       }
     });
   });
