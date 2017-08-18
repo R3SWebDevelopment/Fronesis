@@ -269,20 +269,28 @@ class CommunityView(ListView, FronesisBaseInnerView):
     template_name = 'community.html'
     min_price_filter = 0
     max_price_filter = 10000
+    face2face = False
+    online = False
 
     def dispatch(self, request, *args, **kwargs):
         print(request.GET)
         self.min_price_filter = request.GET.get('price-min', self.min_price_filter)
         self.max_price_filter = request.GET.get('price-max', self.max_price_filter)
+        self.face2face = True if request.GET.get('face2face', '') == 'on' else False
+        self.online = True if request.GET.get('online', '') == 'on' else False
         return super(CommunityView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         qs = super(CommunityView, self).get_queryset()
         qs = qs.filter(services__price__range=(self.min_price_filter, self.max_price_filter))
+        qs = qs.filter(services__face_to_face=self.face2face)
+        qs = qs.filter(services__online=self.online)
         return qs.distinct()
 
     def get_context_data(self, *args, **kwargs):
         context = super(CommunityView, self).get_context_data(*args, **kwargs)
         context['min_price_filter'] = self.min_price_filter
         context['max_price_filter'] = self.max_price_filter
+        context['face2face'] = self.face2face
+        context['online'] = self.online
         return context

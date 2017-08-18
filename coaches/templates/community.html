@@ -69,6 +69,21 @@
         $(filtering_form).submit();
       }
     });
+
+    $(this).find('.border-bottom-radio-input').click(function(){
+      var check_input = $(this).find('input[type="checkbox"]');
+      if($(check_input).is(':checked')){
+        var check_sign = $(this).find('span.checked');
+        $(check_input).prop('checked', false);
+        $(check_sign).removeClass('checked').addClass('check');
+      }else{
+        var check_sign = $(this).find('span.check');
+        $(check_input).prop('checked', true);
+        $(check_sign).removeClass('check').addClass('checked');
+      }
+      $(filtering_form).submit();
+    }).css('cursor', 'pointer');
+
   });
 
   function cleanFilters(obj){

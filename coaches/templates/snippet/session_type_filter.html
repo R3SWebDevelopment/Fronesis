@@ -3,8 +3,10 @@
     <div class="one-col">
        <div class="border-bottom-radio-input">
           <div class="green-radio-input">
-             <div class=" ui-checkbox"><input type="checkbox"></div>
-             <span class="check"></span>
+             <div class=" ui-checkbox">
+               <input type="checkbox" id="face2face" name="face2face" {{face2face|yesno:'checked,'}}>
+             </div>
+             <span class="{{face2face|yesno:'checked,check'}}"></span>
           </div>
           <p class="c-dark-purple">Face to Face</p>
        </div>
@@ -12,8 +14,10 @@
     <div class="one-col mb20">
        <div class="border-bottom-radio-input">
           <div class="green-radio-input">
-             <div class=" ui-checkbox"><input type="checkbox"></div>
-             <span class="check"></span>
+             <div class=" ui-checkbox">
+               <input type="checkbox" id="online" name="online" {{online|yesno:'checked,'}}>
+             </div>
+             <span class="{{online|yesno:'checked,check'}}"></span>
           </div>
           <p class="c-dark-purple">Online Call</p>
        </div>
