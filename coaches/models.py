@@ -84,6 +84,13 @@ class Coach(models.Model):
     clients = models.ManyToManyField(Client)
 
     @property
+    def avatar(self):
+        profile = self.user.profile
+        if profile.userprofile:
+            return '/media/{}'.format(profile.userprofile.avatar)
+        return 'https://lelakisihat.com/wp-content/uploads/2016/09/avatar.jpg'
+
+    @property
     def full_name(self):
         return self.user.get_full_name or self.user.email
 
@@ -165,6 +172,7 @@ class Session(models.Model):
     description = models.TextField(null=False)
     category = models.CharField(max_length=150, null=False, default='')
     face_to_face = models.BooleanField(default=False)
+    online = models.BooleanField(default=False)
     all_venues = models.BooleanField(default=False)
     allow_on_venues = models.ManyToManyField(Venue)
     one_on_one = models.BooleanField(default=False)
