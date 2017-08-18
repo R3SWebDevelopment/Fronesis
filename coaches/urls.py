@@ -1,8 +1,9 @@
 from .views import ContactDetail, BlockedHours, BookingSettings, MyVenues, CreateVenues, RemoveVenues, EditVenues, \
-    MyServices, CreateService, EditService
+    MyServices, CreateService, EditService, CommunityView
 from django.conf.urls import url
 
 urlpatterns = [
+    url(r'^community/$', CommunityView.as_view(), name='community'),
     url(r'^contact_information/$', ContactDetail.as_view(), name='contact_information'),
     url(r'^blocked_hours/$', BlockedHours.as_view(), name='blocked_hours'),
     url(r'^booking_settings/$', BookingSettings.as_view(), name='booking_settings'),

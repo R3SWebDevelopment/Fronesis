@@ -45,7 +45,7 @@
 					{#<li><a href="#">About</a></li>#}
 					<li><a href="{% url 'philios:web' %}">Philios</a></li>
 					<li><a href="/events/">Events</a></li>
-					{#<li><a href="#">Community</a></li>#}
+					<li><a href="{% url 'coaches:community' %}">Community</a></li>
 					<li><a href="{% url 'booking:calendar_view' %}">Bookings</a></li>
         {% if user_display == None or user_display|length == 0 %}
           <li><a href="{% url 'account_login' %}">Log-In</a></li>
