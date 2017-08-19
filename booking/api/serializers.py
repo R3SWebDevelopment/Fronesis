@@ -41,15 +41,14 @@ class AppointmentsSerializer(serializers.ModelSerializer):
                   'client', 'client_id', 'service', 'service_id', 'date', 'time', 'already_paid', 'send_payment_link',
                   'begins', 'ends', 'google_push_url', 'google_calendar_url')
 
-
     def get_starts_datetime(self, obj):
-        return obj.starts_datetime.replace(tzinfo=LOCAL)
+        return obj.starts_datetime.astimezone(LOCAL)
 
     def get_ends_datetime(self, obj):
-        return obj.ends_datetime.replace(tzinfo=LOCAL)
+        return obj.ends_datetime.astimezone(LOCAL)
 
     def get_ends(self, obj, *args, **kwargs):
-        return obj.ends_datetime.strftime('%I:%M %p')
+        return obj.ends_datetime.astimezone(LOCAL).strftime('%I:%M %p')
 
     def get_google_calendar_url(self, obj):
         return obj.google_calendar_url or None
@@ -62,7 +61,7 @@ class AppointmentsSerializer(serializers.ModelSerializer):
         return None
 
     def get_begins(self, obj, *args, **kwargs):
-        return obj.starts_datetime.strftime('%I:%M %p')
+        return obj.starts_datetime.astimezone(LOCAL).strftime('%I:%M %p')
 
     def create(self, validated_data):
         current_user = get_current_user()
