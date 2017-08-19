@@ -33,6 +33,8 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointments.objects.all()
     serializer_class = AppointmentsSerializer
 
+    client_side = False
+
     is_preview = False
 
     def get_queryset(self, *args, **kwargs):
@@ -47,6 +49,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         coach_id = self.request.query_params.get('coach', None)
         if coach_id:
             coach = Coach.objects.filter(pk=coach_id).first()
+            self.client_side = True
         else:
             coach = user.coaches.first()
         session = None
@@ -67,9 +70,13 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         }
         if client_id:
             client = coach.clients.filter(pk=client_id).first()
-            if client:
+            if client and not self.client_side:
                 response_data.update({
                     'client_name': client.full_name or client.email
+                })
+            elif client and self.client_side:
+                response_data.update({
+                    'client_name': coach.full_name()
                 })
         if session_id:
             session = coach.services.filter(pk=session_id).first()
