@@ -92,8 +92,8 @@ class Coach(models.Model):
 
     @property
     def philios(self):
-        user = get_current_user()
-        if user :
+        user = self.user
+        if user:
             mines = Q(user__pk=user.pk)
             content_type = ContentType.objects.get_for_model(Post)
             post_comments = [c.get('object_pk') for c in Comment.objects.filter(content_type=content_type,
