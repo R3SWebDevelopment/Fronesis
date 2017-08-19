@@ -194,6 +194,9 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
         if context:
             request = context.get('request', None)
             if request:
+                coach_id = request.query_params.get('coach', None)
+                if coach_id:
+                    return AppointmentsSerializer(obj.appointments.none(), many=True).data
                 query_date = request.query_params.get('date', None)
                 try:
                     query_date = datetime.strptime(query_date, '%Y-%m-%d').date()

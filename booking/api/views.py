@@ -14,6 +14,11 @@ class CalendarViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self, *args, **kwargs):
         qs = super(CalendarViewSet, self).get_queryset(*args, **kwargs)
+        coach_id = self.request.GET.get('coach', None)
+        if coach_id:
+            coach = Coach.objects.filter(pk=coach_id).first()
+            if coach:
+                return qs.filter(user=coach.user)
         return qs.filter(user=self.request.user)
 
     def get_object(self, *args, **kwargs):
