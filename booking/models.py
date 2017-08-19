@@ -42,22 +42,22 @@ class Appointments(models.Model):
 
     @property
     def starts_datetime_local(self):
-        return self.starts_datetime.replace(tzinfo=LOCAL)
+        return self.starts_datetime.astimezone(LOCAL)
 
     @property
     def ends_datetime_local(self):
-        return self.ends_datetime.replace(tzinfo=LOCAL)
+        return self.ends_datetime.astimezone(LOCAL)
 
     @property
     def start(self):
         return {
-            'dateTime': self.starts_datetime.replace(tzinfo=LOCAL).strftime('%Y-%m-%dT%H:%M:%S%z')
+            'dateTime': self.starts_datetime.astimezone(LOCAL).strftime('%Y-%m-%dT%H:%M:%S%z')
         }
 
     @property
     def end(self):
         return {
-            'dateTime': self.ends_datetime.replace(tzinfo=LOCAL).strftime('%Y-%m-%dT%H:%M:%S%z')
+            'dateTime': self.ends_datetime.astimezone(LOCAL).strftime('%Y-%m-%dT%H:%M:%S%z')
         }
 
     @property
