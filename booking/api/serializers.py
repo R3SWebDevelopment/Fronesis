@@ -92,7 +92,7 @@ class AppointmentsSerializer(serializers.ModelSerializer):
             hour = validated_data.get('time', None)
             if date and hour:
                 if date:
-                    date = datetime.combine(date, datetime.min.time()).replace(tzinfo=LOCAL).astimezone(pytz.utc)
+                    date = datetime.combine(date, datetime.min.time()).replace(tzinfo=LOCAL)#.astimezone(pytz.utc)
                     weekday = date.isoweekday()
                     hours = coach.available_hours.filter(day=weekday)
                     hour = hours.filter(pk=hour).first()
