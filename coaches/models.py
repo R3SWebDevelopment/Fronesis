@@ -91,6 +91,14 @@ class Coach(models.Model):
     short_bio = models.TextField(null=False, blank=True, default='')
 
     @property
+    def requires_confirmation(self):
+        if self.is_instante_booking_allow and not self.ask_before_booking:
+            return False
+        if not self.is_instante_booking_allow and self.ask_before_booking:
+            return True
+        return True
+
+    @property
     def philios(self):
         user = self.user
         if user:
