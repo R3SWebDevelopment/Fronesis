@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from datetime import datetime
+from philios.models import Post
+from django.db.models import Q
+from django.contrib.contenttypes.models import ContentType
+from crum import get_current_user
+from django_comments.models import Comment
 
 DAYS = (
     (0, 'Sunday'),
@@ -83,6 +88,21 @@ class Coach(models.Model):
     saturday_works = models.BooleanField(default=False)
     clients = models.ManyToManyField(Client)
     short_bio = models.TextField(null=False, blank=True, default='')
+
+    @property
+    def philios(self):
+        user = get_current_user()
+        if user :
+            mines = Q(user__pk=user.pk)
+            content_type = ContentType.objects.get_for_model(Post)
+            post_comments = [c.get('object_pk') for c in Comment.objects.filter(content_type=content_type,
+                                                                               user__pk=user.pk).values('object_pk')]
+            commented = Q(pk__in=post_comments)
+            rated = Q(rating__user__pk=user.pk)
+            qs = Post.objects.filter(mines | commented | rated).distinct()
+        else:
+            qs = Post.objects.none()
+        return qs
 
     @property
     def avatar(self):

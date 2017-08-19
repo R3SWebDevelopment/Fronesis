@@ -4,6 +4,8 @@ from django.db import models
 from django.utils.text import slugify
 from django.utils import timezone
 from versatileimagefield.fields import VersatileImageField, PPOIField
+from django.contrib.contenttypes.models import ContentType
+from django_comments.models import Comment
 import os
 
 UPLOAD_PATH = "image_uploader/"
@@ -50,3 +52,19 @@ class Post(Link):
         choices=LINK_TYPES,
         default='LI'
     )
+
+    @property
+    def up_rating_count(self):
+        return self.rating.filter(value=1).count()
+
+    @property
+    def down_rating_count(self):
+        return self.rating.filter(value=-1).count()
+
+    def get_comments_count(self):
+        content_type = ContentType.objects.get_for_model(Post)
+        return Comment.objects.filter(content_type=content_type, object_pk=self.pk).count()
+
+    def get_tags_list(self):
+        return [t.get('name') for t in self.tags.all().values('name')]
+
