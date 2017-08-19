@@ -93,29 +93,7 @@
         {% include 'snippet/coach_philios_list.html' with post_list=coach.philios %}
 
         <!-- events -->
-        <div id="tab-4" class="tab-content" style="display: none;">
-          <div class="one-col">
-            <div class="one-third columns card-event">
-              <div class="top" style="background-image: url('img/profile1.png')"></div>
-              <div class="bottom">
-                <h2 class="t-lyon mb20">Value Linking for Couples</h2>
-                <p class="mb20">Increase communication, trust and understanding with your partner.</p>
-                <p><strong>March 23, 2017</strong></p>
-              </div>
-            </div>
-            <div class="one-third columns card-event">
-              <div class="top" style="background-image: url('img/profile1.png')"></div>
-              <div class="bottom">
-                <h2 class="t-lyon mb20">Value Linking for Couples</h2>
-                <p class="mb20">Increase communication, trust and understanding with your partner.</p>
-                <p><strong>March 23, 2017</strong></p>
-              </div>
-            </div>
-          </div>
-          <div class="one-col mt40">
-            <button class="btn-black btn-x2 c-center">See a full list of Events</button>
-          </div>
-        </div>
+        {% include 'snippet/coach_events_list.html' with post_list=coach.get_my_public_events %}
       </div>
     </div>
   </section>

@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from crum import get_current_user
 from django_comments.models import Comment
+from events.models import Event
 
 DAYS = (
     (0, 'Sunday'),
@@ -144,6 +145,9 @@ class Coach(models.Model):
                          for l in self.google_calender_list if l.get('accessRole', None) == 'owner')
             return calendars
         return ()
+
+    def get_my_public_events(self):
+        return Event.published_all.filter(organizer=self.user)
 
 
 class AvailableHour(models.Model):
