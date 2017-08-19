@@ -230,8 +230,8 @@ class AvailableTimeSerializer(serializers.ModelSerializer):
 
         exclude = []
         for a in appointments.values('ends_datetime', 'starts_datetime'):
-            b = a.get('starts_datetime').strftime('%H')
-            e = a.get('ends_datetime').strftime('%H')
+            b = a.get('starts_datetime').astimezone(LOCAL).strftime('%H')
+            e = a.get('ends_datetime').astimezone(LOCAL).strftime('%H')
             for h in range(int(b), int(e) + 1):
                 exclude.append(h)
         available = obj.available_hours.filter(day=weekday).exclude(hour__in=exclude)
