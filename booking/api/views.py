@@ -6,6 +6,10 @@ from rest_framework import status
 from rest_framework.decorators import detail_route
 from datetime import datetime
 from datetime import timedelta
+from dateutil import tz
+import pytz
+
+LOCAL = tz.gettz('America/Monterrey')
 
 
 class CalendarViewSet(viewsets.ModelViewSet):
@@ -40,7 +44,11 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'], url_path='preview')
     def preview(self, request, *args, **kwargs):
         user = self.request.user
-        coach = user.coaches.first()
+        coach_id = self.request.query_params.get('coach', None)
+        if coach_id:
+            coach = Coach.objects.filter(pk=coach_id).first()
+        else:
+            coach = user.coaches.first()
         session = None
         client_id = self.request.query_params.get('client_id', None)
         session_id = self.request.query_params.get('session_id', None)
@@ -61,7 +69,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             client = coach.clients.filter(pk=client_id).first()
             if client:
                 response_data.update({
-                    'client_name': client.full_name
+                    'client_name': client.full_name or client.email
                 })
         if session_id:
             session = coach.services.filter(pk=session_id).first()
@@ -90,7 +98,8 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 hours = coach.available_hours.filter(day=weekday)
                 hour = hours.filter(pk=hour).first()
                 if hour:
-                    begins_datetime = date.replace(hour=hour.hour)
+                    begins_datetime = date.replace(hour=hour.hour).replace(tzinfo=LOCAL).astimezone(pytz.utc)
+                    print("begins_datetime: {}".format(begins_datetime))
                     if session:
                         length_hours = session.length_hours or 0
                         length_minutes = session.length_minutes or 0
@@ -98,10 +107,11 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                         ends_datetime = begins_datetime + session_delta
                         appointments = coach.appointments.exclude(starts_datetime__gte=ends_datetime).\
                             exclude(ends_datetime__lte=begins_datetime)
+                        print("ends_datetime: {}".format(ends_datetime))
                         if not appointments.exists():
                             date_time_available = True
-                            session_time = '{} - {}'.format(begins_datetime.strftime('%I:%M %p'),
-                                                            ends_datetime.strftime('%I:%M %p'))
+                            session_time = '{} - {}'.format(begins_datetime.astimezone(LOCAL).strftime('%I:%M %p'),
+                                                            ends_datetime.astimezone(LOCAL).strftime('%I:%M %p'))
                             session_date = begins_datetime.strftime('%A, %d/%b/%Y')
                             response_data.update({
                                 'session_time': session_time,
