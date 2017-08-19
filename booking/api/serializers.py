@@ -145,6 +145,7 @@ class PreviewAppointmentsSerializer(serializers.Serializer):
     client_name = serializers.CharField(max_length=200)
     venue_name = serializers.CharField(max_length=200)
     date_time_available = serializers.BooleanField()
+    requires_confirmation = serializers.BooleanField()
 
 
 class AvailableHourSerializer(serializers.ModelSerializer):

@@ -52,6 +52,14 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             self.client_side = True
         else:
             coach = user.coaches.first()
+        requires_confirmation = False
+        if coach and self.client_side:
+            if coach.is_instante_booking_allow and not coach.ask_before_booking:
+                requires_confirmation = False
+            elif not coach.is_instante_booking_allow and coach.ask_before_booking:
+                requires_confirmation = True
+            else:
+                requires_confirmation = True
         session = None
         client_id = self.request.query_params.get('client_id', None)
         session_id = self.request.query_params.get('session_id', None)
@@ -67,6 +75,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             'venue_name': '',
             'client_name': '',
             'date_time_available': False,
+            'requires_confirmation': requires_confirmation
         }
         if client_id:
             client = coach.clients.filter(pk=client_id).first()
@@ -106,7 +115,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 hour = hours.filter(pk=hour).first()
                 if hour:
                     begins_datetime = date.replace(hour=hour.hour).replace(tzinfo=LOCAL).astimezone(pytz.utc)
-                    print("begins_datetime: {}".format(begins_datetime))
                     if session:
                         length_hours = session.length_hours or 0
                         length_minutes = session.length_minutes or 0
@@ -114,7 +122,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                         ends_datetime = begins_datetime + session_delta
                         appointments = coach.appointments.exclude(starts_datetime__gte=ends_datetime).\
                             exclude(ends_datetime__lte=begins_datetime)
-                        print("ends_datetime: {}".format(ends_datetime))
                         if not appointments.exists():
                             date_time_available = True
                             session_time = '{} - {}'.format(begins_datetime.astimezone(LOCAL).strftime('%I:%M %p'),
