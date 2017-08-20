@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Appointments, Coach, Session
+from ..models import Appointments, Coach, Session, AppointmentRequest
 from coaches.models import AvailableHour
 from coaches.api.serializers import VenueSerializer, ClientSerializer, SessionSerializer
 from datetime import datetime
@@ -24,6 +24,7 @@ class AppointmentsSerializer(serializers.ModelSerializer):
     venue_id = serializers.IntegerField(write_only=True, required=False)
     client = ClientSerializer(read_only=True)
     client_id = serializers.IntegerField(write_only=True, required=True)
+    coach_id = serializers.IntegerField(write_only=True, required=False)
     service = SessionSerializer(read_only=True)
     service_id = serializers.IntegerField(write_only=True, required=True)
     date = serializers.DateField(write_only=True, required=True, format='%Y-%m-%d')
@@ -34,12 +35,19 @@ class AppointmentsSerializer(serializers.ModelSerializer):
     ends = serializers.SerializerMethodField(read_only=True)
     google_push_url = serializers.SerializerMethodField(read_only=True)
     google_calendar_url = serializers.SerializerMethodField(read_only=True)
+    confirmation_required = serializers.SerializerMethodField(read_only=True)
+
+    client_side = False
 
     class Meta:
         model = Appointments
         fields = ('id', 'starts_datetime', 'ends_datetime', 'custome_venue', 'online_call', 'venue', 'venue_id',
-                  'client', 'client_id', 'service', 'service_id', 'date', 'time', 'already_paid', 'send_payment_link',
-                  'begins', 'ends', 'google_push_url', 'google_calendar_url')
+                  'client', 'client_id', 'coach_id', 'service', 'service_id', 'date', 'time', 'already_paid',
+                  'send_payment_link', 'begins', 'ends', 'google_push_url', 'google_calendar_url',
+                  'confirmation_required')
+
+    def get_confirmation_required(self, obj):
+        return obj.coach.requires_confirmation if isinstance(obj, AppointmentRequest) else False
 
     def get_starts_datetime(self, obj):
         return obj.starts_datetime.astimezone(LOCAL)
@@ -51,13 +59,19 @@ class AppointmentsSerializer(serializers.ModelSerializer):
         return obj.ends_datetime.astimezone(LOCAL).strftime('%I:%M %p')
 
     def get_google_calendar_url(self, obj):
-        return obj.google_calendar_url or None
+        try:
+            return obj.google_calendar_url or None
+        except:
+            return None
 
     def get_google_push_url(self, obj):
-        if obj.google_calendar_url is None and obj.coach.google_calendar_account_id:
-            return reverse('google:add_appointment', kwargs={
-                'pk': obj.pk
-            })
+        try:
+            if obj.google_calendar_url is None and obj.coach.google_calendar_account_id:
+                return reverse('google:add_appointment', kwargs={
+                    'pk': obj.pk
+                })
+        except:
+            pass
         return None
 
     def get_begins(self, obj, *args, **kwargs):
@@ -65,7 +79,12 @@ class AppointmentsSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         current_user = get_current_user()
-        coach = current_user.coaches.first()
+        coach_id = validated_data.get('coach_id', None)
+        if coach_id:
+            coach = Coach.objects.filter(pk=coach_id).first()
+            self.client_side = True
+        else:
+            coach = current_user.coaches.first()
         instance = None
         client = None
         session = None
@@ -125,15 +144,20 @@ class AppointmentsSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('You can use the venue you select', code=status.HTTP_400_BAD_REQUEST)
         else:
             raise serializers.ValidationError('No coach instance', code=status.HTTP_400_BAD_REQUEST)
-        try:
-            instance = Appointments.objects.create(coach=coach, starts_datetime=begins_datetime,
-                                                   ends_datetime=ends_datetime, online_call=online_call,
-                                                   custome_venue=custome_venue, venue=venue, client=client,
-                                                   service=session, already_paid=already_paid,
-                                                   send_payment_link=send_payment_link)
-        except:
-            raise serializers.ValidationError('There was an error while adding the appointment',
-                                              code=status.HTTP_400_BAD_REQUEST)
+        if coach.requires_confirmation and self.client_side:
+            return AppointmentRequest.objects.create(coach=coach, starts_datetime=begins_datetime,
+                                                     ends_datetime=ends_datetime, online_call=online_call,
+                                                     venue=venue, client=client, service=session)
+        else:
+            try:
+                instance = Appointments.objects.create(coach=coach, starts_datetime=begins_datetime,
+                                                       ends_datetime=ends_datetime, online_call=online_call,
+                                                       custome_venue=custome_venue, venue=venue, client=client,
+                                                       service=session, already_paid=already_paid,
+                                                       send_payment_link=send_payment_link)
+            except:
+                raise serializers.ValidationError('There was an error while adding the appointment',
+                                                  code=status.HTTP_400_BAD_REQUEST)
         return instance
 
 
