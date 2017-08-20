@@ -39,12 +39,33 @@
             </p>
           </div>
           <div class="one-third mt10 center-dir columns">
-            <button class="btn-aqua" data-id="{{appointment.pk}}">Confirm</button>
-            <button class="btn-danger" data-id="{{appointment.pk}}">Remove</button>
+            <button class="btn-aqua confirm" data-id="{{appointment.pk}}" data-url="{% url 'booking:confirmation_confirm' pk=appointment.pk %}">Confirm</button>
+            <button class="btn-danger remove" data-id="{{appointment.pk}}" data-url="{% url 'booking:confirmation_remove' pk=appointment.pk %}">Remove</button>
           </div>
         </div>
       {% endfor %}
       </div>
     </div>
   </section>
+  <form id="request" method="post" action="">
+    {% csrf_token %}
+    <input type="hidden" name="id" id="id_id" value="">
+  </form>
+{% endblock %}
+{% block SCRIPT %}
+{{block.super}}
+<script>
+  $(document).ready(function(){
+    var form = $(this).find('form#request')
+    $(this).find('button.confirm').click(function(){
+      var url = $(this).data('url');
+      var id = $(this).data('id');
+      $(form).attr('action', url).find('#id_id').val(id).parent().submit();
+    });
+    $(this).find('button.remove').click(function(){
+      var url = $(this).data('url')
+      $(form).attr('action', url).submit();
+    });
+  });
+</script>
 {% endblock %}

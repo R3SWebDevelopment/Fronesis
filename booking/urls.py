@@ -1,4 +1,5 @@
-from .views import CalendarView, HistoryView, ClientsView, BundleView, AddAppointmentView, AppointmentRequestView
+from .views import CalendarView, HistoryView, ClientsView, BundleView, AddAppointmentView, AppointmentRequestView, \
+    AppointmentRequestRemoveView, AppointmentRequestConfirmView
 from django.conf.urls import url
 
 urlpatterns = [
@@ -8,5 +9,7 @@ urlpatterns = [
     url(r'^bundles/$', BundleView.as_view(), name='bundles'),
     url(r'^add/$', AddAppointmentView.as_view(), name='add_appointment'),
     url(r'^confirmation/$', AppointmentRequestView.as_view(), name='confirmation'),
+    url(r'^confirmation/(?P<pk>\d+)/remove/$', AppointmentRequestRemoveView.as_view(), name='confirmation_remove'),
+    url(r'^confirmation/(?P<pk>\d+)/confirm/$', AppointmentRequestConfirmView.as_view(), name='confirmation_confirm'),
 ]
 

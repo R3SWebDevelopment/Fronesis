@@ -1,6 +1,6 @@
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from .models import Appointments, Coach, Client, AppointmentRequest
-from .forms import AddAppointmentForm
+from .forms import AddAppointmentForm, AppointmentRequestConfirmForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
@@ -161,4 +161,45 @@ class AppointmentRequestView(ListView, FronesisBaseInnerView):
     def get_context_data(self, **kwargs):
         context = super(AppointmentRequestView, self).get_context_data(**kwargs)
         context['confirmation'] = True
+        context['form'] = AppointmentRequestConfirmForm()
         return context
+
+
+class AppointmentRequestRemoveView(DeleteView, FronesisBaseInnerView):
+    model = AppointmentRequest
+    queryset = AppointmentRequest.objects.all()
+    template_name = 'confirmation.html'
+    appointments_section = True
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse('booking:confirmation')
+
+
+class AppointmentRequestConfirmView(UpdateView, FronesisBaseInnerView):
+    model = AppointmentRequest
+    queryset = AppointmentRequest.objects.all()
+    template_name = 'confirmation.html'
+    appointments_section = True
+    form_class = AppointmentRequestConfirmForm
+    appointment_id = None
+
+    def get_success_url(self, *args, **kwargs):
+        if self.appointment_id:
+            return reverse('google:add_appointment', kwargs={
+                'pk': self.appointment_id
+            })
+        else:
+            return reverse('booking:calendar_view')
+
+    def get_form(self, *args, **kwargs):
+        return self.get_form_class()(self.request.POST, instance=self.get_object())
+
+    def post(self, *args, **kwargs):
+        form = self.get_form(*args, **kwargs)
+        if form.is_valid():
+            appointment = form.save()
+            if appointment.coach.google_calendar_account_id:
+                self.appointment_id = appointment.pk
+            instance = self.get_object()
+            instance.delete()
+            return self.form_valid(form)
