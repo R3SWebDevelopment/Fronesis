@@ -101,3 +101,7 @@ class AppointmentRequest(models.Model):
     venue = models.ForeignKey(Venue, null=True, related_name='appointments_request')
     client = models.ForeignKey(Client, null=False, related_name='appointments_request')
     service = models.ForeignKey(Session, null=True, related_name='appointments_request')
+
+    @property
+    def is_available(self):
+        return True

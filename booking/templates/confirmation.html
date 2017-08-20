@@ -1,0 +1,50 @@
+{% extends 'booking_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+  {{ block.super }}
+  <section>
+    <div class="wrap">
+      <div class="one-col mb40">
+        <div class="heading-separator">
+          <h2 class="t-lyonL c-gray">Appointment Confirmation</h2>
+        </div>
+      {% for appointment in object_list %}
+        <div class="one-col border-bottom-gray c-gray p20">
+          <div class="one-third columns">
+            <div class="square-profile-thumb">
+              <div class="img" style="background-image: url('img/profile3.png')"></div>
+              <div class="txt c-light-gray">
+                <p>
+                  <strong>
+                    <span class="c-black">
+                      {{appointment.client.full_name|default:appointment.client.email}}
+                    </span>
+                  </strong>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="one-third mt10 center-dir columns">
+            <p>
+              <strong>
+                {{appointment.starts_datetime|date:'l, F jS (P'}}-{{appointment.ends_datetime|date:'- P)'}}
+              </strong>
+            </p>
+            <p>
+              <strong>
+                {{appointment.service.name}} @ {{appointment.venue.name}}
+              </strong>
+            </p>
+          </div>
+          <div class="one-third mt10 center-dir columns">
+            <button class="btn-aqua" data-id="{{appointment.pk}}">Confirm</button>
+            <button class="btn-danger" data-id="{{appointment.pk}}">Remove</button>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from .models import Appointments, Coach, Client
+from .models import Appointments, Coach, Client, AppointmentRequest
 from .forms import AddAppointmentForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
@@ -146,3 +146,19 @@ class AddAppointmentView(CreateView, FronesisBaseInnerView):
     form_class = AddAppointmentForm
     appointments_section = True
 
+
+class AppointmentRequestView(ListView, FronesisBaseInnerView):
+    model = AppointmentRequest
+    queryset = AppointmentRequest.objects.all()
+    template_name = 'confirmation.html'
+    appointments_section = True
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(AppointmentRequestView, self).get_queryset()
+        user = self.request.user
+        return qs.filter(service__coach__user__pk=user.pk).order_by('starts_datetime')
+
+    def get_context_data(self, **kwargs):
+        context = super(AppointmentRequestView, self).get_context_data(**kwargs)
+        context['confirmation'] = True
+        return context

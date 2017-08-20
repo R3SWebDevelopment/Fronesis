@@ -2,6 +2,9 @@
 {% load static %}
 
 {% block SECTION_MENU %}
+<li {% if confirmation == True %}class="active"{% endif %}>
+  <a href="{% url 'booking:confirmation' %}">Appointment Confirmation</a>
+</li>
 <li {% if calendar == True %}class="active"{% endif %}>
   <a href="{% url 'booking:calendar_view' %}">Calendar View</a>
 </li>
