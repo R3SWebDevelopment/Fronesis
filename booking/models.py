@@ -28,7 +28,7 @@ class Appointments(models.Model):
 
     @property
     def client_name(self):
-        return self.client.full_name
+        return self.client.full_name or self.client.email
 
     @property
     def summary(self):
