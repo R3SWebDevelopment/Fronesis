@@ -91,3 +91,13 @@ class Appointments(models.Model):
             },
         }
         return data
+
+
+class AppointmentRequest(models.Model):
+    coach = models.ForeignKey(Coach, null=False, related_name='appointments_request')
+    starts_datetime = models.DateTimeField(null=True)
+    ends_datetime = models.DateTimeField(null=True)
+    online_call = models.BooleanField(default=False)
+    venue = models.ForeignKey(Venue, null=True, related_name='appointments_request')
+    client = models.ForeignKey(Client, null=False, related_name='appointments_request')
+    service = models.ForeignKey(Session, null=True, related_name='appointments_request')
