@@ -104,4 +104,8 @@ class AppointmentRequest(models.Model):
 
     @property
     def is_available(self):
+        appointments = self.coach.appointments.exclude(starts_datetime__gte=self.ends_datetime).\
+            exclude(ends_datetime__lte=self.starts_datetime)
+        if appointments.exists():
+            return False
         return True

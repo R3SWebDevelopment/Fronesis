@@ -37,9 +37,20 @@
                 {{appointment.service.name}} @ {{appointment.venue.name}}
               </strong>
             </p>
+          {% if appointment.is_available == False %}
+            <p>
+              <strong>
+                <span class="danger">
+                  Date and time is not available
+                </span>
+              </strong>
+            </p>
+          {% endif %}
           </div>
           <div class="one-third mt10 center-dir columns">
+          {% if appointment.is_available %}
             <button class="btn-aqua confirm" data-id="{{appointment.pk}}" data-url="{% url 'booking:confirmation_confirm' pk=appointment.pk %}">Confirm</button>
+          {% endif %}
             <button class="btn-danger remove" data-id="{{appointment.pk}}" data-url="{% url 'booking:confirmation_remove' pk=appointment.pk %}">Remove</button>
           </div>
         </div>

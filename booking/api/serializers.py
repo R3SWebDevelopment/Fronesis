@@ -141,7 +141,8 @@ class AppointmentsSerializer(serializers.ModelSerializer):
                 venues = coach.venues.all()
                 venue = venues.filter(pk=venue_id).first()
             if venue is None and custome_venue is None:
-                raise serializers.ValidationError('You can use the venue you select', code=status.HTTP_400_BAD_REQUEST)
+                raise serializers.ValidationError('You can not use the venue you select',
+                                                  code=status.HTTP_400_BAD_REQUEST)
         else:
             raise serializers.ValidationError('No coach instance', code=status.HTTP_400_BAD_REQUEST)
         if coach.requires_confirmation and self.client_side:
