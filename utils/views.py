@@ -1,10 +1,12 @@
 from django.utils.translation import activate
 from django.views.generic.base import ContextMixin
 from django.views import View
+#from django.contrib.auth.decorators import login_required
 
 
 class EnglishView(View):
 
+    #@login_required
     def dispatch(self, request, *args, **kwargs):
         activate('en')
         return super(EnglishView, self).dispatch(request, **kwargs)

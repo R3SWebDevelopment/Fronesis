@@ -12,7 +12,7 @@
     {% endif %}
     </div>
     <div class="one-third right-dir columns">
-      <button class="btn-black btn-x1" data-url="">
+      <button class="btn-black btn-x1 book-trigger" data-url="{% url 'booking:client_side_modal' pk=service.pk %}">
         Book this session
       </button>
     </div>

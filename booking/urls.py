@@ -1,5 +1,5 @@
 from .views import CalendarView, HistoryView, ClientsView, BundleView, AddAppointmentView, AppointmentRequestView, \
-    AppointmentRequestRemoveView, AppointmentRequestConfirmView
+    AppointmentRequestRemoveView, AppointmentRequestConfirmView, AppointmentClientSideModalView
 from django.conf.urls import url
 
 urlpatterns = [
@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^confirmation/$', AppointmentRequestView.as_view(), name='confirmation'),
     url(r'^confirmation/(?P<pk>\d+)/remove/$', AppointmentRequestRemoveView.as_view(), name='confirmation_remove'),
     url(r'^confirmation/(?P<pk>\d+)/confirm/$', AppointmentRequestConfirmView.as_view(), name='confirmation_confirm'),
+    url(r'^client-side/(?P<pk>\d+)/modal/$', AppointmentClientSideModalView.as_view(), name='client_side_modal'),
 ]
 

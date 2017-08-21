@@ -1,5 +1,5 @@
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from .models import Appointments, Coach, Client, AppointmentRequest
+from .models import Appointments, Coach, Client, AppointmentRequest, Session
 from .forms import AddAppointmentForm, AppointmentRequestConfirmForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
@@ -203,3 +203,22 @@ class AppointmentRequestConfirmView(UpdateView, FronesisBaseInnerView):
             instance = self.get_object()
             instance.delete()
             return self.form_valid(form)
+
+
+class AppointmentClientSideModalView(DetailView, FronesisBaseInnerView):
+    model = Session
+    queryset = Session.objects.all()
+    template_name = 'client_side_appointment_modal.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AppointmentClientSideModalView, self).get_context_data(*args, **kwargs)
+        user = self.request.user
+        token = user.auth_token
+        session = self.get_object()
+        coach = session.coach.pk
+        service = session.pk
+        context['token'] = token
+        context['coach'] = coach
+        context['service'] = service
+        context['url'] = reverse('coaches:community')
+        return context
