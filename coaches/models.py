@@ -252,8 +252,8 @@ class Bundle(models.Model):
     hours = models.IntegerField(null=False, default=0)
     upfront_payment_required = models.BooleanField(default=False)
     down_payment_allow = models.BooleanField(default=False)
-    down_payment = models.DecimalField(max_digits=8, decimal_places=2)
-    nover_expires = models.BooleanField(default=False)
+    down_payment = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    never_expires = models.BooleanField(default=False)
     expires = models.BooleanField(default=False)
     expiration_date = models.DateField(null=True)
 
