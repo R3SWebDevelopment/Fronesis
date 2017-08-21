@@ -1,5 +1,5 @@
 from django import forms
-from .models import Coach, AVAILABLE_HOURS, AvailableHour, Venue, Session
+from .models import Coach, AVAILABLE_HOURS, AvailableHour, Venue, Session, Bundle
 from django.contrib.auth.models import User
 from crum import get_current_user
 
@@ -143,3 +143,12 @@ class SessionForm(forms.ModelForm):
         self.fields['allow_on_venues'].queryset = coach.venues.all()
         for field in ['face_to_face', 'one_on_one', 'groups_allow', 'person_price', 'max_capacity', 'allow_on_venues']:
             self.fields[field].required = False
+
+
+class BundleForm(forms.ModelForm):
+
+    class Meta:
+        model = Bundle
+        fields = ['name', 'price', 'description', 'category', 'half_hour_session', 'hour_session', 'open_session',
+                  'half_hour', 'hour', 'open_session', 'minutes', 'hours', 'upfront_payment_required',
+                  'down_payment_allow', 'down_payment', 'never_expires', 'expires', 'expiration_date']
