@@ -32,4 +32,28 @@
     </a>
   </div>
 </section>
+
+
+<section>
+  <div class="wrap mb40">
+    <div class="heading-separator">
+      <h2 class="t-lyonL c-gray">My Bundles</h2>
+    </div>
+  {% for bundle in bundles %}
+    <div class="one-col border-bottom-gray ptb20">
+      <div class="two-col">
+        <h3 class="c-gray t-lyon">Business Transformation for Entrepreneur</h3>
+        <p class="c-gray smaller-txt">Special cycle for business owners (solo or groups)</p>
+      </div>
+      <div class="two-col right-dir">
+        <p class="c-gray">30 min / $100 USD</p>
+        <p class="c-bright-green smaller-txt">Available online</p>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+  <div class="wrap mb60">
+    <button class="btn-black">Add New Sessions</button>
+  </div>
+	</section>
 {% endblock %}
