@@ -158,6 +158,9 @@ class BundleForm(forms.ModelForm):
         coach = get_current_user().coaches.first()
         self.fields['coach'].widget = forms.HiddenInput()
         self.fields['coach'].initial = coach
-        for field in ['coach', 'name', 'price', 'description', 'category']:
-            self.fields[field].required = False
+        for field in self.fields:
+            if field in ['coach', 'name', 'price', 'description', 'category']:
+                self.fields[field].required = True
+            else:
+                self.fields[field].required = False
 

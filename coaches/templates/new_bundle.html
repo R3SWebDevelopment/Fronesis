@@ -7,7 +7,6 @@
 <form method="post">
   {% csrf_token %}
   {{form.coach}}
-
   <section>
     <div class="wrap">
       <h1 class="mb20">Create a New Bundle</h1>
@@ -37,8 +36,7 @@
       </div>
     </div>
   </section>
-
-<section>
+  <section>
 		<div class="wrap">
 			<div class="one-col">
 				<div class="heading-separator mb40">
@@ -96,15 +94,15 @@
 						<div class="one-col mb20">
 							<label class="dark-label mb20">DEFINE SESSIONS AVAILABLE</label>
 							<div class="border-bottom-radio-input">
-								<div class="green-radio-input"><input type="radio" name="half_hour" id="id_half_hour"><span class="check"></span></div>
+								<div class="green-radio-input"><input type="checkbox" name="half_hour" id="id_half_hour"><span class="check"></span></div>
 								<p class="c-dark-purple">30 Minute Meeting</p>
 							</div>
 							<div class="border-bottom-radio-input">
-								<div class="green-radio-input"><input type="radio" name="hour" id="id_hour"><span class="check"></span></div>
+								<div class="green-radio-input"><input type="checkbox" name="hour" id="id_hour"><span class="check"></span></div>
 								<p class="c-dark-purple">1 Hour Business Meeting</p>
 							</div>
 							<div class="border-bottom-radio-input">
-								<div class="green-radio-input"><input type="radio" id="id_is_open_session" name="is_open_session"><span class="check"></span></div>
+								<div class="green-radio-input"><input type="checkbox" id="id_is_open_session" name="is_open_session"><span class="check"></span></div>
 								<p class="c-dark-purple">Opening Season</p>
 							</div>
 						</div>
@@ -113,7 +111,6 @@
 			</div>
 		</div>
 	</section>
-
   <section>
 		<div class="wrap">
 			<div class="one-col">
@@ -160,7 +157,16 @@
 			</div>
 		</div>
 	</section>
-
+  <section>
+		<div class="wrap">
+			<div class="one-col mb40 t-center">
+				<h2 class="t-lyonL c-gray ">Ready to Go!</h2>
+			</div>
+			<div class="one-col gray-border-box t-center mb40">
+				<button type="submit" class="btn-aqua btn-x2">Save New Bundle</button>
+			</div>
+		</div>
+	</section>
 </form>
 {% endblock %}
 {% block SCRIPT %}
@@ -189,7 +195,7 @@
     });
 
     $(by_time_inputs).change(function(){
-      if($(this).val().trim().length > 0){
+      if($(this).val().trim().length > 0 || $(this).is(':checked')){
         $(by_session_inputs).val('')
       }else{
         $(this).val('')
@@ -222,6 +228,32 @@
         $(expiration_date).val('').parent().addClass('disable-events');
       }
     });
+
+    $(this).find('form').submit(function(e){
+      var by_times_is_valid = true;
+      var by_times_checkbox = $(by_time_inputs).filter(':checkbox')
+      if($(by_times_checkbox).filter(':checked').length == 0){
+        by_times_is_valid = false;
+      }
+      $(by_time_inputs).not(by_times_checkbox).each(function(){
+        if($(this).val().trim().length > 0){
+          by_times_is_valid = true;
+        }
+      });
+      var by_session_is_valid = false;
+      $(by_session_inputs).each(function(){
+        if($(this).val().trim().length > 0){
+          by_session_is_valid = true;
+        }
+      });
+      if(by_times_is_valid || by_session_is_valid){
+        return true;
+      }else{
+        alert('Services included on the bundle need to be defined')
+        e.preventDefault()
+      }
+    });
+
   });
 </script>
 {% endblock %}
