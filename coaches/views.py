@@ -265,6 +265,25 @@ class CreateBundle(CreateView, FronesisBaseInnerView):
         return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
 
 
+class EditBundle(UpdateView, FronesisBaseInnerView):
+    model = Bundle
+    queryset = Bundle.objects.all()
+    template_name = 'edit_bundle.html'
+    form_class = BundleForm
+    my_services_section = True
+
+    def dispatch(self, request, *args, **kwargs):
+        Coach.objects.get_or_create(user=request.user)
+        return super(EditBundle, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('coaches:my_services')
+
+    def get_queryset(self):
+        qs = super(EditBundle, self).get_queryset()
+        return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
+
+
 class EditService(UpdateView, FronesisBaseInnerView):
     model = Session
     queryset = Session.objects.all()

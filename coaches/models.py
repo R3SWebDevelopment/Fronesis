@@ -266,6 +266,6 @@ class Bundle(models.Model):
         if self.never_expires:
             return 'Never expires'
         if self.expires and self.expiration_date:
-            return self.expiration_date.strftime("%d/%m/%y")
+            return self.expiration_date.strftime("%d/%m/%Y")
         return ''
 
