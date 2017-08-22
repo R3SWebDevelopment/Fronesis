@@ -42,12 +42,12 @@
   {% for bundle in bundles %}
     <div class="one-col border-bottom-gray ptb20">
       <div class="two-col">
-        <h3 class="c-gray t-lyon">Business Transformation for Entrepreneur</h3>
-        <p class="c-gray smaller-txt">Special cycle for business owners (solo or groups)</p>
+        <h3 class="c-gray t-lyon">{{bundle.name}}</h3>
+        <p class="c-gray smaller-txt">{{bundle.description}}</p>
       </div>
       <div class="two-col right-dir">
-        <p class="c-gray">30 min / $100 USD</p>
-        <p class="c-bright-green smaller-txt">Available online</p>
+        <p class="c-gray">{{bundle.price_label}}</p>
+        <p class="c-bright-green smaller-txt">{{bundle.expiration_label}}</p>
       </div>
     </div>
   {% endfor %}

@@ -257,3 +257,15 @@ class Bundle(models.Model):
     expires = models.BooleanField(default=False)
     expiration_date = models.DateField(null=True)
 
+    @property
+    def price_label(self):
+        return '${} MXN'.format(self.price)
+
+    @property
+    def expiration_label(self):
+        if self.never_expires:
+            return 'Never expires'
+        if self.expires and self.expiration_date:
+            return self.expiration_date.strftime("%d/%m/%y")
+        return ''
+
