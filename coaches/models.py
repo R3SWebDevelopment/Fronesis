@@ -247,7 +247,7 @@ class Bundle(models.Model):
     open_session = models.IntegerField(null=False, default=0)
     half_hour = models.BooleanField(null=False, default=False)
     hour = models.BooleanField(null=False, default=False)
-    open_session = models.BooleanField(null=False, default=False)
+    is_open_session = models.BooleanField(null=False, default=False)
     minutes = models.IntegerField(null=False, default=0)
     hours = models.IntegerField(null=False, default=0)
     upfront_payment_required = models.BooleanField(default=False)

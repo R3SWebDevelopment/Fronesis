@@ -1,6 +1,6 @@
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from .models import Coach, Venue, Session, Bundle
-from .forms import CoachContactForm, CoachBlockedHours, CoachBookingSettings, VenuesForm, SessionForm
+from .forms import CoachContactForm, CoachBlockedHours, CoachBookingSettings, VenuesForm, SessionForm, BundleForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
@@ -214,6 +214,13 @@ class MyServices(ListView, FronesisBaseInnerView):
         qs = super(MyServices, self).get_queryset()
         return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
 
+    def get_context_data(self, **kwargs):
+        context = super(MyServices, self).get_context_data(**kwargs)
+        q1 = Q(never_expires=True)
+        q2 = Q(expires=True, expiration_date__gte=datetime.now())
+        context['bundles'] = Bundle.objects.filter(coach__user=self.request.user)
+        return context
+
 
 class CreateService(CreateView, FronesisBaseInnerView):
     model = Session
@@ -229,9 +236,6 @@ class CreateService(CreateView, FronesisBaseInnerView):
     def get_context_data(self, **kwargs):
         context = super(CreateService, self).get_context_data(**kwargs)
         context['venues'] = True
-        q1 = Q(never_expires=True)
-        q2 = Q(expires=True, expiration_date__gte=datetime.now())
-        context['bundles'] = Bundle.objects.filter(coach__user=self.request.user)
         return context
 
     def get_success_url(self):
@@ -239,6 +243,25 @@ class CreateService(CreateView, FronesisBaseInnerView):
 
     def get_queryset(self):
         qs = super(CreateService, self).get_queryset()
+        return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
+
+
+class CreateBundle(CreateView, FronesisBaseInnerView):
+    model = Bundle
+    queryset = Bundle.objects.all()
+    template_name = 'new_bundle.html'
+    form_class = BundleForm
+    my_services_section = True
+
+    def dispatch(self, request, *args, **kwargs):
+        Coach.objects.get_or_create(user=request.user)
+        return super(CreateBundle, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('coaches:my_services')
+
+    def get_queryset(self):
+        qs = super(CreateBundle, self).get_queryset()
         return qs.filter(coach=Coach.objects.filter(user=self.request.user).first())
 
 

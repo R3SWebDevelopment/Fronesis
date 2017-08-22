@@ -53,7 +53,9 @@
   {% endfor %}
   </div>
   <div class="wrap mb60">
-    <button class="btn-black">Add New Sessions</button>
+    <a href="{% url 'coaches:add_bundles' %}">
+      <button class="btn-black">Add New Sessions</button>
+    </a>
   </div>
 	</section>
 {% endblock %}

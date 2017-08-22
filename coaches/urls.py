@@ -1,5 +1,5 @@
 from .views import ContactDetail, BlockedHours, BookingSettings, MyVenues, CreateVenues, RemoveVenues, EditVenues, \
-    MyServices, CreateService, EditService, CommunityView, CoachDetailView
+    MyServices, CreateService, EditService, CommunityView, CoachDetailView, CreateBundle
 from django.conf.urls import url
 
 urlpatterns = [
@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^my_services/$', MyServices.as_view(), name='my_services'),
     url(r'^my_services/add/$', CreateService.as_view(), name='add_services'),
     url(r'^my_services/(?P<pk>\d+)/edit/$', EditService.as_view(), name='edit_services'),
+    url(r'^my_bundles/add/$', CreateBundle.as_view(), name='add_bundles'),
 ]
 

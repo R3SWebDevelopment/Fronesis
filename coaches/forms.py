@@ -149,6 +149,15 @@ class BundleForm(forms.ModelForm):
 
     class Meta:
         model = Bundle
-        fields = ['name', 'price', 'description', 'category', 'half_hour_session', 'hour_session', 'open_session',
-                  'half_hour', 'hour', 'open_session', 'minutes', 'hours', 'upfront_payment_required',
+        fields = ['coach', 'name', 'price', 'description', 'category', 'half_hour_session', 'hour_session',
+                  'open_session', 'half_hour', 'hour', 'is_open_session', 'minutes', 'hours', 'upfront_payment_required',
                   'down_payment_allow', 'down_payment', 'never_expires', 'expires', 'expiration_date']
+
+    def __init__(self, *args, **kwargs):
+        super(BundleForm, self).__init__(*args, **kwargs)
+        coach = get_current_user().coaches.first()
+        self.fields['coach'].widget = forms.HiddenInput()
+        self.fields['coach'].initial = coach
+        for field in ['coach', 'name', 'price', 'description', 'category']:
+            self.fields[field].required = False
+
