@@ -1,8 +1,10 @@
 from rest_framework_swagger.views import get_swagger_view
 from django.conf.urls import url, include
 from .admin import admin_site
+from .views import Homepage
 
 urlpatterns = [
+    url(r'^$', Homepage.as_view(), name='my_services'),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^philios/', include('philios.urls')),
     url(r'^philios-web/', include('philios.web_urls', namespace='philios')),
