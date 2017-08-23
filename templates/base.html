@@ -36,8 +36,10 @@
 <body class="{{BODY_CLASS|default:''}}">
 	<header>
 		<div class="wrap">
-			<div class="logo" id="triggerStMenu">
-				<img src="{% static 'img/f-logo.png' %}" alt="logo">
+			<div class="logo" id="triggerStMenu__">
+        <a href="/">
+          <img src="{% static 'img/f-logo.png' %}" alt="logo">
+        </a>
 			</div>
 			<div class="st-menu">
 				<ul>
@@ -56,6 +58,7 @@
 		</div>
 	</header>
 
+  <!--
 	<div class="st-menu hidden-menu">
 		<div class="wrap">
 			<div class="table-cell">
@@ -72,6 +75,7 @@
 			<div class="close-btn smaller-txt c-white" id="closeBtn">Close [x]</div>
 		</div>
 	</div>
+	-->
 {% block CONTENT %}
 {% endblock %}
 {% block LIBRARIES %}
