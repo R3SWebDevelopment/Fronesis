@@ -2,25 +2,31 @@
 <section class="bg-dark-gray ptb100">
   <div class="wrap t-center">
     <div class="t-center">
-      <h2 class="c-white t-lyon mb40">Events Created by You</h2>
+      <h2 class="c-white t-lyon mb40">Events</h2>
     </div>
     <div class="one-col mb60">
+    {% for event in events %}
       <div class="one-third columns card-event c-white">
-        <div class="top" style="background-image: url('{% static 'img/profile1.png' %}')"></div>
+        <div class="top" style="background-image: url('{{ event.cover_url }}')"></div>
         <div class="bottom">
-          <h2 class="t-lyon mb20">Transformation Cycle</h2>
-          <p class="mb20">Learn about life cycles with the Universal Model designed by Demartini Institute.</p>
-          <p><strong>June 30, 2017</strong></p>
+          <h2 class="t-lyon mb20">
+            <a href="{{event.url}}">
+              {{ event.name }}
+            </a>
+          </h2>
+          <p class="mb20">
+            {{ event.subtitle|default:'<br>'|truncatewords:3}}
+          </p>
+          <p><strong>{{ event.begins_date|date:"F d, Y"}}</strong></p>
         </div>
       </div>
-      <div class="one-third columns card-event c-white">
-        <div class="top" style="background-image: url('{% static 'img/profile1.png' %}')"></div>
-        <div class="bottom">
-          <h2 class="t-lyon mb20">Value Linking for Couples</h2>
-          <p class="mb20">Increase communication, trust and understanding with your partner.</p>
-          <p><strong>March 23, 2017</strong></p>
-        </div>
+    {% empty %}
+      <div class="two-third columns white-box c-white stroke-btn-4px">
+        <h3>
+          There are not upcoming events
+        </h3>
       </div>
+    {% endfor %}
     </div>
     <div class="one-col">
       <a href="/events/">

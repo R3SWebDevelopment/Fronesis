@@ -78,3 +78,8 @@ span.checked{
     height: 100%;
     border: none;
 }
+
+.white-box{
+    border: 2px solid #FFFFFF;
+    padding: 10px;
+}
