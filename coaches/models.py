@@ -90,6 +90,14 @@ class Coach(models.Model):
     clients = models.ManyToManyField(Client)
     short_bio = models.TextField(null=False, blank=True, default='')
 
+    class Meta:
+        permissions = (
+            ('edit_contact_info', 'Edit Contact Info'),
+            ('edit_blocked_hours', 'Edit Blocked Hours'),
+            ('edit_booking_settings', 'Edit Booking Settings'),
+            ('edit_venues', 'Edit Venues'),
+        )
+
     @property
     def requires_confirmation(self):
         if self.is_instante_booking_allow and not self.ask_before_booking:

@@ -26,7 +26,6 @@ class Appointments(models.Model):
             ('view_clients', 'View Clients'),
             ('view_active_bundles', 'View Active Bundle'),
             ('view_coach_appointment', 'View Coach Appointment'),
-
         )
 
     @property
