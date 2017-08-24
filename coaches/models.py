@@ -92,6 +92,7 @@ class Coach(models.Model):
 
     class Meta:
         permissions = (
+            ('edit_my_services', 'Edit My Service'),
             ('edit_contact_info', 'Edit Contact Info'),
             ('edit_blocked_hours', 'Edit Blocked Hours'),
             ('edit_booking_settings', 'Edit Booking Settings'),
