@@ -7,6 +7,9 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from datetime import datetime
 
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 
 class ContactDetail(UpdateView, FronesisBaseInnerView):
     model = Coach
@@ -15,6 +18,10 @@ class ContactDetail(UpdateView, FronesisBaseInnerView):
     object = None
     template_name = 'detail.html'
     coach_settings_section = True
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ContactDetail, self).dispatch(request, *args, **kwargs)
 
     def get_form(self, form_class=None):
         form_class = self.get_form_class()
@@ -53,6 +60,10 @@ class BlockedHours(UpdateView, FronesisBaseInnerView):
     template_name = 'blocked_hours.html'
     coach_settings_section = True
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(BlockedHours, self).dispatch(request, *args, **kwargs)
+
     def get_form(self, form_class=None):
         form_class = self.get_form_class()
         form = form_class(instance=self.get_object())
@@ -90,6 +101,10 @@ class BookingSettings(UpdateView, FronesisBaseInnerView):
     template_name = 'settings.html'
     coach_settings_section = True
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(BookingSettings, self).dispatch(request, *args, **kwargs)
+
     def get_form(self, form_class=None):
         form_class = self.get_form_class()
         form = form_class(instance=self.get_object())
@@ -125,6 +140,7 @@ class MyVenues(ListView, FronesisBaseInnerView):
     template_name = 'my_venues.html'
     coach_settings_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
         return super(MyVenues, self).dispatch(request, *args, **kwargs)
@@ -146,6 +162,7 @@ class CreateVenues(CreateView, FronesisBaseInnerView):
     form_class = VenuesForm
     coach_settings_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
         return super(CreateVenues, self).dispatch(request, *args, **kwargs)
@@ -166,6 +183,7 @@ class EditVenues(UpdateView, FronesisBaseInnerView):
     form_class = VenuesForm
     coach_settings_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
         return super(EditVenues, self).dispatch(request, *args, **kwargs)
@@ -188,6 +206,7 @@ class RemoveVenues(DeleteView, FronesisBaseInnerView):
     queryset = Venue.objects.all()
     coach_settings_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
         return super(RemoveVenues, self).dispatch(request, *args, **kwargs)
@@ -206,6 +225,7 @@ class MyServices(ListView, FronesisBaseInnerView):
     template_name = 'my_services.html'
     my_services_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
         return super(MyServices, self).dispatch(request, *args, **kwargs)
@@ -229,6 +249,7 @@ class CreateService(CreateView, FronesisBaseInnerView):
     form_class = SessionForm
     my_services_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
         return super(CreateService, self).dispatch(request, *args, **kwargs)
@@ -253,6 +274,7 @@ class CreateBundle(CreateView, FronesisBaseInnerView):
     form_class = BundleForm
     my_services_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
         return super(CreateBundle, self).dispatch(request, *args, **kwargs)
@@ -272,6 +294,7 @@ class EditBundle(UpdateView, FronesisBaseInnerView):
     form_class = BundleForm
     my_services_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
         return super(EditBundle, self).dispatch(request, *args, **kwargs)
@@ -291,6 +314,7 @@ class EditService(UpdateView, FronesisBaseInnerView):
     form_class = SessionForm
     my_services_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         Coach.objects.get_or_create(user=request.user)
         return super(EditService, self).dispatch(request, *args, **kwargs)

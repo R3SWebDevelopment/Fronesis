@@ -7,6 +7,9 @@ from django.core.urlresolvers import reverse
 from datetime import datetime, timedelta
 from rest_framework.authtoken.models import Token
 
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 
 class CalendarView(ListView, FronesisBaseInnerView):
     model = Appointments
@@ -18,6 +21,7 @@ class CalendarView(ListView, FronesisBaseInnerView):
     date = None
     appointments_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
         if not Token.objects.filter(user=request.user).exists():
@@ -75,6 +79,7 @@ class ClientsView(ListView, FronesisBaseInnerView):
     coach = None
     appointments_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
         self.coach = coach
@@ -98,6 +103,7 @@ class HistoryView(ListView, FronesisBaseInnerView):
     coach = None
     appointments_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
         self.coach = coach
@@ -125,6 +131,7 @@ class BundleView(ListView, FronesisBaseInnerView):
     coach = None
     appointments_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
         self.coach = coach
@@ -146,12 +153,20 @@ class AddAppointmentView(CreateView, FronesisBaseInnerView):
     form_class = AddAppointmentForm
     appointments_section = True
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AddAppointmentView, self).dispatch(request, *args, **kwargs)
+
 
 class AppointmentRequestView(ListView, FronesisBaseInnerView):
     model = AppointmentRequest
     queryset = AppointmentRequest.objects.all()
     template_name = 'confirmation.html'
     appointments_section = True
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AppointmentRequestView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self, *args, **kwargs):
         qs = super(AppointmentRequestView, self).get_queryset()
@@ -171,6 +186,10 @@ class AppointmentRequestRemoveView(DeleteView, FronesisBaseInnerView):
     template_name = 'confirmation.html'
     appointments_section = True
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AppointmentRequestRemoveView, self).dispatch(request, *args, **kwargs)
+
     def get_success_url(self, *args, **kwargs):
         return reverse('booking:confirmation')
 
@@ -182,6 +201,10 @@ class AppointmentRequestConfirmView(UpdateView, FronesisBaseInnerView):
     appointments_section = True
     form_class = AppointmentRequestConfirmForm
     appointment_id = None
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AppointmentRequestConfirmView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self, *args, **kwargs):
         if self.appointment_id:
@@ -209,6 +232,10 @@ class AppointmentClientSideModalView(DetailView, FronesisBaseInnerView):
     model = Session
     queryset = Session.objects.all()
     template_name = 'client_side_appointment_modal.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AppointmentClientSideModalView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super(AppointmentClientSideModalView, self).get_context_data(*args, **kwargs)
