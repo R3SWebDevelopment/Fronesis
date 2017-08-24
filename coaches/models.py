@@ -266,6 +266,11 @@ class Bundle(models.Model):
     expires = models.BooleanField(default=False)
     expiration_date = models.DateField(null=True)
 
+    class Meta:
+        permissions = (
+            ('edit_bundle', 'Edit bundle'),
+        )
+
     @property
     def price_label(self):
         return '${} MXN'.format(self.price)
