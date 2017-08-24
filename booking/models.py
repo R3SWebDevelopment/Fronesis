@@ -19,6 +19,16 @@ class Appointments(models.Model):
     send_payment_link = models.BooleanField(default=False)
     google_calendar_url = models.URLField(null=True)
 
+    class Meta:
+        permissions = (
+            ('add_appointment_coach_side', 'Add Appointment Coach Side'),
+            ('appointment_history', 'Appointment History'),
+            ('view_clients', 'View Clients'),
+            ('view_active_bundles', 'View Active Bundle'),
+            ('view_coach_appointment', 'View Coach Appointment'),
+
+        )
+
     @property
     def venue_name(self):
         return self.venue.name if self.venue else self.custome_venue
