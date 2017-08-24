@@ -1,6 +1,7 @@
 from django.db import models
 from coaches.models import Coach, Venue, Client, Session
 from dateutil import tz
+from django.contrib.contenttypes.models import ContentType
 
 LOCAL = tz.gettz('America/Monterrey')
 
@@ -74,6 +75,10 @@ class Appointments(models.Model):
         ]
 
     @property
+    def amount(self):
+        return self.service.price
+
+    @property
     def google_calendar_data(self):
         data = {
             'summary': self.summary,
@@ -92,6 +97,17 @@ class Appointments(models.Model):
         }
         return data
 
+    @property
+    def payment_info(self):
+        content_type = ContentType.objects.get_for_model(self)
+        return ServicePayment.objects.filter(service_content_type=content_type, service_object_pk=self.pk).first()
+
+    def generate_payment_info(self):
+        content_type = ContentType.objects.get_for_model(self)
+        instance, created = ServicePayment.objects.get_or_create(service_content_type=content_type,
+                                                                 service_object_pk=self.pk, amount=self.amount)
+        return instance
+
 
 class AppointmentRequest(models.Model):
     coach = models.ForeignKey(Coach, null=False, related_name='appointments_request')
@@ -109,3 +125,18 @@ class AppointmentRequest(models.Model):
         if appointments.exists():
             return False
         return True
+
+
+class ServicePayment(models.Model):
+    amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    credit_card = models.CharField(max_length=16, null=True)
+    auth_number = models.CharField(max_length=16, null=True)
+    created_timestamp = models.DateTimeField(auto_now_add=True)
+    processed_timestamp = models.DateTimeField()
+    service_content_type = models.ForeignKey(ContentType, null=True)
+    service_object_pk = models.IntegerField(null=True)
+
+    @property
+    def service(self):
+        return self.service_content_type.model_class.objects.filter(pk=self.service_object_pk).first()
+
