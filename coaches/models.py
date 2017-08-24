@@ -96,6 +96,7 @@ class Coach(models.Model):
             ('edit_contact_info', 'Edit Contact Info'),
             ('edit_blocked_hours', 'Edit Blocked Hours'),
             ('edit_booking_settings', 'Edit Booking Settings'),
+            ('coach_settings', 'Coach Settings'),
             ('edit_venues', 'Edit Venues'),
         )
 
