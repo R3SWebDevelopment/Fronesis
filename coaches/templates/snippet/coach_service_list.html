@@ -12,9 +12,17 @@
     {% endif %}
     </div>
     <div class="one-third right-dir columns">
+    {% if user.is_authenticated %}
       <button class="btn-black btn-x1 book-trigger" data-url="{% url 'booking:client_side_modal' pk=service.pk %}">
         Book this session
       </button>
+    {% else %}
+      <a href="{% url 'account_login' %}?next={{request.get_full_path}}">
+        <button class="btn-black btn-x1">
+          Book this session
+        </button>
+      </a>
+    {% endif %}
     </div>
   </div>
   {% empty %}
