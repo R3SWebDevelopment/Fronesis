@@ -5,7 +5,8 @@ from django.conf.urls import url
 from django.contrib.auth.decorators import permission_required
 
 urlpatterns = [
-    url(r'^calendar_view/$', CalendarView.as_view(), name='calendar_view'),
+    url(r'^calendar_view/$', permission_required('booking.view_coach_appointment')(CalendarView.as_view()),
+        name='calendar_view'),
     url(r'^history/$', permission_required('booking.appointment_history')(HistoryView.as_view()), name='history'),
     url(r'^clients/$', permission_required('booking.view_clients')(ClientsView.as_view()), name='clients'),
     url(r'^bundles/$', permission_required('booking.view_active_bundles')(BundleView.as_view()), name='bundles'),
