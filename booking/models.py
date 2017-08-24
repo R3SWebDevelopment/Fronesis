@@ -22,6 +22,7 @@ class Appointments(models.Model):
     class Meta:
         permissions = (
             ('add_appointment_coach_side', 'Add Appointment Coach Side'),
+            ('confirm_appointment', 'Confirm Appointment'),
             ('appointment_history', 'Appointment History'),
             ('view_clients', 'View Clients'),
             ('view_active_bundles', 'View Active Bundle'),
