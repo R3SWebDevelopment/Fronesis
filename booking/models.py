@@ -143,8 +143,8 @@ class AppointmentRequest(models.Model):
 
 class ServicePayment(models.Model):
     amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    credit_card = models.CharField(max_length=16, null=True)
-    auth_number = models.CharField(max_length=16, null=True)
+    credit_card = models.CharField(max_length=50, null=True)
+    auth_number = models.CharField(max_length=50, null=True)
     created_timestamp = models.DateTimeField(auto_now_add=True)
     processed_timestamp = models.DateTimeField(null=True)
     service_content_type = models.ForeignKey(ContentType, null=True)
