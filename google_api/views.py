@@ -17,8 +17,11 @@ from oauth2client.contrib.django_util.storage import DjangoORMStorage
 
 from django.urls import reverse
 
+from django.contrib.sites.models import Site
+
 OAUTH2CALLBACK = '/google/oauth2callback/'
-DOMAIN = 'http://fronesis.vordem.mx' # 'http://local.test.com' #
+SITE = Site.objects.get_current()
+DOMAIN = 'http://{}'.format(SITE.domain) if SITE else 'http://local.test.com'
 
 SESSION_GOOGLE_SUCESS_URL_KEY = 'GOOGLE_SUCESS_URL'
 SESSION_GOOGLE_ERROR_URL_KEY = 'GOOGLE_ERROR_URL'
