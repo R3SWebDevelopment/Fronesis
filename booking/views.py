@@ -1,4 +1,4 @@
-from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
+from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView, TemplateView
 from .models import Appointments, Coach, Client, AppointmentRequest, Session, ServicePayment
 from .forms import AddAppointmentForm, AppointmentRequestConfirmForm, CreditCardForm
 from crum import get_current_user
@@ -256,6 +256,7 @@ class MyAppointmentsView(ListView, FronesisBaseInnerView):
     model = Appointments
     queryset = Appointments.objects.all()
     template_name = 'my_appointments.html'
+    appointments_section = True
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -299,9 +300,11 @@ class PayAppointmentByCreditCardView(UpdateView, FronesisBaseInnerView):
     queryset = ServicePayment.objects.all()
     template_name = 'appointment_pay_cc_form.html'
     form_class = CreditCardForm
+    appointments_section = True
 
     @method_decorator(login_required)
     def dispatch(self, request, pk, *args, **kwargs):
+        self.service_pk = pk
         appointment = Appointments.objects.filter(pk=pk).first()
         payment_info = appointment.payment_info
         if payment_info is None:
@@ -339,8 +342,25 @@ class PayAppointmentByCreditCardView(UpdateView, FronesisBaseInnerView):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
-            return self.form_valid()
-        return self.form_invalid()
+            return self.form_valid(form)
+        return self.form_invalid(form)
 
     def get_success_url(self):
-        return reverse('booking:pay_appointment_by_cc_notification')
+        return reverse('booking:pay_appointment_by_cc_notification', kwargs={
+            'pk': self.service_pk
+        })
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(PayAppointmentByCreditCardView, self).get_context_data(*args, **kwargs)
+        context['my_appointments'] = True
+        return context
+
+
+class PayAppointmentByCreditCardNotificationView(TemplateView, FronesisBaseInnerView):
+    template_name = 'appointment_pay_cc_notification.html'
+    appointments_section = True
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(PayAppointmentByCreditCardNotificationView, self).get_context_data(*args, **kwargs)
+        context['my_appointments'] = True
+        return context

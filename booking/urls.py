@@ -1,6 +1,6 @@
 from .views import CalendarView, HistoryView, ClientsView, BundleView, AddAppointmentView, AppointmentRequestView, \
     AppointmentRequestRemoveView, AppointmentRequestConfirmView, AppointmentClientSideModalView, MyAppointmentsView,\
-    PayAppointmentView, PayAppointmentByCreditCardView
+    PayAppointmentView, PayAppointmentByCreditCardView, PayAppointmentByCreditCardNotificationView
 from django.conf.urls import url
 
 from django.contrib.auth.decorators import permission_required
@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^pay_appointment/(?P<pk>\d+)/$', PayAppointmentView.as_view(), name='pay_appointment'),
     url(r'^pay_appointment/(?P<pk>\d+)/credit_card/$', PayAppointmentByCreditCardView.as_view(),
         name='pay_appointment_by_cc'),
+    url(r'^pay_appointment/(?P<pk>\d+)/credit_card/notification/$',
+        PayAppointmentByCreditCardNotificationView.as_view(), name='pay_appointment_by_cc_notification'),
     url(r'^confirmation/$', permission_required('booking.confirm_appointment')(AppointmentRequestView.as_view()),
         name='confirmation'),
     url(r'^confirmation/(?P<pk>\d+)/remove/$',
