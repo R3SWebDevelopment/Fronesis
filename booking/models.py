@@ -46,6 +46,10 @@ class Appointments(models.Model):
         return '{} with {}'.format(self.service_name, self.client_name)
 
     @property
+    def coach_name(self):
+        return self.service.coach.user.get_full_name()
+
+    @property
     def location(self):
         return '{} - {}'.format(self.venue.name, self.venue.address) \
             if self.venue else self.custome_venue \
@@ -148,5 +152,13 @@ class ServicePayment(models.Model):
 
     @property
     def service(self):
-        return self.service_content_type.model_class.objects.filter(pk=self.service_object_pk).first()
+        return self.service_content_type.model_class().objects.filter(pk=self.service_object_pk).first()
+
+    @property
+    def description(self):
+        service = self.service
+        return "Pay for appointment {} with {} @ {} on {}".format(service.service_name, service.coach_name,
+                                                                  service.location,
+                                                                  service.starts_datetime_local.
+                                                                  strftime('%Y-%m-%dT%H:%M'))
 

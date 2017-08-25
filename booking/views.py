@@ -1,6 +1,6 @@
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from .models import Appointments, Coach, Client, AppointmentRequest, Session, ServicePayment
-from .forms import AddAppointmentForm, AppointmentRequestConfirmForm
+from .forms import AddAppointmentForm, AppointmentRequestConfirmForm, CreditCardForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
@@ -297,7 +297,8 @@ class PayAppointmentView(DetailView, FronesisBaseInnerView):
 class PayAppointmentByCreditCardView(UpdateView, FronesisBaseInnerView):
     model = ServicePayment
     queryset = ServicePayment.objects.all()
-    template_name = 'my_appointments.html'
+    template_name = 'appointment_pay_cc_form.html'
+    form_class = CreditCardForm
 
     @method_decorator(login_required)
     def dispatch(self, request, pk, *args, **kwargs):
@@ -307,4 +308,27 @@ class PayAppointmentByCreditCardView(UpdateView, FronesisBaseInnerView):
             payment_info = appointment.generate_payment_info()
         if payment_info:
             pk = payment_info.pk
-        return super(PayAppointmentByCreditCardView, self).dispatch(request, pk, *args, **kwargs)
+        self.pk = pk
+        return super(PayAppointmentByCreditCardView, self).dispatch(request=request, pk=pk, *args, **kwargs)
+
+    def get_object(self, *args, **kwargs):
+        qs = self.get_queryset()
+        return qs.filter(pk=self.pk).first()
+
+    def get_form(self):
+        instance = self.get_object()
+        user =self.request.user
+        first_name= user.first_name
+        last_name = user.last_name
+        email = user.email
+        amount = instance.amount
+        order = instance.pk
+        description = instance.description
+        return self.form_class(initial={
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+            'amount': amount,
+            'order': order,
+            'description': description,
+        })
