@@ -4,6 +4,8 @@ import celery
 from utils.openpay_gateway import PaymentGateway
 from django.contrib.auth.models import User
 from utils.utils import send_email
+from .models import ServicePayment
+from datetime import datetime
 
 
 @celery.task
@@ -19,6 +21,59 @@ def check_tickets_reservation(ticket_id):
 @celery.task
 def process_service_payment(payment_info):
     print("payment_info: {}".format(payment_info))
+    first_name = payment_info.get('first_name')
+    last_name = payment_info.get('last_name')
+    email = payment_info.get('email')
+    line1 = payment_info.get('line1')
+    line2 = payment_info.get('line2')
+    line3 = payment_info.get('line3')
+    city = payment_info.get('city')
+    state = payment_info.get('state')
+    postal_code = payment_info.get('postal_code')
+    phone_number = payment_info.get('phone_number')
+    card_holder = payment_info.get('card_holder')
+    cc_number = payment_info.get('credit_card_number')
+    cc_exp_month = payment_info.get('credit_card_exp_month')
+    cc_exp_year = payment_info.get('credit_card_exp_year')
+    cc_cvv = payment_info.get('credit_card_cvv')
+    order_id = payment_info.get('order')
+    description = payment_info.get('description')
+    total = payment_info.get('amount')
+    try:
+        gateway = PaymentGateway()
+        customer_id, to_create = gateway.set_customer(first_name=first_name, last_name=last_name,
+                                                      email=email, line1=line1, line2=line2,
+                                                      line3=line3, city=city, state=state,
+                                                      postal_code=postal_code, phone_number=phone_number)
+
+        card_id, cc_mask = gateway.set_credit_card(card_holder=card_holder, number=cc_number, month=cc_exp_month,
+                                                   year=cc_exp_year, cvv=cc_cvv)
+
+        total = float('{}'.format(total))
+        authorized, authorization, error_message = gateway.do_pay(amount=total, order_id=order_id,
+                                                                  description=description)
+
+        if authorized:
+            # SEND EMAIL AND CHANGE FLAG
+            service_payment = ServicePayment.objects.filter(pk=order_id).first()
+            if service_payment:
+                service_payment.auth_number = authorization
+                service_payment.credit_card = cc_mask
+                service_payment.processed_timestamp = datetime.now()
+                service_payment.save()
+                service = service_payment.service
+                if service:
+                    service.already_paid = True
+                    service.save()
+            print("PAYMENT COLLECTED FROM {} WITH AUTH NUMBER {}".format(cc_mask, authorization))
+
+        else:
+            # Send Email with error
+            print("THERE WAS AN ERROR")
+    except Exception as error:
+        # Send Email with error
+        error_message = '{}'.format(error)
+        print("THERE WAS AN ERROR: {}".format(error_message))
 
 
 @celery.task

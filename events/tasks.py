@@ -17,11 +17,6 @@ def check_tickets_reservation(ticket_id):
 
 
 @celery.task
-def process_service_payment(payment_info):
-    print("payment_info: {}".format(payment_info))
-
-
-@celery.task
 def process_ticket_purchase_order(cart_id, cc_number, cc_exp_month, cc_exp_year, cc_cvv, description):
     from events.models import ShoppingCart
     cart = ShoppingCart.objects.get(id=cart_id)
