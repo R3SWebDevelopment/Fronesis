@@ -86,7 +86,7 @@ class Event(models.Model):
         ordering = ['begins_date', 'begins_time']
         permissions = (
             ('edit_event', 'Edit Event'),
-            ('create_event', 'Create Event'),
+            ('create_event', 'Edit Event'),
         )
 
     @property

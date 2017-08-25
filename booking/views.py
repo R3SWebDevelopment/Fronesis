@@ -320,6 +320,7 @@ class PayAppointmentByCreditCardView(UpdateView, FronesisBaseInnerView):
         user =self.request.user
         first_name= user.first_name
         last_name = user.last_name
+        card_holder = user.get_full_name()
         email = user.email
         amount = instance.amount
         order = instance.pk
@@ -331,4 +332,15 @@ class PayAppointmentByCreditCardView(UpdateView, FronesisBaseInnerView):
             'amount': amount,
             'order': order,
             'description': description,
+            'card_holder': card_holder,
         })
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return self.form_valid()
+        return self.form_invalid()
+
+    def get_success_url(self):
+        return reverse('booking:pay_appointment_by_cc_notification')

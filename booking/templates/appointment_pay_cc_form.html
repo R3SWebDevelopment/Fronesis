@@ -6,6 +6,9 @@
  {{ block.super }}
 <form method="post" id="payment">
   {% csrf_token %}
+  {{form.amount}}
+  {{form.order}}
+  {{form.description}}
 {% if error_message != None and error_message|length > 0 %}
     <section>
         <div class="wrap">
@@ -55,13 +58,13 @@
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ form.line2.id_for_label }}" class="dark-label mb20">{{ form.line2.label|upper }}</label>
-                    <input type="text" id = "{{ form.line2.id_for_label }}" name = "{{ form.line2.html_name}}" value = "{{ form.line2.value }}" class="border-bottom-input two-col columns" placeholder="{{form.line2.label|title}}" required>
+                    <input type="text" id = "{{ form.line2.id_for_label }}" name = "{{ form.line2.html_name}}" value = "{{ form.line2.value }}" class="border-bottom-input two-col columns" placeholder="{{form.line2.label|title}}">
                 </div>
             </div>
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ form.line3.id_for_label }}" class="dark-label mb20">{{ form.line3.label|upper }}</label>
-                    <input type="text" id = "{{ form.line3.id_for_label }}" name = "{{ form.line3.html_name}}" value = "{{ form.line3.value }}" class="border-bottom-input two-col columns" placeholder="{{form.line3.label|title}}" required>
+                    <input type="text" id = "{{ form.line3.id_for_label }}" name = "{{ form.line3.html_name}}" value = "{{ form.line3.value }}" class="border-bottom-input two-col columns" placeholder="{{form.line3.label|title}}">
                 </div>
             </div>
             <div class="one-col mb40">
