@@ -47,7 +47,11 @@
 					<li><a href="{% url 'philios:web' %}">Philios</a></li>
 					<li><a href="/events/">Events</a></li>
 					<li><a href="{% url 'coaches:community' %}">Community</a></li>
+        {% if 'booking.view_coach_appointment' in user.get_all_permissions %}
 					<li><a href="{% url 'booking:calendar_view' %}">Bookings</a></li>
+        {% else %}
+          <li><a href="{% url 'booking:my_appointments' %}">Bookings</a></li>
+        {% endif %}
         {% if user_display == None or user_display|length == 0 %}
           <li><a href="{% url 'account_login' %}">Log-In</a></li>
         {% else %}

@@ -249,3 +249,27 @@ class AppointmentClientSideModalView(DetailView, FronesisBaseInnerView):
         context['service'] = service
         context['url'] = reverse('coaches:community')
         return context
+
+
+class MyAppointmentsView(ListView, FronesisBaseInnerView):
+    model = Appointments
+    queryset = Appointments.objects.all()
+    template_name = 'my_appointments.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(MyAppointmentsView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(MyAppointmentsView, self).get_queryset(*args, **kwargs)
+
+        qs = qs.filter(client__email__iexact=self.request.user.email)
+
+        now = datetime.now()
+        qs = qs.filter(starts_datetime__gte = now)
+        return qs.order_by('starts_datetime').distinct()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(MyAppointmentsView, self).get_context_data(*args, **kwargs)
+        context['my_appointments'] = True
+        return context
