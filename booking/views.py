@@ -1,11 +1,12 @@
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from .models import Appointments, Coach, Client, AppointmentRequest, Session
+from .models import Appointments, Coach, Client, AppointmentRequest, Session, ServicePayment
 from .forms import AddAppointmentForm, AppointmentRequestConfirmForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
 from datetime import datetime, timedelta
 from rest_framework.authtoken.models import Token
+from django.shortcuts import redirect
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -265,11 +266,45 @@ class MyAppointmentsView(ListView, FronesisBaseInnerView):
 
         qs = qs.filter(client__email__iexact=self.request.user.email)
 
-        now = datetime.now()
-        qs = qs.filter(starts_datetime__gte = now)
         return qs.order_by('starts_datetime').distinct()
 
     def get_context_data(self, *args, **kwargs):
         context = super(MyAppointmentsView, self).get_context_data(*args, **kwargs)
+        qs = context['object_list']
+        now = datetime.now()
         context['my_appointments'] = True
+        context['last_appointments'] = qs.filter(starts_datetime__lte = now)
+        context['object_list'] = qs.filter(starts_datetime__gte = now)
         return context
+
+
+class PayAppointmentView(DetailView, FronesisBaseInnerView):
+    model = Appointments
+    queryset = Appointments.objects.all()
+    template_name = 'pay_appointments.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        response = super(PayAppointmentView, self).dispatch(request, *args, **kwargs)
+        instance = self.get_object()
+        url = reverse('booking:pay_appointment_by_cc', kwargs={
+            'pk': instance.pk
+        })
+        return redirect(url)
+        #return super(PayAppointmentView, self).dispatch(request, *args, **kwargs)
+
+
+class PayAppointmentByCreditCardView(UpdateView, FronesisBaseInnerView):
+    model = ServicePayment
+    queryset = ServicePayment.objects.all()
+    template_name = 'my_appointments.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, pk, *args, **kwargs):
+        appointment = Appointments.objects.filter(pk=pk).first()
+        payment_info = appointment.payment_info
+        if payment_info is None:
+            payment_info = appointment.generate_payment_info()
+        if payment_info:
+            pk = payment_info.pk
+        return super(PayAppointmentByCreditCardView, self).dispatch(request, pk, *args, **kwargs)
