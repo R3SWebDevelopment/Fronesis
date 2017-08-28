@@ -83,3 +83,26 @@ span.checked{
     border: 2px solid #FFFFFF;
     padding: 10px;
 }
+
+input.auth-form{
+    background-color: white;
+}
+
+input.auth-form::-webkit-input-placeholder { /* Chrome */
+  color: gray;
+  font-weight: bolder;
+}
+input.auth-form:-ms-input-placeholder { /* IE 10+ */
+  color: gray;
+  font-weight: bolder;
+}
+input.auth-form::-moz-placeholder { /* Firefox 19+ */
+  color: gray;
+  font-weight: bolder;
+  opacity: 1;
+}
+input.auth-form:-moz-placeholder { /* Firefox 4 - 18 */
+  color: gray;
+  font-weight: bolder;
+  opacity: 1;
+}
