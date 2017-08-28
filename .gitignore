@@ -93,5 +93,4 @@ ENV/
 # Rope project settings
 .ropeproject
 
-*.sqlite3
-media/
+
