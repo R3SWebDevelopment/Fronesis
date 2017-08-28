@@ -2,17 +2,33 @@
 {% load static %}
 
 {% block SECTION_MENU %}
+{% if 'booking.confirm_appointment' in user.get_all_permissions %}
+<li {% if confirmation == True %}class="active"{% endif %}>
+  <a href="{% url 'booking:confirmation' %}">Appointment Confirmation</a>
+</li>
+{% endif %}
+{% if 'booking.view_coach_appointment' in user.get_all_permissions %}
 <li {% if calendar == True %}class="active"{% endif %}>
   <a href="{% url 'booking:calendar_view' %}">Calendar View</a>
 </li>
+{% endif %}
+{% if 'booking.appointment_history' in user.get_all_permissions %}
 <li {% if history == True %}class="active"{% endif %}>
   <a href="{% url 'booking:history' %}">Appointments History</a>
 </li>
+{% endif %}
+{% if 'booking.view_clients' in user.get_all_permissions %}
 <li {% if clients == True %}class="active"{% endif %}>
   <a href="{% url 'booking:clients' %}">Your Clients</a>
 </li>
+{% endif %}
+{% if 'booking.view_active_bundles' in user.get_all_permissions %}
 <li {% if bundles == True %}class="active"{% endif %}>
   <a href="{% url 'booking:bundles' %}">Active Bundles</a>
+</li>
+{% endif %}
+<li {% if my_appointments == True %}class="active"{% endif %}>
+  <a href="{% url 'booking:my_appointments' %}">My Appointments</a>
 </li>
 {% endblock %}
 

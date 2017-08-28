@@ -1,0 +1,22 @@
+ <div class="one-col mb20">
+    <p class="dark-label mb20"><strong>AVERAGE HOURLY RATE</strong></p>
+    <div data-role="main" class="ui-content">
+        <div data-role="rangeslider" class="ui-rangeslider">
+           <div class="half-col">
+              <div class="amount-input">
+                 <div class="ui-slider">
+                   <input class="smaller-txt ui-shadow-inset ui-corner-all ui-slider-input ui-rangeslider-first ui-body-inherit" type="number" data-type="range" name="price-min" id="price-min" value="{{min_price_filter|default:0}}" min="0" max="10000" data-value="{{min_price_filter|default:0}}">
+                 </div>
+              </div>
+           </div>
+           <div class="half-col t-right">
+              <div class="amount-input">
+                 <div class="ui-slider">
+                   <input class="smaller-txt ui-shadow-inset ui-corner-all ui-slider-input ui-rangeslider-last ui-body-inherit" type="number" data-type="range" name="price-max" id="price-max" value="{{max_price_filter|default:10000}}" min="0" max="10000" data-value="{{max_price_filter|default:10000}}">
+                 </div>
+              </div>
+           </div>
+           <div id="slider-range"></div>
+        </div>
+    </div>
+ </div>

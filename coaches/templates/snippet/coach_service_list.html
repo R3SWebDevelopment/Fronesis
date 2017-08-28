@@ -1,0 +1,35 @@
+<div id="tab-1" class="tab-content" style="">
+{% for service in session_list %}
+  <div class="one-col border-bottom-gray ptb20">
+    <div class="one-third columns">
+      <h3 class="c-gray t-lyon line-clamp-x1">{{service.length}}</h3>
+      <p class="c-gray smaller-txt line-clamp-x1">{{service.name}}</p>
+    </div>
+    <div class="one-third right-dir columns">
+      <p class="c-gray">{{service.price_label}}</p>
+    {% if service.face_to_face %}
+      <p class="c-bright-green smaller-txt">Available online</p>
+    {% endif %}
+    </div>
+    <div class="one-third right-dir columns">
+    {% if user.is_authenticated %}
+      <button class="btn-black btn-x1 book-trigger" data-url="{% url 'booking:client_side_modal' pk=service.pk %}">
+        Book this session
+      </button>
+    {% else %}
+      <a href="{% url 'account_login' %}?next={{request.get_full_path}}">
+        <button class="btn-black btn-x1">
+          Book this session
+        </button>
+      </a>
+    {% endif %}
+    </div>
+  </div>
+  {% empty %}
+      <div class="one-column" style="text-align: center;">
+        <h2>
+          No Service
+        </h2>
+      </div>
+{% endfor %}
+</div>

@@ -1,10 +1,13 @@
 from django.utils.translation import activate
 from django.views.generic.base import ContextMixin
 from django.views import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 
 class EnglishView(View):
 
+    #@login_required
     def dispatch(self, request, *args, **kwargs):
         activate('en')
         return super(EnglishView, self).dispatch(request, **kwargs)
@@ -27,4 +30,11 @@ class FronesisBaseInnerView(ContextMixin, EnglishView):
         context['events_section'] = self.events_section or False
         context['profile_section'] = self.profile_section or False
         return context
+
+
+class FronesisLoggedView(object):
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(FronesisLoggedView, self).dispatch(request, **kwargs)
 

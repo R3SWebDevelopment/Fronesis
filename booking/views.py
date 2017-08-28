@@ -1,11 +1,15 @@
-from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from .models import Appointments, Coach, Client
-from .forms import AddAppointmentForm
+from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView, TemplateView
+from .models import Appointments, Coach, Client, AppointmentRequest, Session, ServicePayment
+from .forms import AddAppointmentForm, AppointmentRequestConfirmForm, CreditCardForm
 from crum import get_current_user
 from utils.views import FronesisBaseInnerView
 from django.core.urlresolvers import reverse
 from datetime import datetime, timedelta
 from rest_framework.authtoken.models import Token
+from django.shortcuts import redirect
+
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 
 class CalendarView(ListView, FronesisBaseInnerView):
@@ -18,6 +22,7 @@ class CalendarView(ListView, FronesisBaseInnerView):
     date = None
     appointments_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
         if not Token.objects.filter(user=request.user).exists():
@@ -75,6 +80,7 @@ class ClientsView(ListView, FronesisBaseInnerView):
     coach = None
     appointments_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
         self.coach = coach
@@ -98,6 +104,7 @@ class HistoryView(ListView, FronesisBaseInnerView):
     coach = None
     appointments_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
         self.coach = coach
@@ -125,6 +132,7 @@ class BundleView(ListView, FronesisBaseInnerView):
     coach = None
     appointments_section = True
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         coach, created = Coach.objects.get_or_create(user=request.user)
         self.coach = coach
@@ -146,3 +154,213 @@ class AddAppointmentView(CreateView, FronesisBaseInnerView):
     form_class = AddAppointmentForm
     appointments_section = True
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AddAppointmentView, self).dispatch(request, *args, **kwargs)
+
+
+class AppointmentRequestView(ListView, FronesisBaseInnerView):
+    model = AppointmentRequest
+    queryset = AppointmentRequest.objects.all()
+    template_name = 'confirmation.html'
+    appointments_section = True
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AppointmentRequestView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(AppointmentRequestView, self).get_queryset()
+        user = self.request.user
+        return qs.filter(service__coach__user__pk=user.pk).order_by('starts_datetime')
+
+    def get_context_data(self, **kwargs):
+        context = super(AppointmentRequestView, self).get_context_data(**kwargs)
+        context['confirmation'] = True
+        context['form'] = AppointmentRequestConfirmForm()
+        return context
+
+
+class AppointmentRequestRemoveView(DeleteView, FronesisBaseInnerView):
+    model = AppointmentRequest
+    queryset = AppointmentRequest.objects.all()
+    template_name = 'confirmation.html'
+    appointments_section = True
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AppointmentRequestRemoveView, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse('booking:confirmation')
+
+
+class AppointmentRequestConfirmView(UpdateView, FronesisBaseInnerView):
+    model = AppointmentRequest
+    queryset = AppointmentRequest.objects.all()
+    template_name = 'confirmation.html'
+    appointments_section = True
+    form_class = AppointmentRequestConfirmForm
+    appointment_id = None
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AppointmentRequestConfirmView, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self, *args, **kwargs):
+        if self.appointment_id:
+            return reverse('google:add_appointment', kwargs={
+                'pk': self.appointment_id
+            })
+        else:
+            return reverse('booking:calendar_view')
+
+    def get_form(self, *args, **kwargs):
+        return self.get_form_class()(self.request.POST, instance=self.get_object())
+
+    def post(self, *args, **kwargs):
+        form = self.get_form(*args, **kwargs)
+        if form.is_valid():
+            appointment = form.save()
+            if appointment.coach.google_calendar_account_id:
+                self.appointment_id = appointment.pk
+            instance = self.get_object()
+            instance.delete()
+            return self.form_valid(form)
+
+
+class AppointmentClientSideModalView(DetailView, FronesisBaseInnerView):
+    model = Session
+    queryset = Session.objects.all()
+    template_name = 'client_side_appointment_modal.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(AppointmentClientSideModalView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AppointmentClientSideModalView, self).get_context_data(*args, **kwargs)
+        user = self.request.user
+        token = user.auth_token
+        session = self.get_object()
+        coach = session.coach.pk
+        service = session.pk
+        context['token'] = token
+        context['coach'] = coach
+        context['service'] = service
+        context['url'] = reverse('coaches:community')
+        return context
+
+
+class MyAppointmentsView(ListView, FronesisBaseInnerView):
+    model = Appointments
+    queryset = Appointments.objects.all()
+    template_name = 'my_appointments.html'
+    appointments_section = True
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(MyAppointmentsView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(MyAppointmentsView, self).get_queryset(*args, **kwargs)
+
+        qs = qs.filter(client__email__iexact=self.request.user.email)
+
+        return qs.order_by('starts_datetime').distinct()
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(MyAppointmentsView, self).get_context_data(*args, **kwargs)
+        qs = context['object_list']
+        now = datetime.now()
+        context['my_appointments'] = True
+        context['last_appointments'] = qs.filter(starts_datetime__lte = now)
+        context['object_list'] = qs.filter(starts_datetime__gte = now)
+        return context
+
+
+class PayAppointmentView(DetailView, FronesisBaseInnerView):
+    model = Appointments
+    queryset = Appointments.objects.all()
+    template_name = 'pay_appointments.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        response = super(PayAppointmentView, self).dispatch(request, *args, **kwargs)
+        instance = self.get_object()
+        url = reverse('booking:pay_appointment_by_cc', kwargs={
+            'pk': instance.pk
+        })
+        return redirect(url)
+        #return super(PayAppointmentView, self).dispatch(request, *args, **kwargs)
+
+
+class PayAppointmentByCreditCardView(UpdateView, FronesisBaseInnerView):
+    model = ServicePayment
+    queryset = ServicePayment.objects.all()
+    template_name = 'appointment_pay_cc_form.html'
+    form_class = CreditCardForm
+    appointments_section = True
+
+    @method_decorator(login_required)
+    def dispatch(self, request, pk, *args, **kwargs):
+        self.service_pk = pk
+        appointment = Appointments.objects.filter(pk=pk).first()
+        payment_info = appointment.payment_info
+        if payment_info is None:
+            payment_info = appointment.generate_payment_info()
+        if payment_info:
+            pk = payment_info.pk
+        self.pk = pk
+        return super(PayAppointmentByCreditCardView, self).dispatch(request=request, pk=pk, *args, **kwargs)
+
+    def get_object(self, *args, **kwargs):
+        qs = self.get_queryset()
+        return qs.filter(pk=self.pk).first()
+
+    def get_form(self):
+        instance = self.get_object()
+        user =self.request.user
+        first_name= user.first_name
+        last_name = user.last_name
+        card_holder = user.get_full_name()
+        email = user.email
+        amount = instance.amount
+        order = instance.pk
+        description = instance.description
+        return self.form_class(initial={
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+            'amount': amount,
+            'order': order,
+            'description': description,
+            'card_holder': card_holder,
+        })
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('booking:pay_appointment_by_cc_notification', kwargs={
+            'pk': self.service_pk
+        })
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(PayAppointmentByCreditCardView, self).get_context_data(*args, **kwargs)
+        context['my_appointments'] = True
+        return context
+
+
+class PayAppointmentByCreditCardNotificationView(TemplateView, FronesisBaseInnerView):
+    template_name = 'appointment_pay_cc_notification.html'
+    appointments_section = True
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(PayAppointmentByCreditCardNotificationView, self).get_context_data(*args, **kwargs)
+        context['my_appointments'] = True
+        return context

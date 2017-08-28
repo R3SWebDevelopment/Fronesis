@@ -1,0 +1,133 @@
+{% extends 'coach_clean_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+  {% include 'snippet/client-side-modal.html' %}
+  <div class="gray-notification">
+    <div class="wrap">
+      <a href="{% url 'coaches:community' %}" class="clear-link" style="color:#A1A1A1;">
+        <p><span class="left-arrow"></span> Back to all coaches</p>
+      </a>
+    </div>
+  </div>
+  <section>
+    <div class="wrap mt60 mb60">
+      <div class="table">
+        <div class="one-third table-cell-desktop columns">
+          <div class="profile-square">
+            <div class="profile-square">
+              <div class="img" style="background-image: url('{{coach.avatar}}')">
+                <div class="labels">
+                  <div class="c-white smaller-txt bg-wine">{{coach.current_city|default:''}}</div>
+                  <div class="smaller-txt bg-white t-lyonL c-black">Coach</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="one-third table-cell-desktop columns">
+          <div class="v-align-t pb60">
+            <h2 class="t-lyon">{{coach.full_name}}</h2>
+            <h2 class="c-light-gray">{{coach.specialty|default:'No Specialty'}}</h2>
+          </div>
+          <div class="absolute-bottom-desktop t-lyon">
+            <p class="c-gray">{{coach.job_title|default:'No Job Title'}}</p>
+            <p class="c-light-gray">{{coach.current_city|default:''}}A</p>
+          </div>
+        </div>
+        <div class="one-third table-cell-desktop columns">
+          <p class="c-gray mb20"><strong>Short Bio</strong></p>
+          <p class="c-gray">
+            {{coach.short_bio}}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tabs-container-white">
+    <div class="wrap pb60">
+      <ul class="tabs-menu">
+        <li class="current"><a href="#tab-1">Sessions</a></li>
+        <li class=""><a href="#tab-2">Bundles</a></li>
+        <li class=""><a href="#tab-3">Philios</a></li>
+        <li class=""><a href="#tab-4">Events</a></li>
+      </ul>
+
+      <div class="tab">
+        <!-- sessions -->
+        {% include 'snippet/coach_service_list.html' with session_list=coach.services.all %}
+
+        <!-- bundles -->
+        <div id="tab-2" class="tab-content" style="display: none;">
+          <div class="one-col border-bottom-gray ptb20">
+            <div class="one-third columns">
+              <h3 class="c-gray t-lyon line-clamp-x1">Business Transformation for Entrepreneur</h3>
+              <p class="c-gray smaller-txt line-clamp-x1">Special cycle for business owners (solo or groups)</p>
+            </div>
+            <div class="one-third right-dir columns">
+              <p class="c-gray">8 h / $30,000 MXN</p>
+              <p class="c-bright-green smaller-txt">Available online</p>
+            </div>
+            <div class="one-third right-dir columns">
+              <button class="btn-black btn-x1">Book this bundle</button>
+            </div>
+          </div>
+          <div class="one-col border-bottom-gray ptb20">
+            <div class="one-third columns">
+              <h3 class="c-gray t-lyon line-clamp-x1">Couple Transformation Mastercourse</h3>
+              <p class="c-gray smaller-txt line-clamp-x1">Express meeting (business related topics)</p>
+            </div>
+            <div class="one-third right-dir columns">
+              <p class="c-gray">8 h / $26,000 MXN</p>
+              <p class="c-bright-green smaller-txt">Available online</p>
+            </div>
+            <div class="one-third right-dir columns">
+              <button class="btn-black btn-x1">Book this bundle</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- philios -->
+        {% include 'snippet/coach_philios_list.html' with post_list=coach.philios %}
+
+        <!-- events -->
+        {% include 'snippet/coach_events_list.html' with post_list=coach.get_my_public_events %}
+      </div>
+    </div>
+  </section>
+{% endblock %}
+{% block SCRIPT %}
+{{block.super}}
+<script>
+  $(document).ready(function(){
+
+    $(this).find('button.book-trigger').click(function(){
+        var url = $(this).data('url')
+        console.log(url)
+        $(dialog).find('iframe').attr('src', url).parent().dialog( "open" );
+        //dialog.dialog( "open" );
+    });
+
+    dialog = $(this).find( "#dialog-form" ).dialog({
+      autoOpen: false,
+      height: 530,
+      width: 860,
+      modal: true,
+      resizable: false,
+      modal: true,
+      open: function (event, ui) {
+        $('#dialog-form').css('overflow', 'hidden');
+      }
+    });
+
+  });
+
+</script>
+{% endblock %}
+{% block LIBRARIES %}
+  {{ block.super }}
+
+{% endblock %}

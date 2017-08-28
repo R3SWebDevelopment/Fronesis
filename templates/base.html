@@ -22,7 +22,6 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}"/>
 	<link rel="stylesheet" href="{% static 'css/index.css' %}">
   <link rel="stylesheet" href="{% static 'css/fixing.css' %}">
-{#  <link rel="stylesheet" href="{% static 'css/style.css' %}">#}
 <style>
   input[type="email"],
   input[type="password"] {
@@ -37,16 +36,22 @@
 <body class="{{BODY_CLASS|default:''}}">
 	<header>
 		<div class="wrap">
-			<div class="logo" id="triggerStMenu">
-				<img src="{% static 'img/f-logo.png' %}" alt="logo">
+			<div class="logo" id="triggerStMenu__">
+        <a href="/">
+          <img src="{% static 'img/f-logo.png' %}" alt="logo">
+        </a>
 			</div>
 			<div class="st-menu">
 				<ul>
 					{#<li><a href="#">About</a></li>#}
 					<li><a href="{% url 'philios:web' %}">Philios</a></li>
 					<li><a href="/events/">Events</a></li>
-					{#<li><a href="#">Community</a></li>#}
+					<li><a href="{% url 'coaches:community' %}">Community</a></li>
+        {% if 'booking.view_coach_appointment' in user.get_all_permissions %}
 					<li><a href="{% url 'booking:calendar_view' %}">Bookings</a></li>
+        {% else %}
+          <li><a href="{% url 'booking:my_appointments' %}">Bookings</a></li>
+        {% endif %}
         {% if user_display == None or user_display|length == 0 %}
           <li><a href="{% url 'account_login' %}">Log-In</a></li>
         {% else %}
@@ -57,6 +62,7 @@
 		</div>
 	</header>
 
+  <!--
 	<div class="st-menu hidden-menu">
 		<div class="wrap">
 			<div class="table-cell">
@@ -73,6 +79,7 @@
 			<div class="close-btn smaller-txt c-white" id="closeBtn">Close [x]</div>
 		</div>
 	</div>
+	-->
 {% block CONTENT %}
 {% endblock %}
 {% block LIBRARIES %}

@@ -34,7 +34,7 @@
                             </a>
                           {% endif %}
                         </p>
-                        <p class="c-aqua">{{appointment.client_name}}</p>
+                        <p class="c-aqua" title="{{appointment.client_name}}">{{appointment.client_name|truncatechars:20}}</p>
                         <p class="t-proxima c-light-gray">{{appointment.service_name}}</p>
                         <p class="t-proxima c-light-gray">@ {{appointment.venue_name}}</p>
                      </div>

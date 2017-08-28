@@ -1,0 +1,259 @@
+{% extends 'session_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+<form method="post">
+  {% csrf_token %}
+  {{form.coach}}
+  <section>
+    <div class="wrap">
+      <h1 class="mb20">Edit Bundle</h1>
+      <div class="one-col">
+        <div class="heading-separator mb40">
+          <div class="blue-cir"><div class="txt">1</div></div>
+          <h2 class="t-lyonL c-gray">Session Details</h2>
+        </div>
+        <div class="one-col mb40">
+          <div class="two-col columns">
+            <label class="dark-label mb20">BUNDLE NAME OR TITLE</label>
+            <input type="text" class="border-bottom-input two-col columns" placeholder="Add a descriptive name for your bundle" id="id_name" name="name" value="{{form.name.value|default:''}}" required>
+          </div>
+          <div class="two-col columns">
+            <label class="dark-label mb20">BUNDLE PRICE (IN MXN)</label>
+            <input type="number" class="border-bottom-input two-col columns" placeholder="$100.00" id="id_price" name="price" value="{{form.price.value|default:''}}" required>
+          </div>
+        </div>
+        <div class="one-col mb40">
+          <label class="dark-label mb20">DESCRIPTION</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="Describe this session type (in less than 80 characters)" id="id_description" name="description" value="{{form.description.value|default:''}}" required>
+        </div>
+        <div class="one-col mb40 blue-tags">
+          <label class="dark-label mb20">CATEGORIES</label>
+          <input type="text" class="border-bottom-input two-col columns" placeholder="" id="id_category" name="category" value="{{form.category.value|default:''}}" required>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+		<div class="wrap">
+			<div class="one-col">
+				<div class="heading-separator mb40">
+					<div class="blue-cir"><div class="txt">2</div></div>
+					<h2 class="t-lyonL c-gray">Included in this Bundle</h2>
+				</div>
+			</div>
+			<div class="one-col mb40">
+				<div class="two-col columns by_session">
+					<div class="black-border-box-x1 min-box">
+						<h3 class="c-aqua mb20"><strong>Define by number of sessions</strong></h3>
+						<div class="one-col mb20">
+							<label class="dark-label mb20">INCLUDE THE FOLLOWING SESSIONS</label>
+							<div class="one-col">
+								<div class="col10">
+									<input type="number" class="border-bottom-input two-col columns" placeholder="0" id="id_half_hour_session" name="half_hour_session" value="{{form.half_hour_session.value|default:''}}" min="0">
+								</div>
+								<div class="three-col v-align-b">
+									<p class="ptbl20">30 Minute Meeting</p>
+								</div>
+							</div>
+							<div class="one-col">
+								<div class="col10">
+									<input type="number" class="border-bottom-input two-col columns" placeholder="0" id="id_hour_session" name="hour_session" value="{{form.hour_session.value|default:''}}" min="0">
+								</div>
+								<div class="three-col v-align-b">
+									<p class="ptbl20">1 hour Business Meeting</p>
+								</div>
+							</div>
+							<div class="one-col">
+								<div class="col10">
+									<input type="number" class="border-bottom-input two-col columns" placeholder="0" id="id_open_session" name="open_session" value="{{form.open_session.value|default:''}}" min="0" max="1">
+								</div>
+								<div class="three-col v-align-b">
+									<p class="ptbl20">Opening Season</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="two-col columns by_time">
+					<div class="gray-border-box-x1 min-box">
+						<h3 class="c-aqua mb20"><strong>Define by set amount of time</strong></h3>
+						<div class="one-col mb20">
+							<label class="dark-label mb20">INCLUDE THE FOLLOWING SESSIONS</label>
+							<div class="two-col columns">
+                <label class="dark-label mb20">MINUTES</label>
+								<input type="number" class="border-bottom-input two-col columns" placeholder="0" id="id_minutes" name="minutes" value="{{form.minutes.value|default:''}}" min="0" max="59">
+							</div>
+							<div class="two-col columns">
+                <label class="dark-label mb20">HOURS</label>
+                <input type="number" class="border-bottom-input two-col columns" placeholder="0" id="id_hours" name="hours" value="{{form.hours.value|default:''}}" min="0" max="16">
+							</div>
+						</div>
+						<div class="one-col mb20">
+							<label class="dark-label mb20">DEFINE SESSIONS AVAILABLE</label>
+							<div class="border-bottom-radio-input">
+								<div class="green-radio-input"><input type="checkbox" name="half_hour" id="id_half_hour" {{form.half_hour.value|yesno:'checked,'}}><span class="check"></span></div>
+								<p class="c-dark-purple">30 Minute Meeting</p>
+							</div>
+							<div class="border-bottom-radio-input">
+								<div class="green-radio-input"><input type="checkbox" name="hour" id="id_hour" {{form.hour.value|yesno:'checked,'}}><span class="check"></span></div>
+								<p class="c-dark-purple">1 Hour Business Meeting</p>
+							</div>
+							<div class="border-bottom-radio-input">
+								<div class="green-radio-input"><input type="checkbox" id="id_is_open_session" name="is_open_session" {{form.is_open_session.value|yesno:'checked,'}}><span class="check"></span></div>
+								<p class="c-dark-purple">Opening Season</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+  <section>
+		<div class="wrap">
+			<div class="one-col">
+				<div class="heading-separator mb40">
+					<div class="blue-cir"><div class="txt">3</div></div>
+					<h2 class="t-lyonL c-gray">Payment &amp; Expiration</h2>
+				</div>
+			</div>
+			<div class="one-col mb40">
+				<div class="one-col mb20">
+					<div class="two-col columns mb40">
+						<label class="dark-label mb20">PAYMENT OPTIONS</label>
+						<div class="border-bottom-radio-input">
+							<div class="green-radio-input"><input type="checkbox" name="upfront_payment_required" id="id_upfront_payment_required" {{form.upfront_payment_required.value|yesno:'checked,'}}><span class="check"></span></div>
+							<p class="c-dark-purple">Request Upfront Payment</p>
+						</div>
+						<div class="border-bottom-radio-input">
+							<div class="green-radio-input"><input type="checkbox" name="down_payment_allow" id="id_down_payment_allow" {{form.down_payment_allow.value|yesno:'checked,'}}><span class="check"></span></div>
+							<p class="c-dark-purple">Allow Down Payment</p>
+						</div>
+					</div>
+					<div class="two-col columns mb40 disable-events">
+						<label class="dark-label mb20">DEFINE DOWN PAYMENT AMOUNT (IF REQUESTED)</label>
+						<input type="number" class="border-bottom-input" placeholder="$ 0.00" name="down_payment" id="id_down_payment" value="{{form.down_payment.value|default:''}}" min="0">
+					</div>
+				</div>
+				<div class="one-col mb20">
+					<div class="two-col columns mb40">
+						<label class="dark-label mb20">BUNDLE DURATION</label>
+						<div class="border-bottom-radio-input">
+							<div class="green-radio-input"><input type="checkbox" name="never_expires" id="id_never_expires" class="expiration" {{form.never_expires.value|yesno:'checked,'}}><span class="check"></span></div>
+							<p class="c-dark-purple">Bundle never expires</p>
+						</div>
+						<div class="border-bottom-radio-input">
+							<div class="green-radio-input"><input type="checkbox" name="expires" id="id_expires" class="expiration" {{form.expires.value|yesno:'checked,'}}><span class="check"></span></div>
+							<p class="c-dark-purple">Bundle expires</p>
+						</div>
+					</div>
+					<div class="two-col columns mb40 {{form.never_expires.value|yesno:'disable-events,'}}">
+						<label class="dark-label mb20">EXPIRATION DATE</label>
+						<input type="date" class="border-bottom-input" min="{% now "Y-m-d" %}" id="id_expiration_date" name="expiration_date" value="{{form.expiration_date.value|default:''|date:'Y-m-d'}}" >
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+  <section>
+		<div class="wrap">
+			<div class="one-col mb40 t-center">
+				<h2 class="t-lyonL c-gray ">Ready to Go!</h2>
+			</div>
+			<div class="one-col gray-border-box t-center mb40">
+				<button type="submit" class="btn-aqua btn-x2">Save Bundle</button>
+			</div>
+		</div>
+	</section>
+</form>
+{% endblock %}
+{% block SCRIPT %}
+{{block.super}}
+<script>
+  $(document).ready(function(){
+    var never_expires = $(this).find('#id_never_expires');
+    var expires = $(this).find('#id_expires');
+    var expiration = $(this).find('.expiration');
+    var expiration_date = $(this).find('#id_expiration_date');
+    var upfront_payment_required = $(this).find('#id_upfront_payment_required');
+    var down_payment = $(this).find('#id_down_payment');
+
+    var by_session_inputs = $('.by_session').find('input');
+    var by_time_inputs = $('.by_time').find('input');
+
+    $(this).find('input[type="number"]').change(function(){
+      var min = $(this).attr('min');
+      var max = $(this).attr('max');
+      if(min != undefined && min > $(this).val()){
+        $(this).val('');
+      }
+      if(max != undefined && max < $(this).val()){
+        $(this).val('');
+      }
+    });
+
+    $(by_time_inputs).change(function(){
+      if($(this).val().trim().length > 0 || $(this).is(':checked')){
+        $(by_session_inputs).val('')
+      }else{
+        $(this).val('')
+      }
+    });
+    $(by_session_inputs).change(function(){
+      if($(this).val().trim().length > 0){
+        $(by_time_inputs).val('').prop("checked", false)
+      }else{
+        $(this).val('')
+      }
+    });
+
+
+    $(upfront_payment_required).change(function(){
+      if($(this).is(':checked')){
+        $(down_payment).val('').parent().removeClass('disable-events');
+      }else{
+        $(down_payment).val('').parent().addClass('disable-events');
+      }
+    });
+
+
+    $(expiration).change(function(){
+      var is_checked = $(this).is(':checked');
+      $(expiration).not(this).prop("checked", !is_checked);
+      if($(expires).is(':checked')){
+        $(expiration_date).val('').parent().removeClass('disable-events');
+      }else{
+        $(expiration_date).val('').parent().addClass('disable-events');
+      }
+    });
+
+    $(this).find('form').submit(function(e){
+      var by_times_is_valid = true;
+      var by_times_checkbox = $(by_time_inputs).filter(':checkbox')
+      if($(by_times_checkbox).filter(':checked').length == 0){
+        by_times_is_valid = false;
+      }
+      $(by_time_inputs).not(by_times_checkbox).each(function(){
+        if($(this).val().trim().length > 0){
+          by_times_is_valid = true;
+        }
+      });
+      var by_session_is_valid = false;
+      $(by_session_inputs).each(function(){
+        if($(this).val().trim().length > 0){
+          by_session_is_valid = true;
+        }
+      });
+      if(by_times_is_valid || by_session_is_valid){
+        return true;
+      }else{
+        alert('Services included on the bundle need to be defined')
+        e.preventDefault()
+      }
+    });
+
+  });
+</script>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Coach, AVAILABLE_HOURS, AvailableHour, Venue, Session
+from .models import Coach, AVAILABLE_HOURS, AvailableHour, Venue, Session, Bundle
 from django.contrib.auth.models import User
 from crum import get_current_user
 
@@ -11,7 +11,7 @@ class CoachContactForm(forms.ModelForm):
     class Meta:
         model = Coach
         fields = ['full_name', 'email', 'specialty', 'office_phone', 'mobile_phone', 'job_title', 'current_city',
-                  'default_skype_id']
+                  'default_skype_id', 'short_bio']
 
     def __init__(self, *args, **kwargs):
         super(CoachContactForm, self).__init__(*args, **kwargs)
@@ -143,3 +143,24 @@ class SessionForm(forms.ModelForm):
         self.fields['allow_on_venues'].queryset = coach.venues.all()
         for field in ['face_to_face', 'one_on_one', 'groups_allow', 'person_price', 'max_capacity', 'allow_on_venues']:
             self.fields[field].required = False
+
+
+class BundleForm(forms.ModelForm):
+
+    class Meta:
+        model = Bundle
+        fields = ['coach', 'name', 'price', 'description', 'category', 'half_hour_session', 'hour_session',
+                  'open_session', 'half_hour', 'hour', 'is_open_session', 'minutes', 'hours', 'upfront_payment_required',
+                  'down_payment_allow', 'down_payment', 'never_expires', 'expires', 'expiration_date']
+
+    def __init__(self, *args, **kwargs):
+        super(BundleForm, self).__init__(*args, **kwargs)
+        coach = get_current_user().coaches.first()
+        self.fields['coach'].widget = forms.HiddenInput()
+        self.fields['coach'].initial = coach
+        for field in self.fields:
+            if field in ['coach', 'name', 'price', 'description', 'category']:
+                self.fields[field].required = True
+            else:
+                self.fields[field].required = False
+

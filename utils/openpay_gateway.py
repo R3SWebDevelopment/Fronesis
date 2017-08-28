@@ -2,13 +2,6 @@ from django.contrib.auth.models import User
 import openpay
 import os
 
-####TESTING
-# from utils.openpay_gateway import PaymentGateway
-# gateway = PaymentGateway()
-# gateway.set_customer(first_name='Leonardo', last_name='Tercero Solis', email='tercero3@hotmail.com', line1='Narciso Serradel 16', line2='Col. Indeco Animas', line3='aa', city='Xalapa', state='Veracruz', postal_code='91190', phone_number='2288128877')
-# gateway.set_credit_card(card_holder='Blanca Lilia Solis Campos', number='4111111111111111', month='12', year='2020', cvv='110')
-# gateway.do_pay(amount=100.00, order_id='11212213', description='Test')
-
 class PaymentGateway(object):
     payment_customer = None
     customer = None

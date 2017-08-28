@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from datetime import datetime
+from philios.models import Post
+from django.db.models import Q
+from django.contrib.contenttypes.models import ContentType
+from crum import get_current_user
+from django_comments.models import Comment
+from events.models import Event
 
 DAYS = (
     (0, 'Sunday'),
@@ -82,6 +88,51 @@ class Coach(models.Model):
     friday_works = models.BooleanField(default=False)
     saturday_works = models.BooleanField(default=False)
     clients = models.ManyToManyField(Client)
+    short_bio = models.TextField(null=False, blank=True, default='')
+
+    class Meta:
+        permissions = (
+            ('edit_my_services', 'Edit My Service'),
+            ('edit_contact_info', 'Edit Contact Info'),
+            ('edit_blocked_hours', 'Edit Blocked Hours'),
+            ('edit_booking_settings', 'Edit Booking Settings'),
+            ('coach_settings', 'Coach Settings'),
+            ('edit_venues', 'Edit Venues'),
+        )
+
+    @property
+    def requires_confirmation(self):
+        if self.is_instante_booking_allow and not self.ask_before_booking:
+            return False
+        if not self.is_instante_booking_allow and self.ask_before_booking:
+            return True
+        return True
+
+    @property
+    def philios(self):
+        user = self.user
+        if user:
+            mines = Q(user__pk=user.pk)
+            content_type = ContentType.objects.get_for_model(Post)
+            post_comments = [c.get('object_pk') for c in Comment.objects.filter(content_type=content_type,
+                                                                               user__pk=user.pk).values('object_pk')]
+            commented = Q(pk__in=post_comments)
+            rated = Q(rating__user__pk=user.pk)
+            qs = Post.objects.filter(mines | commented | rated).distinct()
+        else:
+            qs = Post.objects.none()
+        return qs
+
+    @property
+    def avatar(self):
+        profile = self.user.profile
+        if profile.userprofile:
+            return '/media/{}'.format(profile.userprofile.avatar)
+        return 'https://lelakisihat.com/wp-content/uploads/2016/09/avatar.jpg'
+
+    @property
+    def full_name(self):
+        return self.user.get_full_name or self.user.email
 
     @property
     def is_google_account_set(self):
@@ -112,6 +163,9 @@ class Coach(models.Model):
                          for l in self.google_calender_list if l.get('accessRole', None) == 'owner')
             return calendars
         return ()
+
+    def get_my_public_events(self):
+        return Event.published_all.filter(organizer=self.user)
 
 
 class AvailableHour(models.Model):
@@ -161,6 +215,7 @@ class Session(models.Model):
     description = models.TextField(null=False)
     category = models.CharField(max_length=150, null=False, default='')
     face_to_face = models.BooleanField(default=False)
+    online = models.BooleanField(default=False)
     all_venues = models.BooleanField(default=False)
     allow_on_venues = models.ManyToManyField(Venue)
     one_on_one = models.BooleanField(default=False)
@@ -197,10 +252,35 @@ class Bundle(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)
     description = models.TextField(null=False)
     category = models.CharField(max_length=150, null=False, default='')
-    number_sessions = models.BooleanField(default=False)
+    half_hour_session = models.IntegerField(null=True, default=0)
+    hour_session = models.IntegerField(null=True, default=0)
+    open_session = models.IntegerField(null=True, default=0)
+    half_hour = models.BooleanField(null=False, default=False)
+    hour = models.BooleanField(null=False, default=False)
+    is_open_session = models.BooleanField(null=False, default=False)
+    minutes = models.IntegerField(null=True, default=0)
+    hours = models.IntegerField(null=True, default=0)
     upfront_payment_required = models.BooleanField(default=False)
     down_payment_allow = models.BooleanField(default=False)
-    down_payment = models.DecimalField(max_digits=8, decimal_places=2)
+    down_payment = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    never_expires = models.BooleanField(default=False)
     expires = models.BooleanField(default=False)
-    expiration_date = models.DateField(null=True, verbose_name="ends")
+    expiration_date = models.DateField(null=True)
+
+    class Meta:
+        permissions = (
+            ('edit_bundle', 'Edit bundle'),
+        )
+
+    @property
+    def price_label(self):
+        return '${} MXN'.format(self.price)
+
+    @property
+    def expiration_label(self):
+        if self.never_expires:
+            return 'Never expires'
+        if self.expires and self.expiration_date:
+            return self.expiration_date.strftime("%d/%m/%Y")
+        return ''
 

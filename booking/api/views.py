@@ -6,6 +6,10 @@ from rest_framework import status
 from rest_framework.decorators import detail_route
 from datetime import datetime
 from datetime import timedelta
+from dateutil import tz
+import pytz
+
+LOCAL = tz.gettz('America/Monterrey')
 
 
 class CalendarViewSet(viewsets.ModelViewSet):
@@ -14,6 +18,11 @@ class CalendarViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self, *args, **kwargs):
         qs = super(CalendarViewSet, self).get_queryset(*args, **kwargs)
+        coach_id = self.request.GET.get('coach', None)
+        if coach_id:
+            coach = Coach.objects.filter(pk=coach_id).first()
+            if coach:
+                return qs.filter(user=coach.user)
         return qs.filter(user=self.request.user)
 
     def get_object(self, *args, **kwargs):
@@ -23,6 +32,8 @@ class CalendarViewSet(viewsets.ModelViewSet):
 class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointments.objects.all()
     serializer_class = AppointmentsSerializer
+
+    client_side = False
 
     is_preview = False
 
@@ -35,7 +46,20 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'], url_path='preview')
     def preview(self, request, *args, **kwargs):
         user = self.request.user
-        coach = user.coaches.first()
+        coach_id = self.request.query_params.get('coach', None)
+        if coach_id:
+            coach = Coach.objects.filter(pk=coach_id).first()
+            self.client_side = True
+        else:
+            coach = user.coaches.first()
+        requires_confirmation = False
+        if coach and self.client_side:
+            if coach.is_instante_booking_allow and not coach.ask_before_booking:
+                requires_confirmation = False
+            elif not coach.is_instante_booking_allow and coach.ask_before_booking:
+                requires_confirmation = True
+            else:
+                requires_confirmation = True
         session = None
         client_id = self.request.query_params.get('client_id', None)
         session_id = self.request.query_params.get('session_id', None)
@@ -51,12 +75,17 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             'venue_name': '',
             'client_name': '',
             'date_time_available': False,
+            'requires_confirmation': requires_confirmation
         }
         if client_id:
             client = coach.clients.filter(pk=client_id).first()
-            if client:
+            if client and not self.client_side:
                 response_data.update({
-                    'client_name': client.full_name
+                    'client_name': client.full_name or client.email
+                })
+            elif client and self.client_side:
+                response_data.update({
+                    'client_name': coach.full_name()
                 })
         if session_id:
             session = coach.services.filter(pk=session_id).first()
@@ -85,7 +114,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 hours = coach.available_hours.filter(day=weekday)
                 hour = hours.filter(pk=hour).first()
                 if hour:
-                    begins_datetime = date.replace(hour=hour.hour)
+                    begins_datetime = date.replace(hour=hour.hour).replace(tzinfo=LOCAL).astimezone(pytz.utc)
                     if session:
                         length_hours = session.length_hours or 0
                         length_minutes = session.length_minutes or 0
@@ -95,8 +124,8 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                             exclude(ends_datetime__lte=begins_datetime)
                         if not appointments.exists():
                             date_time_available = True
-                            session_time = '{} - {}'.format(begins_datetime.strftime('%I:%M %p'),
-                                                            ends_datetime.strftime('%I:%M %p'))
+                            session_time = '{} - {}'.format(begins_datetime.astimezone(LOCAL).strftime('%I:%M %p'),
+                                                            ends_datetime.astimezone(LOCAL).strftime('%I:%M %p'))
                             session_date = begins_datetime.strftime('%A, %d/%b/%Y')
                             response_data.update({
                                 'session_time': session_time,

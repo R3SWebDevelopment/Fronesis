@@ -84,6 +84,10 @@ class Event(models.Model):
 
     class Meta:
         ordering = ['begins_date', 'begins_time']
+        permissions = (
+            ('edit_event', 'Edit Event'),
+            ('create_event', 'Edit Event'),
+        )
 
     @property
     def sales_order(self):

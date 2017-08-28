@@ -1,0 +1,252 @@
+{% extends 'booking_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+ {{ block.super }}
+<form method="post" id="payment">
+  {% csrf_token %}
+  {{form.amount}}
+  {{form.order}}
+  {{form.description}}
+{% if error_message != None and error_message|length > 0 %}
+    <section>
+        <div class="wrap">
+            <div class="one-col mb40">
+                <p>
+                    {{ error_message }}
+                </p>
+            </div>
+        </div>
+    </section>
+{% endif %}
+    <section>
+        <div class="wrap">
+            <div class="heading-separator mb40">
+                <h2 class="t-lyonL c-gray">Your Info</h2>
+            </div>
+            <div class="one-col mb40">
+                <div class="two-col columns">
+                    <label for="{{ form.first_name.id_for_label }}" class="dark-label mb20">{{ form.first_name.label|upper }}</label>
+                    <input type="text" id = "{{ form.first_name.id_for_label }}" name = "{{ form.first_name.html_name}}" value = "{{ form.first_name.value }}" class="border-bottom-input two-col columns" placeholder="First Name" required>
+                </div>
+                <div class="two-col columns">
+                    <label for="{{ form.last_name.id_for_label }}" class="dark-label mb20">{{ form.last_name.label|upper }}</label>
+                    <input type="text" id = "{{ form.last_name.id_for_label }}" name = "{{ form.last_name.html_name}}" value = "{{ form.last_name.value }}" class="border-bottom-input two-col columns" placeholder="Last Name" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ form.email.id_for_label }}" class="dark-label mb20">{{ form.email.label|upper }}</label>
+                    <input type="text" id = "{{ form.email.id_for_label }}" name = "{{ form.email.html_name}}" value = "{{ form.email.value }}" class="border-bottom-input two-col columns" placeholder="Email Address" required>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="wrap">
+            <div class="heading-separator mb40">
+                <h2 class="t-lyonL c-gray">Your Billing Info</h2>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ form.line1.id_for_label }}" class="dark-label mb20">{{ form.line1.label|upper }}</label>
+                    <input type="text" id = "{{ form.line1.id_for_label }}" name = "{{ form.line1.html_name}}" value = "{{ form.line1.value }}" class="border-bottom-input two-col columns" placeholder="{{form.line1.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ form.line2.id_for_label }}" class="dark-label mb20">{{ form.line2.label|upper }}</label>
+                    <input type="text" id = "{{ form.line2.id_for_label }}" name = "{{ form.line2.html_name}}" value = "{{ form.line2.value }}" class="border-bottom-input two-col columns" placeholder="{{form.line2.label|title}}">
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ form.line3.id_for_label }}" class="dark-label mb20">{{ form.line3.label|upper }}</label>
+                    <input type="text" id = "{{ form.line3.id_for_label }}" name = "{{ form.line3.html_name}}" value = "{{ form.line3.value }}" class="border-bottom-input two-col columns" placeholder="{{form.line3.label|title}}">
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="two-col columns">
+                    <label for="{{ form.postal_code.id_for_label }}" class="dark-label mb20">{{ form.postal_code.label|upper }}</label>
+                    <input type="text" maxlength="5" type="text" id = "{{ form.postal_code.id_for_label }}" name = "{{ form.postal_code.html_name}}" value = "{{ form.postal_code.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{form.postal_code.label|title}}" required>
+                </div>
+                <div class="two-col columns">
+                    <label for="{{ form.city.id_for_label }}" class="dark-label mb20">{{ form.city.label|upper }}</label>
+                    <input type="text" id = "{{ form.city.id_for_label }}" name = "{{ form.city.html_name}}" value = "{{ form.city.value }}" class="border-bottom-input two-col columns" placeholder="{{form.city.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="two-col columns">
+                    <label for="{{ form.state.id_for_label }}" class="dark-label mb20">{{ form.state.label|upper }}</label>
+                    <select id = "{{ form.state.id_for_label }}" name = "{{ form.state.html_name}}" value = "{{ form.state.value }}" class="border-bottom-input two-col columns">
+                        {% for value, label in form.state.field.choices %}
+                        <option value="{{ value }}" {% if form.state.values == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="two-col columns">
+                    <label for="{{ form.phone_number.id_for_label }}" class="dark-label mb20">{{ form.phone_number.label|upper }}</label>
+                    <input maxlength="10" type="text" id = "{{ form.phone_number.id_for_label }}" name = "{{ form.phone_number.html_name}}" value = "{{ form.phone_number.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{form.phone_number.label|title}}" required>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="wrap">
+            <div class="heading-separator mb40">
+                <h2 class="t-lyonL c-gray">Your Credit Card Info</h2>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ form.card_holder.id_for_label }}" class="dark-label mb20">{{ form.card_holder.label|upper }}</label>
+                    <input type="text" id = "{{ form.card_holder.id_for_label }}" name = "{{ form.card_holder.html_name}}" value = "{{ form.card_holder.value }}" class="border-bottom-input two-col columns" placeholder="{{form.card_holder.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ form.credit_card_number.id_for_label }}" class="dark-label mb20">{{ form.credit_card_number.label|upper }}</label>
+                    <input type="text" maxlength="16" id = "{{ form.credit_card_number.id_for_label }}" name = "{{ form.credit_card_number.html_name}}" value = "{{ form.credit_card_number.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{form.credit_card_number.label|title}}" required>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="two-col columns">
+                  <label for="{{ form.credit_card_exp_month.id_for_label }}" class="dark-label mb20">{{ form.credit_card_exp_month.label|upper }}</label>
+                  {#<input type="text" id = "{{ form.credit_card_exp_month.id_for_label }}" name = "{{ form.credit_card_exp_month.html_name}}" value = "{{ form.credit_card_exp_month.value }}" class="border-bottom-input two-col columns" placeholder="{{form.credit_card_exp_month.label|title}}" required>#}
+                  <select id = "{{ form.credit_card_exp_month.id_for_label }}" name = "{{ form.credit_card_exp_month.html_name}}" class="border-bottom-input two-col columns">
+                    <option value="-1" selected>Select Month</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                  </select>
+                </div>
+                <div class="two-col columns">
+                  <label for="{{ form.credit_card_exp_year.id_for_label }}" class="dark-label mb20">{{ form.credit_card_exp_year.label|upper }}</label>
+                  {#<input type="text" id = "{{ form.credit_card_exp_year.id_for_label }}" name = "{{ form.credit_card_exp_year.html_name}}" value = "{{ form.credit_card_exp_year.value }}" class="border-bottom-input two-col columns" placeholder="{{form.credit_card_exp_year.label|title}}" required>#}
+                  <select id = "{{ form.credit_card_exp_year.id_for_label }}" name = "{{ form.credit_card_exp_year.html_name}}" class="border-bottom-input two-col columns">
+                    <option value="-1" selected>Select Year</option>
+                    <option value="17">2017</option>
+                    <option value="18">2018</option>
+                    <option value="19">2019</option>
+                    <option value="20">2020</option>
+                    <option value="21">2021</option>
+                    <option value="22">2022</option>
+                    <option value="23">2023</option>
+                    <option value="24">2024</option>
+                    <option value="25">2025</option>
+                    <option value="26">2026</option>
+                    <option value="27">2027</option>
+                    <option value="28">2028</option>
+                    <option value="29">2029</option>
+                    <option value="30">2030</option>
+                  </select>
+                </div>
+            </div>
+            <div class="one-col mb40">
+                <div class="one-col columns">
+                    <label for="{{ form.credit_card_cvv.id_for_label }}" class="dark-label mb20">{{ form.credit_card_cvv.label|upper }}</label>
+                    <input type="text" maxlength="3" id = "{{ form.credit_card_cvv.id_for_label }}" name = "{{ form.credit_card_cvv.html_name}}" value = "{{ form.credit_card_cvv.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{form.credit_card_cvv.label|upper}}" required>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="one-col gray-border-box t-center mb40">
+            <a href="{{object.url}}">
+                <button class="btn-black btn-x2 mr20" name="button" type="submit">Cancel</button>
+            </a>
+            <button class="btn-aqua btn-x2 mr20" name="button" type="submit">Pay</button>
+        </div>
+    </section>
+</form>
+
+{% endblock %}
+
+{% block SCRIPT %}
+{{ block.super }}
+<script>
+  $('body').ready(function(){
+    var qty_input = $(this).find('.qty_input');
+    $(qty_input).prop('disabled', 'disabled');
+    $(this).find('.just-number').keydown(function(e){
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A, Command+A
+            (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+             // Allow: home, end, left, right, down, up
+            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+    $(this).find('#payment').submit(function(e){
+      var valid = true;
+      var phone_number = $(this).find('#id_phone_number');
+      var postal_code = $(this).find('#id_postal_code');
+      var credit_card_number = $(this).find('#id_credit_card_number');
+      var credit_card_exp_month = $(this).find('#id_credit_card_exp_month');
+      var credit_card_exp_year = $(this).find('#id_credit_card_exp_year');
+      var credit_card_cvv = $(this).find('#id_credit_card_cvv');
+      var msg = "";
+      if($(phone_number).val().trim().length != 10){
+        msg += "Phone number is not valid.\n";
+        valid = false;
+      }
+      if($(postal_code).val().trim().length != 5){
+        msg += "Postal code is not valid.\n";
+        valid = false;
+      }
+      if($(credit_card_number).val().trim().length != 16){
+        msg += "Credit Card Number is not valid.\n";
+        valid = false;
+      }
+      if($(credit_card_cvv).val().trim().length != 3){
+        msg += "Credit Card CVV Number is not valid.\n";
+        valid = false;
+      }
+      if($(credit_card_exp_month).val() == '-1'){
+        msg += "You need to select the expiration month.\n";
+        valid = false;
+      }
+      if($(credit_card_exp_year).val() == '-1'){
+        msg += "You need to select the expiration year.\n";
+        valid = false;
+      }
+      if($(credit_card_exp_month).val() != '-1' && $(credit_card_exp_year).val() != '-1'){
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = now.getMonth();
+        var selectedMonth = parseInt($(credit_card_exp_month).val());
+        var selectedYear = parseInt("20" + $(credit_card_exp_year).val());
+        if(year == selectedYear && month>selectedMonth){
+          msg += "The expiration date is not valid.\n";
+          valid = false;
+        }
+      }
+
+      if(!valid){
+        e.preventDefault();
+        alert(msg)
+      }
+    });
+  });
+</script>
+{% endblock %}

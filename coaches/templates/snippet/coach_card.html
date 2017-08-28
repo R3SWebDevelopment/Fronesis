@@ -1,0 +1,21 @@
+<div class="one-third columns">
+    <div class="profile-square">
+       <div class="profile-square">
+          <div class="img" style="background-image: url('{{coach.avatar}}')">
+             <div class="labels">
+                <div class="c-white smaller-txt bg-wine">{{coach.current_city|default:''}}</div>
+                <div class="smaller-txt bg-white t-lyonL c-black">Coach</div>
+             </div>
+          </div>
+          <div class="txt">
+             <h4 class="c-black t-lyon">
+               <a href="{% url 'coaches:detail' pk=coach.pk %}" class="clear-link">
+                 {{coach.full_name}}
+               </a>
+             </h4>
+             <p class="c-light-gray">{{coach.specialty|default:'No Specialty'}}</p>
+             <p class="c-light-gray">{{coach.job_title|default:'No Job Title'}}</p>
+          </div>
+       </div>
+    </div>
+ </div>

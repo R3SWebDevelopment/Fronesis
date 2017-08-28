@@ -1,0 +1,133 @@
+{% extends 'booking_base.html' %}
+{% load static %}{% block CONTENT %}
+  {{ block.super }}
+  <section>
+    <div class="wrap">
+      <div class="one-col mb40">
+        <div class="heading-separator">
+          <h2 class="t-lyonL c-gray">My Upcoming Appointments</h2>
+        </div>
+      {% for appointment in object_list %}
+        <div class="one-col border-bottom-gray c-gray p20">
+          <div class="one-third columns">
+            <div class="square-profile-thumb">
+              <div class="img" style="background-image: url('img/profile3.png')"></div>
+              <div class="txt c-light-gray">
+                <p>
+                  <strong>
+                    <span class="c-black">
+                      {{appointment.coach.user.get_full_name}}
+                    </span>
+                    - Coach
+                  </strong>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="one-third mt10 center-dir columns">
+            <p>
+              {{appointment.service_name}} @ {{appointment.location}}
+            </p>
+            <p>
+              {{appointment.starts_datetime_local|date:'SHORT_DATETIME_FORMAT'}} - {{appointment.ends_datetime_local|date:'P'}}
+            </p>
+          </div>
+          <div class="one-third mt10 center-dir columns">
+          {% if appointment.already_paid %}
+            <p>
+              <strong>
+                This appointment is already paid
+              </strong>
+            </p>
+          {% else %}
+            <p>
+              <strong>
+                This appointment is not paid yet
+              </strong>
+            </p>
+            <p>
+              <a href="{% url 'booking:pay_appointment' pk=appointment.pk %}">
+                <button class="btn-aqua btn-x1">
+                  Pay
+                </button>
+              </a>
+            </p>
+          {% endif %}
+          </div>
+        </div>
+      {% empty %}
+        <div class="one-col border-bottom-gray c-gray p20" style="text-align: center;">
+          <h3>
+            No Appointments
+          </h3>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="one-col mb40">
+        <div class="heading-separator">
+          <h2 class="t-lyonL c-gray">My Past Appointments</h2>
+        </div>
+      {% for appointment in last_appointments %}
+        <div class="one-col border-bottom-gray c-gray p20">
+          <div class="one-third columns">
+            <div class="square-profile-thumb">
+              <div class="img" style="background-image: url('img/profile3.png')"></div>
+              <div class="txt c-light-gray">
+                <p>
+                  <strong>
+                    <span class="c-black">
+                      {{appointment.coach.user.get_full_name}}
+                    </span>
+                    - Coach
+                  </strong>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="one-third mt10 center-dir columns">
+            <p>
+              {{appointment.service_name}} @ {{appointment.location}}
+            </p>
+            <p>
+              {{appointment.starts_datetime_local|date:'SHORT_DATETIME_FORMAT'}} - {{appointment.ends_datetime_local|date:'P'}}
+            </p>
+          </div>
+          <div class="one-third mt10 center-dir columns">
+          {% if appointment.already_paid %}
+            <p>
+              <strong>
+                This appointment is already paid
+              </strong>
+            </p>
+          {% else %}
+            <p>
+              <strong>
+                This appointment is not paid yet
+              </strong>
+            </p>
+            <p>
+              <a href="{% url 'booking:pay_appointment' pk=appointment.pk %}">
+                <button class="btn-aqua btn-x1">
+                  Pay
+                </button>
+              </a>
+            </p>
+          {% endif %}
+          </div>
+        </div>
+      {% empty %}
+        <div class="one-col border-bottom-gray c-gray p20" style="text-align: center;">
+          <h3>
+            No Appointments
+          </h3>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

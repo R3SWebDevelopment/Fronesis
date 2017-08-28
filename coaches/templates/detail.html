@@ -57,6 +57,14 @@
             <input type="text" class="border-bottom-input two-col columns" name="default_skype_id" id="id_default_skype_id" placeholder="Add a skype ID" value="{{form.default_skype_id.value|default:''}}">
           </div>
         </div>
+        <div class="one-col columns">
+          <div class="one-col mb20">
+            <label class="dark-label mb20">SHORT BIOS</label>
+            <textarea class="border-bottom-input two-col columns" name="short_bio" id="id_short_bio" rows="10">
+              {{form.short_bio.value|default:''}}
+            </textarea>
+          </div>
+        </div>
       </div>
     </div>
   </section>

@@ -1,0 +1,40 @@
+{% load static %}
+<section class="ptb100" style="background-color: white;">
+  <div class="wrap">
+    <div class="one-col ptb100">
+      <h1 class="c-black c-center t-center">Authentic mentors for life,<br> handpicked from across the<br> world:</h1>
+    </div>
+    <div class="mentors-slider slick-initialized slick-slider">
+      <span class="slick-prev slick-arrow" aria-disabled="true" style="display: block;"></span>
+
+      <div aria-live="polite" class="slick-list draggable" style="padding: 0px 50px;">
+        <div class="slick-track" role="listbox" style="opacity: 1; width: 2940px; transform: translate3d(0px, 0px, 0px);">
+        {% for coach in coaches %}
+          <div style="background-color: black; width: 735px;" class="slick-slide slick-current slick-center" data-slick-index="0" aria-hidden="true" tabindex="-1" role="option" aria-describedby="slick-slide00">
+            <div class="img" style="background-image: url('{{coach.avatar}}')"></div>
+            <div class="txt">
+              <h2 class="t-lyonL"><strong>{{coach.user.get_full_name|default:coach.user.email|truncatewords:3}} ({{coach.current_city}})</strong></h2>
+              <h3 class="mb20">{{coach.short_bio}}</h3>
+              <a href="{% url 'coaches:detail' pk=coach.pk %}" class="clear-link">
+                <button class="c-white stroke-btn-4px" tabindex="-1">Get to know {{coach.user.first_name|default:coach.user.email}}</button>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+
+      <span class="slick-next slick-arrow" style="display: block;" aria-disabled="false"></span>
+    </div>
+    <div class="one-col t-center mtb40">
+      <a href="{% url 'coaches:community' %}" class="mb20 c-black block">
+        <p>Visit the <strong>Consultants</strong> page to get a grasp of our networkof gifted individuals ➞</p>
+      </a>
+      <div class="listed-elements">
+      {% for avatar in coaches_avatar %}
+        <div class="small-profile-thumb-stroke" style="background-image: url('/media/{{avatar}}')"></div>
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

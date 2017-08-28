@@ -1,11 +1,20 @@
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
+from django.contrib.contenttypes.models import ContentType
 import os
 
 
 def create_appointment(sender, *args, **kwargs):
     if kwargs.get('created', False):
         appointment = kwargs.get('instance', None)
+
+        payment_url = ''
+
+        if not appointment.already_paid:
+            payment_info = appointment.generate_payment_info()
+
+
+
         data = {
             'appointment': appointment
         }

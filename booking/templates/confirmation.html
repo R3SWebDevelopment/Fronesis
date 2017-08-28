@@ -1,0 +1,82 @@
+{% extends 'booking_base.html' %}
+{% load static %}
+
+
+{% block CONTENT %}
+  {{ block.super }}
+  <section>
+    <div class="wrap">
+      <div class="one-col mb40">
+        <div class="heading-separator">
+          <h2 class="t-lyonL c-gray">Appointment Confirmation</h2>
+        </div>
+      {% for appointment in object_list %}
+        <div class="one-col border-bottom-gray c-gray p20">
+          <div class="one-third columns">
+            <div class="square-profile-thumb">
+              <div class="img" style="background-image: url('img/profile3.png')"></div>
+              <div class="txt c-light-gray">
+                <p>
+                  <strong>
+                    <span class="c-black">
+                      {{appointment.client.full_name|default:appointment.client.email}}
+                    </span>
+                  </strong>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="one-third mt10 center-dir columns">
+            <p>
+              <strong>
+                {{appointment.starts_datetime|date:'l, F jS (P'}}-{{appointment.ends_datetime|date:'- P)'}}
+              </strong>
+            </p>
+            <p>
+              <strong>
+                {{appointment.service.name}} @ {{appointment.venue.name}}
+              </strong>
+            </p>
+          {% if appointment.is_available == False %}
+            <p>
+              <strong>
+                <span class="danger">
+                  Date and time is not available
+                </span>
+              </strong>
+            </p>
+          {% endif %}
+          </div>
+          <div class="one-third mt10 center-dir columns">
+          {% if appointment.is_available %}
+            <button class="btn-aqua confirm" data-id="{{appointment.pk}}" data-url="{% url 'booking:confirmation_confirm' pk=appointment.pk %}">Confirm</button>
+          {% endif %}
+            <button class="btn-danger remove" data-id="{{appointment.pk}}" data-url="{% url 'booking:confirmation_remove' pk=appointment.pk %}">Remove</button>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+  <form id="request" method="post" action="">
+    {% csrf_token %}
+    <input type="hidden" name="id" id="id_id" value="">
+  </form>
+{% endblock %}
+{% block SCRIPT %}
+{{block.super}}
+<script>
+  $(document).ready(function(){
+    var form = $(this).find('form#request')
+    $(this).find('button.confirm').click(function(){
+      var url = $(this).data('url');
+      var id = $(this).data('id');
+      $(form).attr('action', url).find('#id_id').val(id).parent().submit();
+    });
+    $(this).find('button.remove').click(function(){
+      var url = $(this).data('url')
+      $(form).attr('action', url).submit();
+    });
+  });
+</script>
+{% endblock %}

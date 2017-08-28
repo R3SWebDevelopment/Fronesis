@@ -1,0 +1,36 @@
+<div id="tab-3" class="tab-content" style="display: none;">
+{% for post in post_list %}
+   <div class="topic-card mb40">
+    <a href="/philios-web/Post/{{post.pk}}">
+      <div class="profile">
+        <div class="profile-thumb" style="background-image: url('img/profile3.png');"></div>
+        <div class="info">
+          <p><strong>{{post.user.get_full_name}}</strong></p>
+          <p>Coach</p>
+          <p>{{post.publish_date|date:'j/m/Y'}}</p>
+        </div>
+      </div>
+      <div class="thumbnail" style="background-image: url('{% if post.image %}{{post.image.url}}{% else %}data:image/jpeg;base64,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{% endif %}');"></div>
+      <div class="description">
+        <div class="top">
+          <h3>{{post.title}}</h3>
+        </div>
+        <div class="bottom">
+          <p><b>{% for t in post.get_tags_list %}t{% endfor %}</b></p>
+          <p>{{post.get_comments_count}} comments</p>
+        </div>
+      </div>
+    </a>
+    <div class="rating">
+      <button type="button" name="button" class="vote-up">{{post.up_rating_count}}</button>
+      <button type="button" name="button" class="vote-down">{{post.down_rating_count}}</button>
+    </div>
+  </div>
+  {% empty %}
+      <div class="one-column" style="text-align: center;">
+        <h2>
+          No Philios' Post
+        </h2>
+      </div>
+{% endfor %}
+</div>
