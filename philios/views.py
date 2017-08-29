@@ -29,12 +29,13 @@ from rest_framework.authtoken.models import Token
 
 
 @login_required
-def philios_web(request):
+def philios_web(request, display_header=True):
     if not Token.objects.filter(user=request.user).exists():
         Token.objects.create(user=request.user)
     return render(request, 'philios/index.html', {
         'token': request.user.auth_token,
         'email': request.user.email,
+        'display_header': display_header,
     })
 
 
