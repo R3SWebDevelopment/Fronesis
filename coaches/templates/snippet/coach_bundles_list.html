@@ -1,0 +1,23 @@
+<div id="tab-2" class="tab-content" style="display: none;">
+{% for bundle in bundles %}
+  <div class="one-col border-bottom-gray ptb20">
+    <div class="one-third columns">
+      <h3 class="c-gray t-lyon line-clamp-x1">{{bundle.name|default:'No Name'}}</h3>
+      <p class="c-gray smaller-txt line-clamp-x1">{{bundle.description|default:'No Description'}}</p>
+    </div>
+    <div class="one-third right-dir columns">
+      <p class="c-gray">{{bundle.price_label}}</p>
+      <p class="c-bright-green smaller-txt">{{bundle.expiration_label}}</p>
+    </div>
+    <div class="one-third right-dir columns">
+      <button class="btn-black btn-x1">Book this bundle</button>
+    </div>
+  </div>
+{% empty %}
+  <div class="one-col border-bottom-gray ptb20">
+    <h2>
+      No Bundles
+    </h2>
+  </div>
+{% endfor %}
+</div>

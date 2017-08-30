@@ -167,6 +167,11 @@ class Coach(models.Model):
     def get_my_public_events(self):
         return Event.published_all.filter(organizer=self.user)
 
+    def get_my_bundles(self):
+        never_expired = Q(never_expires=True)
+        still_active = Q(expiration_date__gt=datetime.now())
+        return self.bundles.filter(never_expired | still_active)
+
 
 class AvailableHour(models.Model):
     coach = models.ForeignKey(Coach, null=False, related_name='available_hours')
@@ -247,7 +252,7 @@ class Session(models.Model):
 
 
 class Bundle(models.Model):
-    coach = models.ForeignKey(Coach, null=False)
+    coach = models.ForeignKey(Coach, null=False, related_name="bundles")
     name = models.CharField(max_length=150, null=False, default='')
     price = models.DecimalField(max_digits=8, decimal_places=2)
     description = models.TextField(null=False)

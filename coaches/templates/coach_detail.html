@@ -61,34 +61,7 @@
         {% include 'snippet/coach_service_list.html' with session_list=coach.services.all %}
 
         <!-- bundles -->
-        <div id="tab-2" class="tab-content" style="display: none;">
-          <div class="one-col border-bottom-gray ptb20">
-            <div class="one-third columns">
-              <h3 class="c-gray t-lyon line-clamp-x1">Business Transformation for Entrepreneur</h3>
-              <p class="c-gray smaller-txt line-clamp-x1">Special cycle for business owners (solo or groups)</p>
-            </div>
-            <div class="one-third right-dir columns">
-              <p class="c-gray">8 h / $30,000 MXN</p>
-              <p class="c-bright-green smaller-txt">Available online</p>
-            </div>
-            <div class="one-third right-dir columns">
-              <button class="btn-black btn-x1">Book this bundle</button>
-            </div>
-          </div>
-          <div class="one-col border-bottom-gray ptb20">
-            <div class="one-third columns">
-              <h3 class="c-gray t-lyon line-clamp-x1">Couple Transformation Mastercourse</h3>
-              <p class="c-gray smaller-txt line-clamp-x1">Express meeting (business related topics)</p>
-            </div>
-            <div class="one-third right-dir columns">
-              <p class="c-gray">8 h / $26,000 MXN</p>
-              <p class="c-bright-green smaller-txt">Available online</p>
-            </div>
-            <div class="one-third right-dir columns">
-              <button class="btn-black btn-x1">Book this bundle</button>
-            </div>
-          </div>
-        </div>
+         {% include 'snippet/coach_bundles_list.html' with bundles=coach.get_my_bundles %}
 
         <!-- philios -->
         {% include 'snippet/coach_philios_list.html' with post_list=coach.philios %}
