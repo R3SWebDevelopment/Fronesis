@@ -38,6 +38,16 @@ def philios_web(request, display_header=True):
         'display_header': display_header,
     })
 
+@login_required
+def philios_web_inner(request, display_header=True):
+    if not Token.objects.filter(user=request.user).exists():
+        Token.objects.create(user=request.user)
+    return render(request, 'philios/inner.html', {
+        'token': request.user.auth_token,
+        'email': request.user.email,
+        'display_header': display_header,
+    })
+
 
 class PostViewSet(OnlyAlterOwnObjectsViewSet):
     serializer_class = PostSerializer
