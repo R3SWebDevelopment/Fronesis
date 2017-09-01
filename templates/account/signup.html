@@ -4,8 +4,29 @@
 {% block EXTRA_STYLE %}
   {{block.super}}
   <style>
-  #id_login, #id_password1, #id_password2{
+  #id_email, #id_password1, #id_password2{
     padding: 15px 10px;
+  }
+
+  #id_email::-webkit-input-placeholder
+  , #id_password1::-webkit-input-placeholder
+  , #id_password2::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #1f1f20;
+  }
+  #id_email::-moz-placeholder
+  , #id_password1::-moz-placeholder
+  , #id_password2::-moz-placeholder { /* Firefox 19+ */
+    color: #1f1f20;
+  }
+  #id_email:-ms-input-placeholder
+  , #id_password1:-ms-input-placeholder
+  , #id_password2:-ms-input-placeholder { /* IE 10+ */
+    color: #1f1f20;
+  }
+  #id_email:-moz-placeholder
+  , #id_password1:-moz-placeholder
+  , #id_password2:-moz-placeholder { /* Firefox 18- */
+    color: #1f1f20;
   }
 
   #submit{
