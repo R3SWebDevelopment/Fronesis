@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 {% load account %}
 
+{% block EXTRA_STYLE %}
+  {{block.super}}
+  <style>
+  #id_login, #id_password1, #id_password2{
+    padding: 15px 10px;
+  }
+
+  #submit{
+    padding: 15px 10px;
+  }
+  </style>
+{% endblock %}
 
 {% block CONTENT %}
 <div class="c-center t-center">
@@ -52,7 +64,7 @@
         </div>
       </div>
       <div class="one-col p20">
-        <div class="submit-wrapper">
+        <div class="submit-wrapper two-col columns">
           <button class="stroke-btn-gray">
             Sign up
           </button>

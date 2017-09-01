@@ -6,6 +6,19 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 
+{% block EXTRA_STYLE %}
+  {{block.super}}
+  <style>
+  #id_login, #id_password{
+    padding: 15px 10px;
+  }
+
+  #submit{
+    padding: 15px 10px;
+  }
+  </style>
+{% endblock %}
+
 {% block CONTENT %}
 <div class="c-center t-center">
   <div class="med-wrap ptb100 c-white">
@@ -45,8 +58,8 @@
         </div>
       </div>
       <div class="one-col p20">
-        <div class="submit-wrapper">
-          <button class="stroke-btn-gray">
+        <div class="submit-wrapper two-col columns">
+          <button class="stroke-btn-gray" id="submit">
             Login
           </button>
         </div>
