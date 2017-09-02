@@ -45,8 +45,9 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
     user_rating = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     tags = TagListSerializerField()
-    image = VersatileImageFieldSerializer(
-        required=False, sizes='post_image')
+    # image = VersatileImageFieldSerializer(
+    #     required=False, sizes='post_image')
+    image = serializers.SerializerMethodField(required=False)
 
     class Meta:
         model = Post
@@ -56,6 +57,26 @@ class PostSerializer(TaggitSerializer, serializers.ModelSerializer):
             'comments_count', 'image'
         ]
         read_only_fields = ['user', 'user_rating', 'publish_date', 'image']
+
+    def get_image(self, obj):
+        if obj.image:
+            return{
+                'full_size': obj.image.url,
+                'medium_square_crop': obj.image.crop['280x280'].url,
+                'small_square_crop': obj.image.crop['50x50'].url,
+                'thumbnail': obj.image.crop['280x280'].url,
+            }
+        else:
+            beingIndex = obj.link.index("v=")
+            parameters = obj.link[beingIndex + 2:]
+            endIndex = parameters.index("&") if "&" in parameters else len(parameters)
+            video_id = parameters[:endIndex]
+            return{
+                'full_size': 'http://img.youtube.com/vi/{}/maxresdefault.jpg'.format(video_id),
+                'medium_square_crop': 'http://img.youtube.com/vi/{}/hqdefault.jpg'.format(video_id),
+                'small_square_crop': 'http://img.youtube.com/vi/{}/mqdefault.jpg'.format(video_id),
+                'thumbnail': 'http://img.youtube.com/vi/{}/1.jpg'.format(video_id),
+            }
 
     def get_user_rating(self, obj):
         rating = obj.rating.filter(user=self.context['request'].user)
