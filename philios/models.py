@@ -68,3 +68,26 @@ class Post(Link):
     def get_tags_list(self):
         return [t.get('name') for t in self.tags.all().values('name')]
 
+    @property
+    def is_from_coach(self):
+        return self.user.coaches.exists()
+
+    @property
+    def thumbnail(self):
+        if self.link_type == Post.VIDEO:
+            beingIndex = self.link.index("v=")
+            parameters = self.link[beingIndex + 2:]
+            endIndex = parameters.index("&") if "&" in parameters else len(parameters)
+            video_id = parameters[:endIndex]
+            return 'http://img.youtube.com/vi/{}/0.jpg'.format(video_id)
+        else:
+            return self.image.url
+
+    @property
+    def avatar(self):
+        try:
+            return self.user.profile.userprofile.avatar.url if self.user.profile.userprofile.avatar \
+                else 'http://eadb.org/wp-content/uploads/2015/08/profile-placeholder.jpg'
+        except:
+            return 'http://eadb.org/wp-content/uploads/2015/08/profile-placeholder.jpg'
+
