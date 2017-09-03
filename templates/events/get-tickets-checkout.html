@@ -71,17 +71,17 @@
             <div class="one-col mb40">
                 <div class="two-col columns">
                     <label for="{{ car_form.first_name.id_for_label }}" class="dark-label mb20">{{ car_form.first_name.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.first_name.id_for_label }}" name = "{{ car_form.first_name.html_name}}" value = "{{ car_form.first_name.value }}" class="border-bottom-input two-col columns" placeholder="First Name" required>
+                    <input type="text" id = "{{ car_form.first_name.id_for_label }}" name = "{{ car_form.first_name.html_name}}" value = "{{ car_form.first_name.value }}" class="border-bottom-input two-col columns" placeholder="First Name" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
                 <div class="two-col columns">
                     <label for="{{ car_form.last_name.id_for_label }}" class="dark-label mb20">{{ car_form.last_name.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.last_name.id_for_label }}" name = "{{ car_form.last_name.html_name}}" value = "{{ car_form.last_name.value }}" class="border-bottom-input two-col columns" placeholder="Last Name" required>
+                    <input type="text" id = "{{ car_form.last_name.id_for_label }}" name = "{{ car_form.last_name.html_name}}" value = "{{ car_form.last_name.value }}" class="border-bottom-input two-col columns" placeholder="Last Name" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
             </div>
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.email.id_for_label }}" class="dark-label mb20">{{ car_form.email.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.email.id_for_label }}" name = "{{ car_form.email.html_name}}" value = "{{ car_form.email.value }}" class="border-bottom-input two-col columns" placeholder="Email Address" required>
+                    <input type="text" id = "{{ car_form.email.id_for_label }}" name = "{{ car_form.email.html_name}}" value = "{{ car_form.email.value }}" class="border-bottom-input two-col columns" placeholder="Email Address" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
             </div>
         </div>
@@ -95,29 +95,29 @@
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.line1.id_for_label }}" class="dark-label mb20">{{ car_form.line1.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.line1.id_for_label }}" name = "{{ car_form.line1.html_name}}" value = "{{ car_form.line1.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line1.label|title}}" required>
+                    <input type="text" id = "{{ car_form.line1.id_for_label }}" name = "{{ car_form.line1.html_name}}" value = "{{ car_form.line1.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line1.label|title}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
             </div>
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.line2.id_for_label }}" class="dark-label mb20">{{ car_form.line2.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.line2.id_for_label }}" name = "{{ car_form.line2.html_name}}" value = "{{ car_form.line2.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line2.label|title}}" required>
+                    <input type="text" id = "{{ car_form.line2.id_for_label }}" name = "{{ car_form.line2.html_name}}" value = "{{ car_form.line2.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line2.label|title}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
             </div>
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.line3.id_for_label }}" class="dark-label mb20">{{ car_form.line3.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.line3.id_for_label }}" name = "{{ car_form.line3.html_name}}" value = "{{ car_form.line3.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line3.label|title}}" required>
+                    <input type="text" id = "{{ car_form.line3.id_for_label }}" name = "{{ car_form.line3.html_name}}" value = "{{ car_form.line3.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.line3.label|title}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
             </div>
             <div class="one-col mb40">
                 <div class="two-col columns">
                     <label for="{{ car_form.postal_code.id_for_label }}" class="dark-label mb20">{{ car_form.postal_code.label|upper }}</label>
-                    <input type="text" maxlength="5" type="text" id = "{{ car_form.postal_code.id_for_label }}" name = "{{ car_form.postal_code.html_name}}" value = "{{ car_form.postal_code.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.postal_code.label|title}}" required>
+                    <input type="text" maxlength="5" type="text" id = "{{ car_form.postal_code.id_for_label }}" name = "{{ car_form.postal_code.html_name}}" value = "{{ car_form.postal_code.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.postal_code.label|title}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
                 <div class="two-col columns">
                     <label for="{{ car_form.city.id_for_label }}" class="dark-label mb20">{{ car_form.city.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.city.id_for_label }}" name = "{{ car_form.city.html_name}}" value = "{{ car_form.city.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.city.label|title}}" required>
+                    <input type="text" id = "{{ car_form.city.id_for_label }}" name = "{{ car_form.city.html_name}}" value = "{{ car_form.city.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.city.label|title}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
             </div>
             <div class="one-col mb40">
@@ -133,7 +133,7 @@
                 </div>
                 <div class="two-col columns">
                     <label for="{{ car_form.phone_number.id_for_label }}" class="dark-label mb20">{{ car_form.phone_number.label|upper }}</label>
-                    <input maxlength="10" type="text" id = "{{ car_form.phone_number.id_for_label }}" name = "{{ car_form.phone_number.html_name}}" value = "{{ car_form.phone_number.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.phone_number.label|title}}" required>
+                    <input maxlength="10" type="text" id = "{{ car_form.phone_number.id_for_label }}" name = "{{ car_form.phone_number.html_name}}" value = "{{ car_form.phone_number.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.phone_number.label|title}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
             </div>
         </div>
@@ -147,19 +147,19 @@
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.card_holder.id_for_label }}" class="dark-label mb20">{{ car_form.card_holder.label|upper }}</label>
-                    <input type="text" id = "{{ car_form.card_holder.id_for_label }}" name = "{{ car_form.card_holder.html_name}}" value = "{{ car_form.card_holder.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.card_holder.label|title}}" required>
+                    <input type="text" id = "{{ car_form.card_holder.id_for_label }}" name = "{{ car_form.card_holder.html_name}}" value = "{{ car_form.card_holder.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.card_holder.label|title}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
             </div>
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.credit_card_number.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_number.label|upper }}</label>
-                    <input type="text" maxlength="16" id = "{{ car_form.credit_card_number.id_for_label }}" name = "{{ car_form.credit_card_number.html_name}}" value = "{{ car_form.credit_card_number.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.credit_card_number.label|title}}" required>
+                    <input type="text" maxlength="16" id = "{{ car_form.credit_card_number.id_for_label }}" name = "{{ car_form.credit_card_number.html_name}}" value = "{{ car_form.credit_card_number.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.credit_card_number.label|title}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
             </div>
             <div class="one-col mb40">
                 <div class="two-col columns">
                   <label for="{{ car_form.credit_card_exp_month.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_month.label|upper }}</label>
-                  {#<input type="text" id = "{{ car_form.credit_card_exp_month.id_for_label }}" name = "{{ car_form.credit_card_exp_month.html_name}}" value = "{{ car_form.credit_card_exp_month.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_month.label|title}}" required>#}
+                  {#<input type="text" id = "{{ car_form.credit_card_exp_month.id_for_label }}" name = "{{ car_form.credit_card_exp_month.html_name}}" value = "{{ car_form.credit_card_exp_month.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_month.label|title}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">#}
                   <select id = "{{ car_form.credit_card_exp_month.id_for_label }}" name = "{{ car_form.credit_card_exp_month.html_name}}" class="border-bottom-input two-col columns">
                     <option value="-1" selected>Select Month</option>
                     <option value="01">January</option>
@@ -178,7 +178,7 @@
                 </div>
                 <div class="two-col columns">
                   <label for="{{ car_form.credit_card_exp_year.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_exp_year.label|upper }}</label>
-                  {#<input type="text" id = "{{ car_form.credit_card_exp_year.id_for_label }}" name = "{{ car_form.credit_card_exp_year.html_name}}" value = "{{ car_form.credit_card_exp_year.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_year.label|title}}" required>#}
+                  {#<input type="text" id = "{{ car_form.credit_card_exp_year.id_for_label }}" name = "{{ car_form.credit_card_exp_year.html_name}}" value = "{{ car_form.credit_card_exp_year.value }}" class="border-bottom-input two-col columns" placeholder="{{car_form.credit_card_exp_year.label|title}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">#}
                   <select id = "{{ car_form.credit_card_exp_year.id_for_label }}" name = "{{ car_form.credit_card_exp_year.html_name}}" class="border-bottom-input two-col columns">
                     <option value="-1" selected>Select Year</option>
                     <option value="17">2017</option>
@@ -201,7 +201,7 @@
             <div class="one-col mb40">
                 <div class="one-col columns">
                     <label for="{{ car_form.credit_card_cvv.id_for_label }}" class="dark-label mb20">{{ car_form.credit_card_cvv.label|upper }}</label>
-                    <input type="text" maxlength="3" id = "{{ car_form.credit_card_cvv.id_for_label }}" name = "{{ car_form.credit_card_cvv.html_name}}" value = "{{ car_form.credit_card_cvv.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.credit_card_cvv.label|upper}}" required>
+                    <input type="text" maxlength="3" id = "{{ car_form.credit_card_cvv.id_for_label }}" name = "{{ car_form.credit_card_cvv.html_name}}" value = "{{ car_form.credit_card_cvv.value }}" class="border-bottom-input two-col columns just-number" placeholder="{{car_form.credit_card_cvv.label|upper}}" required oninvalid="this.setCustomValidity('This field cannot be left blank')">
                 </div>
             </div>
         </div>
@@ -235,12 +235,12 @@
                         </strong>
                     </td>
                     <td>
-                        MX ${{ ticket.price_label.value }}
+                        MXN ${{ ticket.price_label.value }}
                     </td>
                     <td>
-                        {{ ticket.qty }}
+                        {{ ticket.qty.value }}
                     </td>
-                    <td>MX ${{ ticket.total_label.value }}</td>
+                    <td>MXN ${{ ticket.total_label.value }}</td>
                 </tr>
                 {% endfor %}
                 <tr>
@@ -248,7 +248,7 @@
                         Total:
                     </td>
                     <td>
-                        MX ${{cart.total_label}}
+                        MXN ${{cart.total_label}}
                     </td>
                 </tr>
             </table>
@@ -257,7 +257,7 @@
     <section>
         <div class="one-col gray-border-box t-center mb40">
             <a href="{{object.url}}">
-                <button class="btn-black btn-x2 mr20" name="button" type="submit">Cancel</button>
+                <button class="btn-black btn-x2 mr20" name="button" type="button">Cancel</button>
             </a>
             <button class="btn-aqua btn-x2 mr20" name="button" type="submit">Pay</button>
         </div>
