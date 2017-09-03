@@ -20,15 +20,15 @@
       <div class="black-border-box mb40 mr100">
         <p>Invite your friends!</p>
         <div class="display-inline">
-          <button type="button" name="button" class="social-btn-tw c-tw">TW</button>
-          <button type="button" name="button" class="social-btn-fb c-fb">FB</button>
+          <button type="button" name="button" class="social-btn-tw c-tw" data-title="{{ object.name|title }}">TW</button>
+          <button type="button" name="button" class="social-btn-fb c-fb" data-title="{{ object.name|title }}">FB</button>
         </div>
       </div>
     </div>
     <div class="one-fourth columns mb40">
       <div class="one-col mb40">
         <p class="c-aqua mb20">TICKETS</p>
-        <p class="mb20">From <strong>${{ object.min_ticket_price|default:'0.00' }}MXN</strong>  to <strong>${{ object.max_ticket_price|default:'0.00' }}MXN</strong></p>
+        <p class="mb20">From <strong>${{ object.min_ticket_price|default:'0.00' }} MXN</strong>  to <strong>${{ object.max_ticket_price|default:'0.00' }} MXN</strong></p>
         <a href="{{ object.get_tickets_url }}">
           <button class="btn-aqua btn-x2">
             Get Tickets
@@ -37,7 +37,7 @@
       </div>
       <div class="one-col mb40">
         <p class="c-aqua mb20">DATE AND TIME</p>
-        <p class="mb20"> <strong>{{ object.begins_date|date:'F d, Y' }}  {{ object.begins_time|date:'H:i A' }}</strong></p>
+        <p class="mb20"> <strong>{{ object.begins_date|date:'F d, Y' }}  {{ object.begins_time|date:'H:i' }}</strong></p>
       </div>
       <div class="one-col mb40">
         <p class="c-aqua mb20">DURATION</p>
