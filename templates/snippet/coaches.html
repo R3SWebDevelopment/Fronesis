@@ -13,7 +13,7 @@
           <div style="background-color: black; width: 735px;" class="slick-slide slick-current slick-center" data-slick-index="0" aria-hidden="true" tabindex="-1" role="option" aria-describedby="slick-slide00">
             <div class="img" style="background-image: url('{{coach.avatar}}')"></div>
             <div class="txt">
-              <h2 class="t-lyonL"><strong>{{coach.user.get_full_name|default:coach.user.email|truncatewords:3}} ({{coach.current_city}})</strong></h2>
+              <h2 class="t-lyonL"><strong>{{coach.user.get_full_name|default:coach.user.email|truncatewords:3}}</strong></h2>
               <h3 class="mb20">{{coach.short_bio}}</h3>
               <a href="{% url 'coaches:detail' pk=coach.pk %}" class="clear-link">
                 <button class="c-white stroke-btn-4px" tabindex="-1">Get to know {{coach.user.first_name|default:coach.user.email}}</button>
