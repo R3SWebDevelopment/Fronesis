@@ -248,7 +248,7 @@ class AppointmentClientSideModalView(DetailView, FronesisBaseInnerView):
         context['token'] = token
         context['coach'] = coach
         context['service'] = service
-        context['url'] = reverse('coaches:community')
+        context['url'] = '{}?face2face=on'.format(reverse('coaches:community'))
         return context
 
 
