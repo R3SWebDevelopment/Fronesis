@@ -15,9 +15,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['bio', 'avatar']
 
-
     def get_avatar(self, obj):
-        avatar = obj.avatar
         if obj.avatar:
             return{
                 'full_size': obj.avatar.url,
@@ -34,7 +32,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             }
 
 
-
 class ProfileSerializer(serializers.ModelSerializer):
     userprofile = UserProfileSerializer(read_only=True)
 
@@ -45,11 +42,22 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
+    full_name = serializers.SerializerMethodField(read_only=True)
+    is_coach = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
         fields = [
             'id', 'email', 'first_name', 'last_name',
-            'profile'
+            'profile', 'full_name', 'is_coach'
         ]
         read_only_fields = ['email']
+
+    def get_full_name(self, obj):
+        full_name = obj.get_full_name()
+        return full_name if full_name is not None and full_name.strip() else obj.email
+
+    def get_is_coach(self, obj):
+        coach = obj.coaches.first()
+        return True if coach else False
+
